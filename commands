@@ -1,0 +1,32 @@
+sudo docker build -t ollama-battertarware:v1 .
+
+sudo docker run --gpus all  -it -v /home/cpslab/Work/Thesis/rjm/polyphony/Battery-TA-RWARE:/docker-mount/Battery-TA-RWARE ollama-battertarware:v1
+
+
+If stopped, sudo docker ps -a should show the container, and you can restart it with:
+ sudo docker start -ai infallible_maxwell
+
+python3 -m pip install --break-system-packages -e .
+python3 scripts/run_heuristic.py
+
+-- running the PPO
+
+
+python3 scripts/train_ppo.py
+
+pip install  --break-system-packages "ray[rllib]" torch
+pip install --break-system-packages -e . imageio
+python3 -m pip install --break-system-packages "gymnasium[all]"
+python3 -m pip install --break-system-packages opencv-python-headless
+
+
+
+
+--------------------
+ollama serve
+this in one tab
+
+And 
+ollama pull llama3.2:3b
+ollama run llama3.2:3b
+In another to run the llm.

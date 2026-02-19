@@ -32,6 +32,18 @@ parser.add_argument(
 )
 parser.add_argument("--progress_every", default=10, type=int, help="Print progress every N steps")
 parser.add_argument(
+    "--max_action_hold_steps",
+    default=10,
+    type=int,
+    help="Max number of steps an agent may keep the same LLM-decided action without re-query",
+)
+parser.add_argument(
+    "--max_picker_hold_steps",
+    default=3,
+    type=int,
+    help="Max hold steps for picker agents (applied even if max_action_hold_steps is higher)",
+)
+parser.add_argument(
     "--max_candidate_ids",
     default=0,
     type=int,
@@ -191,6 +203,30 @@ def candidate_ids_for_agent(env, idx: int, valid_masks: np.ndarray, max_candidat
     return valid_ids
 
 
+def candidate_ids_for_prompt(env, idx: int, valid_masks: np.ndarray, max_candidate_ids: int) -> List[int]:
+    base_ids = candidate_ids_for_agent(env, idx, valid_masks, 0)
+    if idx < env.num_agvs:
+        if max_candidate_ids and max_candidate_ids > 0:
+            return base_ids[:max_candidate_ids]
+        return base_ids
+
+    # Picker prompt optimization:
+    # Keep only action ids relevant to supporting AGVs plus charging/NOOP.
+    # Execution still validates against full mask; this only narrows prompt choices.
+    agv_shelf_targets = {
+        int(a.target)
+        for a in env.agents[: env.num_agvs]
+        if int(a.target) > 0 and classify_action(env, int(a.target)) == "SHELF"
+    }
+    allowed = {0, *charging_action_ids(env), *agv_shelf_targets}
+    filtered = [aid for aid in base_ids if aid in allowed]
+    if not filtered:
+        filtered = base_ids
+    if max_candidate_ids and max_candidate_ids > 0:
+        return filtered[:max_candidate_ids]
+    return filtered
+
+
 def battery_need_label(battery: float) -> str:
     if battery < 25.0:
         return "critical"
@@ -236,6 +272,58 @@ def get_requested_shelves(env) -> List[str]:
                 f"To go there, choose action id {int(aid)}."
             )
     return requested
+
+
+def get_requested_shelves_for_agent(env, agent) -> List[str]:
+    rows: List[Tuple[int, int, int, int, int]] = []
+    inv = {v: k for k, v in env.action_id_to_coords_map.items()}
+    for shelf in env.request_queue:
+        sx, sy = int(shelf.x), int(shelf.y)
+        aid = inv.get((sy, sx))
+        if aid is None:
+            continue
+        coords = env.action_id_to_coords_map.get(int(aid))
+        if coords is None:
+            continue
+        path = env.find_path((agent.y, agent.x), coords, agent, care_for_agents=False)
+        if path is None:
+            continue
+        rows.append((len(path), int(shelf.id), int(aid), sx, sy))
+
+    rows.sort(key=lambda r: (r[0], r[2]))
+    return [
+        f"shelf_id={sid} action_id={aid} pos=({sx},{sy}) distance_steps={steps}"
+        for steps, sid, aid, sx, sy in rows
+    ]
+
+
+def get_picker_agv_task_view(env) -> List[str]:
+    requested_shelf_ids = {int(s.id) for s in env.request_queue}
+    picker_positions = {(int(a.x), int(a.y)) for a in env.agents if a.type == AgentType.PICKER}
+    lines: List[str] = []
+    for i, agv in enumerate(env.agents[: env.num_agvs]):
+        target_id = int(agv.target)
+        coords = env.action_id_to_coords_map.get(target_id) if target_id > 0 else None
+        at_target = bool(coords is not None and (int(agv.x), int(agv.y)) == (int(coords[1]), int(coords[0])))
+        carrying = agv.carrying_shelf is not None
+        carrying_requested = bool(carrying and int(agv.carrying_shelf.id) in requested_shelf_ids)
+        target_type = classify_action(env, target_id) if target_id > 0 else "NOOP"
+        picker_here = bool((int(agv.x), int(agv.y)) in picker_positions)
+
+        need = "none"
+        if target_type == "SHELF" and at_target and not picker_here:
+            need = "needs_picker_now_at_target"
+        elif target_type == "SHELF" and (not at_target) and (not carrying) and (target_id in requested_shelf_ids):
+            need = "may_need_picker_soon_for_load"
+        elif target_type == "SHELF" and (not at_target) and carrying and (not carrying_requested):
+            need = "may_need_picker_soon_for_unload"
+
+        lines.append(
+            f"agv agent_{i}: target={target_id}:{target_type} "
+            f"busy={bool(agv.busy)} carrying={int(agv.carrying_shelf.id) if carrying else None} "
+            f"battery={float(agv.battery):.1f} support_need={need}"
+        )
+    return lines
 
 
 def nearest_charging_station_for_agent(env, agent) -> Tuple[int, int]:
@@ -356,10 +444,18 @@ def assign_picker_support_pairs(env) -> Dict[int, int]:
         carrying = agent.carrying_shelf is not None
         carrying_is_requested = bool(carrying and int(agent.carrying_shelf.id) in requested_shelf_ids)
 
-        if at_target and not picker_here:
+        needs_waiting_support = at_target and (not picker_here)
+        needs_enroute_load_support = (not at_target) and (not carrying) and (target_id in requested_shelf_ids)
+        needs_enroute_unload_support = (not at_target) and carrying and (not carrying_is_requested)
+
+        if needs_waiting_support:
             support_agvs_waiting.append(i)
             continue
-        if (not at_target) and carrying and (not carrying_is_requested):
+        if needs_enroute_load_support:
+            # Early support: AGV is moving to a requested shelf and will need picker for load at arrival.
+            support_agvs_enroute_unload.append(i)
+            continue
+        if needs_enroute_unload_support:
             # Early support: AGV is returning delivered shelf to empty slot and will need picker at arrival.
             support_agvs_enroute_unload.append(i)
 
@@ -416,11 +512,17 @@ def waiting_agv_support_lines(env, max_picker_suggestions: int = 3) -> List[str]
         carrying = agent.carrying_shelf is not None
         carrying_is_requested = bool(carrying and int(agent.carrying_shelf.id) in requested_shelf_ids)
         needs_waiting_support = at_target and (not picker_here)
+        needs_enroute_load_support = (not at_target) and (not carrying) and (target_id in requested_shelf_ids)
         needs_enroute_unload_support = (not at_target) and carrying and (not carrying_is_requested)
-        if not needs_waiting_support and not needs_enroute_unload_support:
+        if not needs_waiting_support and not needs_enroute_load_support and not needs_enroute_unload_support:
             continue
         ranked = _ranked_picker_distances_to_target(env, coords)
-        event_label = "waiting for Picker support" if needs_waiting_support else "en route to unload shelf; picker support needed soon"
+        if needs_waiting_support:
+            event_label = "waiting for Picker support"
+        elif needs_enroute_load_support:
+            event_label = "en route to requested shelf; picker support needed soon for load"
+        else:
+            event_label = "en route to unload shelf; picker support needed soon"
         if ranked:
             recommended_picker, recommended_steps = ranked[0]
             top = ranked[: max(1, max_picker_suggestions)]
@@ -455,29 +557,44 @@ def picker_support_priority_line(env, picker_idx: int) -> str:
         carrying = agent.carrying_shelf is not None
         carrying_is_requested = bool(carrying and int(agent.carrying_shelf.id) in requested_shelf_ids)
         needs_waiting_support = at_target and (not picker_here)
+        needs_enroute_load_support = (not at_target) and (not carrying) and (target_id in requested_shelf_ids)
         needs_enroute_unload_support = (not at_target) and carrying and (not carrying_is_requested)
-        if not needs_waiting_support and not needs_enroute_unload_support:
+        if not needs_waiting_support and not needs_enroute_load_support and not needs_enroute_unload_support:
             continue
         ranked = _ranked_picker_distances_to_target(env, coords)
         order = [p for p, _ in ranked]
         if picker_idx in order:
             rank = order.index(picker_idx) + 1
             distance = dict(ranked)[picker_idx]
-            support_label = "waiting support" if needs_waiting_support else "early unload support"
+            if needs_waiting_support:
+                support_label = "waiting support"
+            elif needs_enroute_load_support:
+                support_label = "early load support"
+            else:
+                support_label = "early unload support"
             parts.append(f"For AGV agent_{i} ({support_label}) at action {target_id}, your picker rank is {rank}/{len(order)} (distance {distance} steps).")
     if not parts:
         return "You are not currently ranked for any waiting AGV support."
     return " ".join(parts)
 
 
-def build_agent_prompt(env, agent_idx: int, valid_masks: np.ndarray, step_count: int, max_candidate_ids: int) -> str:
-    requested = get_requested_shelves(env)
+def build_agent_prompt(
+    env,
+    agent_idx: int,
+    valid_masks: np.ndarray,
+    step_count: int,
+    max_candidate_ids: int,
+    max_action_hold_steps: int,
+) -> str:
     picker_pairs = assign_picker_support_pairs(env)
     picker_to_agv = {p: a for a, p in picker_pairs.items()}
     charge_now = charging_now_agents(env)
     charge_occupancy = charging_station_occupancy(env)
     agent = env.agents[agent_idx]
-    candidate_ids = candidate_ids_for_agent(env, agent_idx, valid_masks, max_candidate_ids)
+    requested = get_requested_shelves(env)
+    requested_for_agent = get_requested_shelves_for_agent(env, agent)
+    picker_agv_tasks = get_picker_agv_task_view(env)
+    candidate_ids = candidate_ids_for_prompt(env, agent_idx, valid_masks, max_candidate_ids)
     candidate_text = [describe_action_id_for_agent(env, agent, c) for c in candidate_ids]
 
     target_id = int(agent.target)
@@ -610,6 +727,42 @@ def build_agent_prompt(env, agent_idx: int, valid_masks: np.ndarray, step_count:
         else "Not a picker agent."
     )
     goal_id_span = f"1..{len(env.goals)}" if len(env.goals) > 0 else "none"
+    charging_targets: List[str] = []
+    for i, a in enumerate(env.agents):
+        t_id = int(a.target)
+        if t_id > 0 and classify_action(env, t_id) == "CHARGING":
+            charging_targets.append(f"agent_{i} -> charging_action={t_id}")
+    if not charging_targets:
+        charging_targets = ["none"]
+
+    if agent.type == AgentType.AGV:
+        requested_block = (
+            "- Requested shelves:\n"
+            "  - " + ("\n  - ".join(requested) if requested else "none") + "\n"
+            f"- Requested shelves ranked by YOUR distance (agent_{agent_idx}):\n"
+            "  - " + ("\n  - ".join(requested_for_agent) if requested_for_agent else "none_reachable") + "\n"
+        )
+    else:
+        requested_block = (
+            "- AGV request/support view for picker coordination:\n"
+            "  - " + ("\n  - ".join(picker_agv_tasks) if picker_agv_tasks else "none") + "\n"
+        )
+
+    if agent.type == AgentType.AGV:
+        role_policy_block = (
+            "- AGV policy:\n"
+            "- If carrying a requested shelf, move it to a GOAL action id.\n"
+            "- If not carrying, prefer requested shelf action_ids that are closer to you (smaller distance_steps in your ranked list), unless charging/safety constraints dominate.\n"
+            "- At a target SHELF with non-critical battery, avoid detouring to charging before shelf interaction/coordination.\n"
+        )
+    else:
+        role_policy_block = (
+            "- PICKER policy:\n"
+            "- If any AGV is waiting for support OR en route to unload/load support shelf, prioritize moving to that AGV target shelf action id.\n"
+            "- If your battery is not_needed (>=50) or need_charging_soon (25..49), and any AGV support_need is needs_picker_now_at_target or may_need_picker_soon_for_load/unload, always choose the AGV support shelf action_id.\n"
+            "- In that case, do not choose CHARGING and do not choose unrelated shelves.\n"
+            "- Keep support aligned with AGV target to reduce AGV waiting.\n"
+        )
 
     return (
         "You are planning ONE warehouse robot action for this time step.\n"
@@ -637,10 +790,11 @@ def build_agent_prompt(env, agent_idx: int, valid_masks: np.ndarray, step_count:
         "- Agents currently on charging cells: " + (", ".join(charge_now) if charge_now else "none") + "\n"
         "- Charging station occupancy:\n"
         "  - " + "\n  - ".join(charge_occupancy if charge_occupancy else ["none"]) + "\n"
+        "- Agents currently targeting charging actions:\n"
+        "  - " + "\n  - ".join(charging_targets) + "\n"
         "\n"
         "Current global state:\n"
-        "- Requested shelves:\n"
-        "  - " + ("\n  - ".join(requested) if requested else "none") + "\n"
+        f"{requested_block}"
         "- AGV/Picker support pairs to reduce waiting:\n"
         "  - " + "\n  - ".join(pair_lines) + "\n"
         "- AGVs needing picker support now/soon:\n"
@@ -650,6 +804,7 @@ def build_agent_prompt(env, agent_idx: int, valid_masks: np.ndarray, step_count:
         "  - " + "\n  - ".join(all_agents_overview) + "\n"
         "\n"
         f"You are agent_{agent_idx} ({agent.type.name}).\n"
+        f"Current step index: {step_count}.\n"
         f"Your current position is ({int(agent.x)},{int(agent.y)}).\n"
         f"Your movement status: {'moving' if is_moving else 'not moving'}.\n"
         f"Your current target is {target_text}.\n"
@@ -668,14 +823,15 @@ def build_agent_prompt(env, agent_idx: int, valid_masks: np.ndarray, step_count:
         "Decision policy:\n"
         "- Choose exactly ONE action_id for this agent.\n"
         "- Choose from the valid action ids listed below.\n"
-        "- If you are an AGV and you are carrying a requested shelf, move it to a GOAL action id.\n"
+        f"{role_policy_block}"
         f"{carrying_policy_line}"
         f"- GOAL action ids are {goal_id_span}. Any GOAL position is acceptable for delivery.\n"
-        "- If you are a Picker and any AGV is waiting for support OR en route to unload shelf, prioritize moving to that AGV target shelf action id.\n"
-        "- If you are an AGV, at current target SHELF, and battery is not critical, do not detour to charging; prioritize shelf interaction/coordination.\n"
         "- If battery is critical, strongly prioritize charging.\n"
         "- If battery needs charging soon, decide between charging vs productive task based on risk and current coordination demand.\n"
         "- If battery is not_needed and there is productive work, avoid charging.\n"
+        "- If you choose a CHARGING action, select a slot with occupants=[none] from the charging occupancy list.\n"
+        "- If multiple slots are free, avoid a slot already targeted by another agent in 'Agents currently targeting charging actions'.\n"
+        "- Prefer the nearest free charging slot among your valid candidate action ids.\n"
         "- Keep AGV/Picker coordination tight to reduce AGV waiting.\n"
         "\n"
         "Valid action ids for this agent (from environment action mask):\n"
@@ -684,6 +840,8 @@ def build_agent_prompt(env, agent_idx: int, valid_masks: np.ndarray, step_count:
         "Respond in plain text only:\n"
         "Reasoning: <short>\n"
         "Action: <action_id>\n"
+        f"Steps: <integer between 1 and {max(1, max_action_hold_steps)}>\n"
+        "If unsure, use Steps: 1.\n"
     )
 
 
@@ -908,6 +1066,25 @@ def parse_single_action_from_text(text: str) -> int:
     raise ValueError("No parseable single action found in LLM text output")
 
 
+def parse_action_and_steps_from_text(text: str, max_action_hold_steps: int) -> tuple[int, int]:
+    action_id = parse_single_action_from_text(text)
+    steps = 1
+
+    step_patterns = [
+        r"^\s*steps?\s*[:=-]\s*(-?\d+)\b",
+        r"^\s*duration\s*[:=-]\s*(-?\d+)\b",
+        r"hold(?:_steps)?\s*[:=-]\s*(-?\d+)\b",
+    ]
+    for pattern in step_patterns:
+        m = re.search(pattern, text, flags=re.IGNORECASE | re.MULTILINE)
+        if m:
+            steps = int(m.group(1))
+            break
+
+    steps = max(1, min(int(steps), max(1, int(max_action_hold_steps))))
+    return int(action_id), int(steps)
+
+
 def validate_actions(env, actions: List[int], valid_masks: np.ndarray) -> List[int]:
     out = [0] * env.num_agents
     for i in range(env.num_agents):
@@ -986,7 +1163,7 @@ def explain_actions(env, actions: List[int]) -> str:
 def explain_candidates(env, valid_masks: np.ndarray, max_candidate_ids: int) -> str:
     lines: List[str] = []
     for idx, agent in enumerate(env.agents):
-        cands = candidate_ids_for_agent(env, idx, valid_masks, max_candidate_ids)
+        cands = candidate_ids_for_prompt(env, idx, valid_masks, max_candidate_ids)
         cand_desc = []
         for aid in cands:
             if aid == 0:
@@ -1061,60 +1238,80 @@ def llm_episode(env, args, seed: int):
     llm_calls = 0
     llm_failures = 0
     delivery_happened = False
-    steps_since_replan = 0
 
     infos: List[Dict[str, Any]] = []
     episode_returns = np.zeros(env.num_agents)
     global_episode_return = 0.0
-    last_actions = [0] * env.num_agents
+    persisted_actions = [0] * env.num_agents
+    hold_steps_remaining = [0] * env.num_agents
 
     log_block("START", f"seed={seed}, env={args.env_id}, agents={env.num_agents}")
 
     while not done and step_count < args.max_steps_per_episode:
         valid_masks = safe_valid_action_masks(env)
         log_block("STEP", f"step={step_count}")
+        log_block("CANDIDATES", explain_candidates(env, valid_masks, args.max_candidate_ids))
+        fallback = fallback_actions(env, valid_masks)
+        actions = [0] * env.num_agents
 
-        should_replan = False
-        reasons: List[str] = []
-        if step_count % max(1, args.decision_interval) == 0:
-            should_replan, reasons = replan_signals(env)
-            if not should_replan and steps_since_replan >= max(1, args.force_llm_replan_steps):
-                should_replan = True
-                reasons = [f"forced_replan_after_{steps_since_replan}_steps"]
+        for idx in range(env.num_agents):
+            max_hold_for_agent = max(1, int(args.max_action_hold_steps))
+            if env.agents[idx].type == AgentType.PICKER:
+                max_hold_for_agent = min(max_hold_for_agent, max(1, int(args.max_picker_hold_steps)))
+            persisted = int(persisted_actions[idx])
+            if (
+                hold_steps_remaining[idx] > 0
+                and 0 <= persisted < env.action_size
+                and valid_masks[idx, persisted] > 0
+            ):
+                actions[idx] = persisted
+                hold_steps_remaining[idx] -= 1
+                log_block(
+                    f"ACTION_REUSE_agent_{idx}",
+                    f"action={persisted} remaining_reuse_steps={hold_steps_remaining[idx]}",
+                )
+                continue
 
-        if should_replan:
-            log_block("REPLAN_TRIGGER", f"step={step_count}; " + ", ".join(reasons))
-            log_block("CANDIDATES", explain_candidates(env, valid_masks, args.max_candidate_ids))
-            fallback = fallback_actions(env, valid_masks)
-            actions = [0] * env.num_agents
-            for idx in range(env.num_agents):
-                agent_prompt = build_agent_prompt(env, idx, valid_masks, step_count, args.max_candidate_ids)
-                log_block(f"PROMPT_agent_{idx}", maybe_truncate(agent_prompt, args.log_text_chars))
-                candidates = candidate_ids_for_agent(env, idx, valid_masks, args.max_candidate_ids)
-                try:
-                    llm_text = query_ollama_text(args.model, args.ollama_url, agent_prompt, args.request_timeout_s)
-                    llm_calls += 1
-                    log_block(f"LLM_OUTPUT_agent_{idx}", maybe_truncate(llm_text, args.log_text_chars))
-                    action_id = parse_single_action_from_text(llm_text)
-                    if action_id < 0 or action_id >= env.action_size or valid_masks[idx, action_id] <= 0:
-                        raise ValueError(f"action_id={action_id} invalid_by_mask")
-                    actions[idx] = int(action_id)
-                except (error.URLError, TimeoutError, ValueError) as exc:
-                    llm_failures += 1
-                    actions[idx] = int(fallback[idx])
-                    log_block(f"LLM_PARSE_ERROR_agent_{idx}", repr(exc))
-                    log_block(f"FALLBACK_agent_{idx}", f"action={actions[idx]}")
-            log_block("VALIDATED_ACTIONS", str(actions))
-            log_block("ACTION_EFFECT", explain_actions(env, actions))
-            steps_since_replan = 0
-        else:
-            actions = validate_actions(env, last_actions, valid_masks)
-            steps_since_replan += 1
-            log_block("REPLAN_SKIP", f"step={step_count} no_event; reuse_actions; steps_since_replan={steps_since_replan}")
-            log_block("REUSED_ACTIONS", str(actions))
-            log_block("ACTION_EFFECT", explain_actions(env, actions))
+            if hold_steps_remaining[idx] > 0:
+                log_block(
+                    f"ACTION_REUSE_INVALID_agent_{idx}",
+                    f"persisted_action={persisted} became invalid_by_mask; forcing re-query",
+                )
+                hold_steps_remaining[idx] = 0
 
-        last_actions = list(actions)
+            agent_prompt = build_agent_prompt(
+                env,
+                idx,
+                valid_masks,
+                step_count,
+                args.max_candidate_ids,
+                max_hold_for_agent,
+            )
+            log_block(f"PROMPT_agent_{idx}", maybe_truncate(agent_prompt, args.log_text_chars))
+            try:
+                llm_text = query_ollama_text(args.model, args.ollama_url, agent_prompt, args.request_timeout_s)
+                llm_calls += 1
+                log_block(f"LLM_OUTPUT_agent_{idx}", maybe_truncate(llm_text, args.log_text_chars))
+                action_id, action_steps = parse_action_and_steps_from_text(llm_text, max_hold_for_agent)
+                if action_id < 0 or action_id >= env.action_size or valid_masks[idx, action_id] <= 0:
+                    raise ValueError(f"action_id={action_id} invalid_by_mask")
+                actions[idx] = int(action_id)
+                persisted_actions[idx] = int(action_id)
+                hold_steps_remaining[idx] = max(0, int(action_steps) - 1)
+                log_block(
+                    f"ACTION_PLAN_agent_{idx}",
+                    f"action={actions[idx]} hold_steps_total={action_steps} remaining_reuse_steps={hold_steps_remaining[idx]}",
+                )
+            except (error.URLError, TimeoutError, ValueError) as exc:
+                llm_failures += 1
+                actions[idx] = int(fallback[idx])
+                persisted_actions[idx] = int(actions[idx])
+                hold_steps_remaining[idx] = 0
+                log_block(f"LLM_PARSE_ERROR_agent_{idx}", repr(exc))
+                log_block(f"FALLBACK_agent_{idx}", f"action={actions[idx]} hold_steps_total=1")
+
+        log_block("VALIDATED_ACTIONS", str(actions))
+        log_block("ACTION_EFFECT", explain_actions(env, actions))
 
         if args.render:
             env.render(mode="human")

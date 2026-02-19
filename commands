@@ -6,6 +6,10 @@ sudo docker run --gpus all  -it -v /home/cpslab/Work/Thesis/rjm/polyphony/Batter
 If stopped, sudo docker ps -a should show the container, and you can restart it with:
  sudo docker start -ai infallible_maxwell
 
+
+Another terminal:
+sudo docker exec -it infallible_maxwell bash
+
 python3 -m pip install --break-system-packages -e .
 python3 scripts/run_heuristic.py
 
@@ -30,3 +34,30 @@ And
 ollama pull llama3.2:3b
 ollama run llama3.2:3b
 In another to run the llm.
+
+
+python3 scripts/run_llm.py --env_id tarware-tiny-1agvs-1pickers-partialobs-chg-v1
+
+
+python3 scripts/run_llm.py --env_id tarware-tiny-1agvs-1pickers-partialobs-chg-v1 --num_episodes 1 --seed 0 --model llama3.2:3b
+
+
+Rendering
+apt update
+apt install -y libgl1 libglu1-mesa libglut3.12
+
+
+xhost +local:docker
+sudo docker run --name tarware-gui --gpus all -it \
+  -e DISPLAY=:1 \
+  -v /tmp/.X11-unix:/tmp/.X11-unix \
+  -v /home/cpslab/Work/Thesis/rjm/polyphony/Battery-TA-RWARE:/docker-mount/Battery-TA-RWARE \
+  ollama-battertarware:v1
+
+
+Later to start
+
+
+  sudo docker exec -it tarware-gui bash 
+
+  python3 scripts/run_llm.py --env_id tarware-tiny-1agvs-1pickers-partialobs-chg-v1 --num_episodes 1 --seed 0 --model llama3.2:3b --render --log_text_chars 0 -max_steps_per_episode 500 > log5.txt 

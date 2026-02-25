@@ -1,0 +1,317 @@
+\NeedsTeXFormat{LaTeX2e}
+
+\ProvidesPackage{UppsalaExjobb}
+\def\fileversion{1.0}
+\def\filedate{2024-06-17}
+\def\docdate{2024-06-17}
+
+\typeout{Using UppsalaExjobb style, version \fileversion, dated \filedate}
+
+%\ProcessOptions\relax
+%\LoadClass{book}
+% Causes the options of this class to be passed to the book class
+% Needed to change the text font and other behaviours.
+%\LoadClassWithOptions{report} 
+
+\DeclareFontShape{OT1}{cmr}{bx}{sc}{<-> cmbcsc10}{}
+
+% -------------------------------------------------------------------------------------
+\RequirePackage{graphicx} %needed for covers
+\RequirePackage{color}
+\RequirePackage{xcolor}
+\RequirePackage[english,swedish]{babel}
+\RequirePackage[a4paper]{geometry}
+\usepackage{times,helvet}
+\usepackage{setspace}
+% line breaks also at hypens in URLs. 
+\RequirePackage[hyphens]{url}
+\RequirePackage[hidelinks]{hyperref}
+\urlstyle{same}
+
+% Needed for new front page and abstract
+\RequirePackage{fancyhdr}
+\RequirePackage{tikz}
+\RequirePackage{scrextend}
+\usetikzlibrary{calc}
+%%%%%%%%%
+
+\RequirePackage{float}
+\floatstyle{ruled}
+%\floatstyle{boxed}
+\restylefloat{figure}
+\restylefloat{table}
+% but patch it to put the caption below instead of at top
+\renewcommand\fs@ruled{\def\@fs@cfont{\bfseries}\let\@fs@capt\floatc@ruled
+  \def\@fs@pre{\hrule height.8pt depth0pt \kern2pt}%
+  \def\@fs@post{\kern2pt\hrule\relax}%
+  \def\@fs@mid{\kern2pt\hrule\kern2pt}%
+  \let\@fs@iftopcapt\iffalse}
+
+% Useful font packages for maths and symbols
+\RequirePackage{amssymb,amsmath,amsthm,amsfonts}
+
+% for nice code listings
+\RequirePackage{listings}
+
+%%%%% LISTINGS
+\usepackage{listings}
+
+\usepackage{courier}
+\usepackage{color}
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\lstset{ %
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
+  basicstyle=\footnotesize\ttfamily,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{gray},         % comment style
+  deletekeywords={...},            % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  frame=single,                    % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{blue},       % keyword style
+  language=Python,                 % the language of the code
+  otherkeywords={*,...},            % if you want to add more keywords to the set
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{mygreen},     % string literal style
+  tabsize=2,                       % sets default tabsize to 2 spaces
+  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
+%%%%%%%%%%%%
+
+
+%\RequirePackage{a4wide}
+
+%%%%%%%%%%%%%%%%
+%% compatibility with IEEEtran
+\def\bstctlcite{\@ifnextchar[{\@bstctlcite}{\@bstctlcite[@auxout]}}
+\def\@bstctlcite[#1]#2{\@bsphack
+  \@for\@citeb:=#2\do{%
+    \edef\@citeb{\expandafter\@firstofone\@citeb}%
+    \if@filesw\immediate\write\csname #1\endcsname{\string\citation{\@citeb}}\fi}%
+  \@esphack}
+
+
+%%%%%%%%%%%%%%%%% Blank page
+\usepackage{afterpage}
+\newcommand\blankpage{
+    \null
+    \thispagestyle{empty}
+    \addtocounter{page}{-1}
+    \newpage
+}
+
+%%%%%%%%%%%%%%%%
+
+% -------------------------------------------------------------------------------------
+% C H A P T E R   H E A D I N G AND P A G E   S T Y L E
+% 
+\newcommand\frontmatter{	%@@@@
+	\pagenumbering{roman}
+	\pagestyle{plain}
+}
+\newcommand\mainmatter{		%@@@@
+	\pagenumbering{arabic}
+	\pagestyle{fancy}
+	% The lines below are needed so that the empty pages after the frontmatter are completely empty.
+	\let\origdoublepage\cleardoublepage
+	\newcommand{\clearemptydoublepage}{\clearpage{\pagestyle{empty}\origdoublepage}}
+	\let\cleardoublepage\clearemptydoublepage
+}
+
+\RequirePackage{fancyhdr}
+\renewcommand{\headrulewidth}{0.3pt}
+\if@twoside
+  \fancyhead[LO]{\nouppercase{\textsl{\rightmark}}}
+  \fancyhead[RE]{\nouppercase{\textsl{\leftmark}}}
+  \fancyhead[LE,RO]{\thepage}
+  \fancyfoot{}
+\else
+  \lhead{} \chead{}
+  \rhead{\nouppercase{\textsl{\leftmark}}}
+  \lfoot{} \rfoot{}
+  \cfoot{\thepage}
+\fi
+
+%%%% make all section headers sans-serif
+\RequirePackage{sectsty}
+\allsectionsfont{\sffamily}
+
+
+\setlength{\headheight}{14.5pt}
+
+\def\@timesfont #1#2{\fontfamily{ptm}\fontsize{#1}{#2pt}\selectfont}
+\def\@helvfont #1#2{\fontfamily{phv}\fontsize{#1}{#2pt}\selectfont}
+
+
+
+%%%%%%% FRONT PAGE
+
+% Define fonts and colors
+\definecolor{gray}{cmyk}{0, 0, 0, .50}
+
+% Define titlepage
+\newcommand{\serialnumber}[1]{\gdef\@serialnumber{#1}}
+\newcommand{\@serialnumber}{[Ange serienummer]}
+\newcommand{\credits}[1]{\gdef\@credits{#1}}
+\newcommand{\@credits}{[Ange antal HP]}
+\newcommand{\subtitle}[1]{\gdef\@subtitle{#1}}
+\newcommand{\@subtitle}{[Ange undertitel]}
+\newcommand{\program}[1]{\gdef\@program{#1}}
+\newcommand{\@program}{[Ange program]}
+
+\renewcommand{\maketitle}{
+    \thispagestyle{empty}
+    \pagenumbering{gobble}
+    \begin{titlepage}
+        \newgeometry{left=5cm,right=2cm,bottom=1cm,top=1cm}
+        \begin{tikzpicture}[overlay, remember picture]
+            \node[anchor=north west, xshift=1cm, yshift=-1cm] at (current page.north west) {\includegraphics[width=4.2cm]{./dependencies/logo_side.pdf}};
+        \end{tikzpicture}
+        \begin{flushright}
+        
+            {\color{gray}\@helvfont{10}{12}\selectfont \@serialnumber}
+            
+        
+            {\@helvfont{14}{16.8}\selectfont Degree project {\color{gray}\@credits} credits}
+            
+            {\color{gray}\@helvfont{14}{15.12}\selectfont \@date}
+        \end{flushright}
+        
+        \vspace{30pt}
+
+        \begin{flushleft}
+            \setstretch{2.3}    
+            {\color{gray}\@helvfont{28}{33.6}\selectfont \@title}
+            \vspace{-10pt}
+        \end{flushleft}
+
+ 
+        \ifthenelse{\equal{\@subtitle}{}}%
+        {}% Do nothing if subtitle is empty
+        { % Otherwise display subtitle
+            \begin{flushleft}
+                \vspace{-6pt}
+                \setstretch{1.3}    
+                {\color{gray}\@helvfont{16}{19.2}\selectfont \@subtitle}
+                \vspace{-12pt}
+            \end{flushleft}
+        }
+
+        \vspace{4pt}
+        \hrule height 0.8pt
+        \vspace{4pt}
+
+        {\@helvfont{16}{17.28}\selectfont \@author}
+        
+        \vfill
+        
+        \begin{tikzpicture}[overlay, remember picture]
+            \node[anchor=south east, xshift=3pt, yshift=-3pt] at (current page.south east) {\includegraphics{./dependencies/logo_side.pdf}};
+        \end{tikzpicture}
+
+        \begin{flushright}
+            \color{gray}\@helvfont{16}{16}\selectfont \@program
+        \end{flushright}
+    \end{titlepage}
+}
+
+%%%%%%% ABSTRACT
+\newcommand{\supervisor}[1]{\gdef\@supervisor{#1}}
+\newcommand{\@supervisor}{[Ange handledare]}
+\newcommand{\reviewer}[1]{\gdef\@reviewer{#1}}
+\newcommand{\@reviewer}{[Ange ämnesgranskare]}
+\newcommand{\examinator}[1]{\gdef\@examinator{#1}}
+\newcommand{\@examinator}{Ange examinator}
+\newcommand{\secrecy}[1]{\gdef\@secrecy{#1}}
+\newcommand{\@secrecy}{}
+
+\renewenvironment{abstract}{
+    \thispagestyle{empty}
+    \newgeometry{left=7.2cm,right=2cm,bottom=1cm,top=1cm}
+    \begin{tikzpicture}[overlay, remember picture]
+        \node[anchor=north west, xshift=1cm, yshift=-1cm] at (current page.north west) {\includegraphics[width=4.2cm]{./dependencies/logo_side.pdf}};
+    \end{tikzpicture}
+    \vspace{12pt}
+    
+    {\color{gray}\@helvfont{12}{14.4}\selectfont\@title}
+    
+    \vspace{8pt}
+    \hrule
+
+    {\@helvfont{10}{12}\selectfont \@author}
+
+    \vspace{1.7cm}
+
+    \begin{addmargin}[-4.6cm]{0cm}
+    {\bfseries \@helvfont{12}{16}\selectfont Abstract}
+    \@helvfont{11}{13.2}\selectfont
+    
+}{
+    \vfill
+    \begin{center}
+        \color{gray}
+        {
+            \bfseries\@helvfont{12}{16}\selectfont
+            Faculty of Science and Technology
+
+            \vspace{-2pt}
+            
+            Uppsala University, Place of publication Uppsala
+            
+            \vspace{4pt}
+        }{
+            \@helvfont{9}{15}\selectfont
+            Supervisor: {\@supervisor}\;\; Subject reader: {\@reviewer}
+
+            \vspace{-6pt}
+            Examiner: {\@examinator}
+
+            \@secrecy
+        }
+    \end{center}
+    \end{addmargin}
+    \clearpage
+}
+
+%%%%%%% SAMMANFATTNING
+\newenvironment{sammanfattning}
+{
+% HACK THIS
+	\thispagestyle{plain}
+%        \begin{minipage}[t]{13cm}
+	\begin{otherlanguage}{swedish}
+	\section*{\abstractname}
+	\vspace{0.5cm}
+	%\begin{quote}
+}
+{%
+	%\end{quote}
+	\end{otherlanguage}
+%	\end{minipage}
+	\cleardoublepage
+}
+
+
+% -------------------------------------------------------------------------------------
+% F O N T S E L E C T I O N
+%%% Check if the document is built with xelatex and load the Times new roman font
+\RequirePackage{ifxetex}
+\ifxetex
+   \RequirePackage{fontspec}
+   \setmainfont{Times New Roman}
+\fi
+
+\endinput

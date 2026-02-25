@@ -1,0 +1,55 @@
+\subsection{Implementation Status}
+At the time of writing, the following components are implemented and working end-to-end:
+\begin{itemize}
+    \item Battery-TA-RWARE environment integration via Gymnasium.
+    \item Per-agent prompt generation with explicit action-id grounding and role-specific policy hints.
+    \item \gls{llm} querying through a local HTTP interface (Ollama).
+    \item Output parsing, action-mask validation, and rule-based fallbacks.
+    \item Episode-level logging and metric aggregation (deliveries, pick rate, clashes, stuck events, return).
+\end{itemize}
+
+\subsection{Preliminary Experiment}
+This section reports a single initial experiment intended to verify the pipeline and establish a first baseline comparison.
+Configuration:
+\begin{itemize}
+    \item Environment: \texttt{tarware-tiny-1agvs-1pickers-partialobs-chg-v1}
+    \item Seed: 0
+    \item \gls{llm}: \texttt{llama3.2:3b} (Ollama)
+    \item Episodes: 1
+\end{itemize}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Metric} & \textbf{\gls{llm} policy} & \textbf{Heuristic baseline} \\ \hline
+Overall pick rate (deliveries/hour) & 2.08 & 10.12 \\ \hline
+Total shelf deliveries & 1 & 20 \\ \hline
+Global episode return & -3.44 & 17.53 \\ \hline
+Total clashes & 30 & 88 \\ \hline
+Total stuck events & 6 & 14 \\ \hline
+Episode length (steps) & 346 & 1423 \\ \hline
+\end{tabular}
+\caption{Preliminary comparison between the \gls{llm}-driven controller and the built-in heuristic baseline on a tiny environment with two agents. These numbers are from a single seed and are not yet statistically representative.}
+\label{table:prelim_results}
+\end{table}
+
+The \gls{llm} policy achieves substantially lower throughput than the heuristic on this initial run.
+The \gls{llm} episode also terminates earlier, which reduces the opportunity to accumulate deliveries.
+While the \gls{llm} policy produces fewer clashes in absolute terms, this is consistent with lower overall activity rather than better coordinated motion.
+
+\subsection{Observed Failure Modes}
+Qualitative inspection of logs suggests the following recurring issues:
+\begin{itemize}
+    \item \textbf{Weak long-horizon consistency:} the \gls{llm} may switch targets frequently or select targets that do not contribute to completing the load--deliver--return cycle.
+    \item \textbf{Role/phase confusion:} correct decisions depend on the current phase (e.g., \gls{agv} carrying requested shelf should go to a goal; \gls{agv} carrying an already delivered shelf must return it to an empty slot). Even with prompt hints, mistakes occur without stronger structure.
+    \item \textbf{Prompt overload:} listing large candidate action sets can dilute attention. Restricting candidate actions shown to the model may improve performance but risks hiding necessary options.
+    \item \textbf{Battery myopia:} the policy sometimes delays charging too long or charges too early, both of which harm throughput.
+\end{itemize}
+
+\subsection{Discussion}
+The preliminary result supports the hypothesis that plain natural-language prompting is insufficient to match a domain heuristic in a constrained, discrete, multi-agent environment.
+However, the experiment also validates the feasibility of the architecture in Section~\ref{sec:llm_loop}: grounding decisions to action ids, validating them against action masks, and falling back to safe actions prevents catastrophic invalid executions.
+
+The next iterations focus on improving \gls{llm} decision quality without sacrificing feasibility.
+Planned improvements include stricter output formats (e.g., \gls{json}), tighter per-role candidate sets, event-driven replanning triggers, and richer state features that explicitly encode task phase and required coordination steps.

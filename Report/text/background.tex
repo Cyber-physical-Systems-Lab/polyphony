@@ -1,0 +1,36 @@
+\subsection{Multi-Robot Systems and Coordination}
+\glspl{mrs} study how multiple embodied agents share resources, divide work, communicate, and avoid conflicts while pursuing a common objective.
+The term \gls{mas} is broader and can include purely software agents, whereas \gls{mrs} typically emphasizes physical robots operating under motion, sensing, and actuation constraints.
+Classical overviews of cooperative robotics highlight recurring concerns such as group architectures, resource conflicts, and learning~\cite{cao1997cooperative}.
+In heterogeneous teams, these concerns intensify because roles and capabilities differ, and success often requires explicit synchronization (e.g., meeting at the same physical location at the same time).
+
+In this thesis, \emph{collaboration} refers to interdependent task execution among heterogeneous roles, where agents must coordinate to complete an operation (e.g., a load/unload interaction).
+\emph{Coordination} refers to mechanisms that prevent conflicts and deadlocks (e.g., collision avoidance and congestion handling), and \emph{cooperation} refers to pursuing a shared objective even when agents may act more independently.
+
+\subsection{Warehouse Task Assignment Environments}
+Warehouse domains provide a structured but challenging testbed for multi-agent decision-making.
+Tasks are naturally decomposed into repeated cycles: select a requested shelf, bring it to a delivery station, return it to storage, and repeat.
+When multiple agents operate in the same grid, the action space and coordination requirements scale quickly with environment size and fleet size.
+
+This thesis uses Battery-TA-RWARE, an adaptation of the Task-Assignment Robotic Warehouse environment introduced in~\cite{krnjaic2022scalable}.
+The environment models two heterogeneous agent types:
+\begin{itemize}
+    \item \textbf{\glspl{agv}:} carrier agents that transport shelves between storage locations and goal stations.
+    \item \textbf{Pickers:} support agents that must meet \glspl{agv} at shelf locations for loading and unloading.
+\end{itemize}
+Battery-TA-RWARE extends the task-assignment setting with battery depletion and charging stations, forcing agents to balance throughput with energy safety.
+Low-level movement is handled by environment dynamics (including A* path planning), while the controller selects discrete targets representing shelves, goals, or charging stations.
+
+\subsection{LLM-Based Planning and Grounding}
+\glspl{llm} can produce coherent natural-language plans, but robot control requires converting language into \emph{grounded}, \emph{feasible} actions.
+One influential pattern is to constrain the \gls{llm} to select among validated, environment-defined options.
+For example, SayCan combines language-level reasoning with an affordance model to filter actions that are executable in the current state~\cite{ahn2022do}.
+Other work frames \glspl{llm} as planners that can propose action sequences given a symbolic interface to the environment, often coupled with explicit checking and replanning~\cite{huang2022lmp}.
+In language-only settings, prompting patterns such as interleaving reasoning and actions have been studied to improve decision quality under tool or environment feedback~\cite{yao2022react}.
+
+These ideas motivate the design in this thesis: use a prompt that provides a compact but explicit mapping from environment state to action identifiers, require outputs to be parseable into discrete actions, and validate them against the environment's current action constraints.
+
+\subsection{Why Study Model Size and Prompt Design?}
+In applied robotics and embedded contexts, compute and latency budgets may favour smaller models.
+However, smaller models may require more structured prompting, tighter candidate sets, and stronger validation to reach acceptable performance.
+By evaluating multiple model sizes and prompt variants under the same environment and metrics, the thesis aims to clarify which components (model capacity, prompt structure, validation) most strongly affect feasibility, coordination quality, and throughput.

@@ -1,0 +1,34 @@
+\subsection{Problem Formulation}
+Warehouse logistics in heterogeneous fleets can be framed as a continuous decision-making problem: at each time step, each agent must choose a discrete target (shelf, goal, or charging station), subject to dynamic constraints (valid targets, role restrictions, agent busy states) and safety constraints (battery depletion).
+The objective is to maximize delivery throughput while maintaining robust coordination between roles (carrier--picker interactions) and avoiding failure modes such as deadlocks, clashes, and out-of-charge immobilization.
+
+This thesis investigates \gls{llm}-based control as an alternative to purely hand-coded heuristics or fully learned \gls{marl} policies.
+The central question is whether natural-language reasoning can be turned into \emph{actionable} multi-agent decisions once combined with explicit grounding and validation.
+
+\subsection{Purpose}
+The purpose of this thesis is to evaluate the feasibility and limitations of using off-the-shelf \glspl{llm} as high-level controllers for heterogeneous multi-robot collaboration in a warehouse task-assignment setting with battery management.
+
+\subsection{Objectives}
+The concrete objectives are:
+\begin{enumerate}
+    \item Implement an end-to-end \gls{llm} control loop for Battery-TA-RWARE, including prompt generation, output parsing, and feasibility validation.
+    \item Define an evaluation protocol and metrics that capture throughput, coordination quality, and safety.
+    \item Compare different \gls{llm} sizes/architectures and prompt designs against a heuristic baseline (and, where available, learned \gls{rl} baselines).
+    \item Identify and characterize failure modes (invalid actions, poor coordination, battery mismanagement) and propose mitigation strategies.
+\end{enumerate}
+
+\subsection{Delimitations}
+To keep the study focused and measurable, the following delimitations apply in the current stage:
+\begin{itemize}
+    \item The work is evaluated in a simulated, discrete-time environment (Battery-TA-RWARE) rather than on physical robots.
+    \item The \gls{llm} is used for high-level target selection; low-level navigation is handled by the environment (A* path planning and collision handling).
+    \item The initial \gls{llm} policies are \emph{not} fine-tuned; they are prompted as general-purpose models accessed through a local inference server.
+    \item The present results focus on small-scale environments (``tiny'') to enable rapid iteration on prompting and validation before scaling to larger warehouses and more agents.
+\end{itemize}
+
+\subsection{Ethical and Sustainability Considerations}
+Although this work is simulation-based, it touches on two practical considerations:
+\begin{itemize}
+    \item \textbf{Safety:} Policies that ignore constraints (e.g., battery safety) can lead to immobilized agents or unsafe behaviour in real systems. The proposed validation layer is motivated by this gap between natural-language output and executable actions.
+    \item \textbf{Energy and compute:} Larger models increase inference cost and energy consumption. A key motivation for comparing different model sizes is to understand whether smaller models can be made effective through better prompting, structure, and validation.
+\end{itemize}

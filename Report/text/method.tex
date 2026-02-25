@@ -1,0 +1,68 @@
+\subsection{Overview}
+The thesis uses an empirical, experimental methodology:
+\begin{enumerate}
+    \item Implement an \gls{llm}-driven control loop for a simulated heterogeneous warehouse environment.
+    \item Define a set of baselines and evaluation metrics.
+    \item Run controlled experiments (fixed environment ids and seeds) across multiple \gls{llm} models and prompt variants.
+    \item Analyze throughput, safety, and coordination outcomes as well as qualitative failure modes.
+\end{enumerate}
+
+\subsection{Environment: Battery-TA-RWARE}
+Battery-TA-RWARE is a discrete-time, grid-based warehouse simulation derived from \gls{tarware}~\cite{krnjaic2022scalable}.
+At any time, a set of shelves is requested. Carrier \glspl{agv} must transport requested shelves to goal locations and then return them to storage.
+Picker agents are required to meet \glspl{agv} at shelf locations for load and unload interactions, creating explicit heterogeneous coordination constraints.
+Agents additionally have a battery state that decreases with movement and interactions; charging stations are available at fixed locations.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figures/tarware_explanation.png}
+    \caption{Illustration of the task-assignment warehouse setting used in this thesis. Two heterogeneous roles must coordinate: carrier \glspl{agv} transport shelves, while picker agents support loading and unloading at shelf locations. Battery dynamics add a safety constraint that can force agents to recharge.}
+    \label{fig:tarware_overview}
+\end{figure}
+
+The environment exposes a discrete action space where each action corresponds to selecting a target location:
+\begin{itemize}
+    \item \textbf{Shelf actions:} choose a shelf location (e.g., to pick up or return a shelf).
+    \item \textbf{Goal actions:} choose a delivery station (primarily relevant when an \gls{agv} carries a requested shelf).
+    \item \textbf{Charging actions:} choose a charging station to recover battery.
+\end{itemize}
+Low-level motion toward the selected target is handled internally by the environment (A* path planning and collision resolution), while the controller is evaluated on the quality of these high-level decisions.
+
+\subsection{LLM Control Loop}
+\label{sec:llm_loop}
+The \gls{llm} policy is implemented as a text-in / discrete-action-out controller:
+\begin{enumerate}
+    \item \textbf{State summarization:} extract salient features of the global state (requested shelves and their action ids, per-agent position/target/battery/carrying status, charging occupancy).
+    \item \textbf{Candidate action set:} compute a valid-action mask from the environment; optionally restrict the candidate list shown to the \gls{llm} to reduce prompt size.
+    \item \textbf{Prompting:} generate a per-agent prompt describing the agent role and the current state, including explicit mappings from requested objects to action ids.
+    \item \textbf{Querying:} send the prompt to a local inference server (Ollama) and obtain a text response.
+    \item \textbf{Parsing:} parse an integer action id (and optionally an action hold duration) from the response.
+    \item \textbf{Validation and fallback:} if the action is invalid under the current mask, replace it with a rule-based fallback action.
+    \item \textbf{Execution:} apply the validated joint action in the environment for one step (or hold the action for multiple steps, depending on configuration).
+\end{enumerate}
+
+Two design choices are central for feasibility:
+\begin{itemize}
+    \item \textbf{Grounding via action ids:} the \gls{llm} does not output coordinates or free-form text commands; instead it selects from discrete action ids that are already defined by the environment.
+    \item \textbf{Hard validation:} action masks enforce constraints such as invalid goals for picker agents and busy-state restrictions. Invalid \gls{llm} outputs are never executed.
+\end{itemize}
+
+\subsection{Baselines}
+The primary baseline is the environment-provided heuristic policy, which assigns agents to requested shelves and deliveries using domain logic and shortest-path distances.
+Where available, learned \gls{rl} baselines (e.g., \gls{ppo} trained via RLlib) are considered as an additional comparison point, but the current report focuses on heuristic versus \gls{llm} as a first-draft milestone.
+
+\subsection{Evaluation Metrics}
+The main metric is delivery throughput, expressed as a pick rate (deliveries per hour) derived from the number of delivered shelves and the simulated episode duration.
+Additional metrics are collected to capture coordination and safety:
+\begin{itemize}
+    \item total shelf deliveries,
+    \item number of clashes and deadlocks/stuck events,
+    \item distance travelled by each agent type,
+    \item episode return (environment reward),
+    \item episode length and inference speed/latency (when measured).
+\end{itemize}
+
+\subsection{Experimental Protocol (Current Stage)}
+To support reproducibility during prompt iteration, experiments are run with fixed environment ids and fixed seeds.
+The preliminary results in Section~\ref{sec:result_discussion} are obtained on a small environment configuration (``tiny'') with one \gls{agv} and one picker agent and a single seed.
+Subsequent experiments will extend to multiple seeds, additional environment sizes, and larger heterogeneous teams.

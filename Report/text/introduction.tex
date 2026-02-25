@@ -1,0 +1,45 @@
+Modern warehouses increasingly rely on fleets of autonomous agents to move inventory from storage to packing stations.
+Even in simplified settings, achieving high throughput requires more than path planning: agents must continuously decide \emph{which} tasks to execute, \emph{when} to coordinate with other roles, and \emph{when} to recharge to avoid downtime.
+These decisions become harder in heterogeneous teams where agents have different capabilities and constraints.
+
+Research on \glspl{mrs} spans architectures, communication, and coordination strategies.
+Early surveys emphasized fundamental axes such as group architecture, resource conflicts, and learning~\cite{cao1997cooperative}.
+Later overviews categorized multi-robot research topics including communication, task allocation/control, and motion coordination~\cite{arai2002advances}.
+In practical logistics domains, these themes manifest as repeated, interdependent choices: allocate requests to carriers, ensure loaders and carriers meet at shelves, resolve conflicts in shared corridors, and maintain energy safety.
+
+Many approaches address such problems using optimization, hand-engineered heuristics, or \gls{marl}.
+Optimization and heuristics can be strong and efficient, but they often require careful domain-specific design.
+\gls{marl} can learn sophisticated joint behaviour, but training is expensive, sensitive to reward shaping and partial observability, and may generalize poorly when the environment parameters change.
+
+Recent \glspl{llm} offer a complementary direction: instead of learning a policy from scratch for each environment, an \gls{llm} can be prompted with a structured description of the current state and asked to output a high-level decision.
+In robotics, \glspl{llm} have been used for instruction following and planning by combining language reasoning with explicit grounding and feasibility checks; for example, by selecting from validated affordances rather than unconstrained free-form actions~\cite{ahn2022do}.
+However, applying \glspl{llm} to multi-agent control introduces additional challenges: actions must remain valid under environment constraints, decisions must be coordinated across agents, and long-horizon objectives must be approximated under limited context and latency budgets.
+
+This thesis studies \gls{llm}-driven decision-making in a heterogeneous multi-robot warehouse domain with explicit battery dynamics.
+The experimental platform is Battery-TA-RWARE, an adaptation of the Task-Assignment Robotic Warehouse environment~\cite{krnjaic2022scalable}, featuring two agent types: carrier \glspl{agv} and picker agents that must meet at shelf locations for load/unload operations.
+At each decision point, the current global state is summarized into a compact textual prompt, the \gls{llm} proposes an action id per agent, and a validation layer enforces action feasibility via action masks and rule-based fallbacks.
+
+\subsection{Research Questions}
+\label{sec:rq}
+The work is organized around the following research questions:
+\begin{enumerate}
+    \item \textbf{RQ1 (Feasibility and safety):} Can an off-the-shelf \gls{llm} reliably produce \emph{valid} actions under dynamic constraints (busy states, collisions, role restrictions) while avoiding battery-depletion failures?
+    \item \textbf{RQ2 (Coordination quality):} How well can \gls{llm}-based control synchronize heterogeneous roles (carrier--picker meetings) compared to a domain heuristic?
+    \item \textbf{RQ3 (Model and prompt sensitivity):} How do model size/architecture and prompt design choices (candidate action restriction, per-agent vs. shared context, replan triggers) affect throughput and robustness?
+\end{enumerate}
+
+\subsection{Contributions}
+\label{sec:contrib}
+The current thesis work contributes:
+\begin{itemize}
+    \item An end-to-end pipeline for running and evaluating \gls{llm}-driven multi-agent control in Battery-TA-RWARE, including prompt generation, output parsing, and feasibility validation.
+    \item A set of prompt patterns tailored to discrete warehouse actions (requested shelves, goal locations, charging stations) and heterogeneous coordination constraints.
+    \item Preliminary results and an error analysis comparing a plain-language \gls{llm} policy against a heuristic baseline.
+\end{itemize}
+
+\subsection{Report Outline}
+Section~\ref{sec:purpose} states the problem formulation, objectives, and delimitations.
+Section~\ref{sec:background} provides background on multi-robot coordination, warehouse task assignment, and \gls{llm}-based planning.
+Section~\ref{sec:method} describes the environment and the proposed \gls{llm} control loop.
+Section~\ref{sec:result_discussion} presents preliminary experiments and discusses observed failure modes.
+Finally, Section~\ref{sec:conclusions} concludes and outlines future work.

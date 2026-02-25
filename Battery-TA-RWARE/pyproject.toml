@@ -20,7 +20,7 @@ dependencies = [
     "numpy",
     "gymnasium",
     "six==1.16.0",
-    "pyglet==1.5.11",
+    "pyglet==1.5.27",
     "networkx==3.2.1"
 ]
 

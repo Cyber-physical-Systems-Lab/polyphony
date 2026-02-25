@@ -1,0 +1,8 @@
+\begin{itemize}
+    \item \textbf{Structured outputs and tighter parsing:} require the model to output a strict schema (e.g., \texttt{\{action\_id, hold\_steps, rationale\}}) and reject non-conforming responses to reduce ambiguity.
+    \item \textbf{Centralized versus decentralized planning:} compare per-agent prompts (current approach) with a centralized planner that outputs a joint action vector, including explicit coordination constraints.
+    \item \textbf{Candidate-set design:} learn or compute compact candidate action sets (e.g., nearest requested shelves, relevant support targets for pickers) while guaranteeing that necessary actions remain available.
+    \item \textbf{Multi-seed and scaling studies:} extend evaluation to many random seeds and larger layouts (more shelves, more agents) to quantify robustness and scalability.
+    \item \textbf{\gls{marl} baselines:} train/evaluate \gls{ppo} or other \gls{marl} methods on Battery-TA-RWARE and compare to \gls{llm} in throughput, generalization, and compute cost.
+    \item \textbf{Cost-aware deployment:} measure inference latency, token usage, and energy cost across model sizes to assess feasibility for embedded or real-time settings.
+\end{itemize}

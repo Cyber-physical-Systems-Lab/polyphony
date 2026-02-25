@@ -1,0 +1,170 @@
+% Author: A student who wants to help out
+
+% Inspiration from:
+% https://github.com/independent-project-in-it-uu-2021/rapport-mall 
+% https://www.overleaf.com/latex/templates/mall-kandidatarbete-i-teknisk-fysik-uppsala-universitet/hcvpscsrypvt
+
+
+% MUST use a4paper option
+% MAY use twoside, smaller font, and other class
+\documentclass[a4paper,12pt]{article}
+\pdfminorversion=6
+% Use UTF-8 encoding in input files
+\usepackage[utf8]{inputenc}
+\usepackage{svg}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{varioref}
+\usepackage{csquotes}
+
+% Om ni skriver på svenska, använd denna rad:
+% \usepackage[english,swedish]{babel}
+% If you are writing in English, use the following line INSTEAD of the previous (note order of parameters):
+\usepackage[swedish,english]{babel}
+
+% Use the template for thesis reports
+\usepackage{UppsalaExjobb}
+
+% Uncomment the line below to use the todonotes package. A todo note is written using the command \todo{text here}
+%\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+
+% Designval: per default används styckesindrag, men ibland blir det snyggare/mer lättläst med tomrad mellan stycken. Det åstadkoms av de följande raderna.
+% Tycker ni om styckesindrag mera, kommentera bort nästa två rader.
+\parskip=0.8em
+\parindent=0mm
+
+% Designval: vill ni ha en box runt figurer istället för strecken som är default, av-kommentera raden nedan. Obs att både \floatstyle och \restylefloat behövs.
+%\floatstyle{boxed} \restylefloat{figure}
+
+%Hänvisar till tex filen acronyms
+\input{acronyms}
+
+\begin{document}
+% För att ställa in parametrar till IEEEtranS/IEEEtranSA behöver detta ligga här (före första \cite).
+% Se se IEEEtran/bibtex/IEEEtran_bst_HOWTO.pdf, avsnitt VII, eller sista biten av IEEEtran/bibtex/IEEEexample.bib.
+%%%% OBS: här ställer ni t.ex. in hur URLer ska beskrivas.
+\bstctlcite{rapport:BSTcontrol}
+
+% Somehow other solutions for date does not work
+\renewcommand{\today}{\ifcase \month \or January\or February\or March\or %
+April\or May \or June\or July\or August\or September\or October\or November\or %
+December\fi, \number \year} 
+
+\date{\today}
+
+%%%%%%%% 
+
+% Set title
+\title{Heterogeneous Multi-Robot Collaboration Using Large Language Models}
+
+% Use this if you have a subtitle
+\subtitle{Exploring different sizes and architectures}
+
+% Serial number UPTEC XX XXXXX
+\serialnumber{UPTEC XX XXXXX}
+
+%Number of credits
+\credits{30}
+
+% Your progamme
+\program{Master's Programme in Embedded Systems}
+
+% Set author names, separated by "\\ " (don't forget the space, or use newline) and list authors alphabetically by LAST NAME (unless someone did significantly more/less, which should not be the case)
+\author{Rohit Joseph Mamutil}
+
+% Internal or external supervisor 
+\supervisor{Xuezhi Niu}
+
+% Internal reviewer
+\reviewer{Didem Gürdür Broo}
+
+% Examiner
+\examinator{Ramanathan Thinniyam Srinivasan}
+
+% If confidential: This degree project is confidential until [Date]
+\secrecy{}
+
+% This creates the title page
+\maketitle
+
+% Change to frontmatter style (e.g. roman page numbers)
+\frontmatter
+
+\blankpage
+\begin{abstract}
+\input{text/abstract}
+\end{abstract}
+\blankpage
+
+\begin{sammanfattning}
+\input{text/summary}
+\end{sammanfattning}
+
+\paragraph{Acknowledgement}
+\input{text/acknowledgement}
+\newpage
+
+% Innehållsförteckningen här.
+\tableofcontents
+
+% Här kan man också ha \listoffigures, \listoftables
+\clearpage
+
+%\printglossary[type=\acronymtype]
+\printglossary[title=Acronyms, toctitle=Acronyms]
+
+\cleardoublepage
+
+% Change to main matter style (arabic page numbers, reset page numbers)
+\mainmatter
+
+% Here comes the text of the report. You can add your own chapters
+
+
+\section{Introduction}
+\label{sec:introduction}
+\input{text/introduction}
+
+\section{Problem Formulation and Objectives}
+\label{sec:purpose}
+\input{text/purpose}
+
+\section{Background and Related Work}
+\label{sec:background}
+\input{text/background}
+
+\section{System and Method}
+\label{sec:method}
+\input{text/method}
+
+\section{Preliminary Results and Discussion}
+\label{sec:result_discussion}
+\input{text/result_discussion}
+
+\section{Conclusions and Future Work}
+\label{sec:conclusions}
+\input{text/conclusions}
+
+%%%% References
+\newpage
+
+% Use one of these (paths included so BibTeX finds the .bst files in this repo):
+%   IEEEtranS gives numbered references like [42] sorted by author,
+%   IEEEtranSA gives ``alpha''-style references like [Lam81] (also sorted by author)
+\bibliographystyle{./IEEEtran/bibtex/IEEEtranS}
+%\bibliographystyle{./IEEEtran/bibtex/IEEEtranSA}
+
+% Here comes the bibliography/references.
+% För att göra inställningar för IEEEtranS/SA kan man använda ett speciellt bibtex-entry @IEEEtranBSTCTL,
+% se IEEEtran/bibtex/IEEEtran_bst_HOWTO.pdf, avsnitt VII, eller sista biten av IEEEtran/bibtex/IEEEexample.bib.
+\bibliography{./dependencies/bibconfig,refs.bib}
+%\bibliography{refs.bib}
+
+\newpage
+
+%%%% Appendix
+
+\appendix 
+\input{text/appendix}
+
+\end{document}

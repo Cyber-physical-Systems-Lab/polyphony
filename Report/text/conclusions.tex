@@ -1,0 +1,12 @@
+This thesis explores \gls{llm}-driven decision-making for heterogeneous multi-robot collaboration in a task-assignment warehouse setting with battery constraints.
+The work implemented an end-to-end control loop that (i) grounds decisions to discrete environment action identifiers, (ii) queries an \gls{llm} using role-specific prompts, and (iii) enforces feasibility through action-mask validation and safe fallback actions.
+
+The preliminary evaluation shows that a plain-language \gls{llm} controller performs substantially worse than a domain heuristic in throughput on a small-scale environment, despite the feasibility layer preventing invalid execution.
+These results indicate that, in this domain, \gls{llm} reasoning alone is not sufficient: performance depends critically on structure (prompt design and output format), grounding (clear state-to-action mappings), and explicit coordination mechanisms.
+
+Nevertheless, the implemented pipeline provides a concrete platform for systematically studying how model size and prompt design affect multi-agent feasibility, safety, and collaboration quality, and it establishes a baseline for future improvements and comparisons.
+
+\subsection{Future Work}
+\label{sec:futurework}
+\input{text/futurework}
+

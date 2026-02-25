@@ -1,0 +1,8 @@
+Heterogeneous warehouse fleets typically include robots with different roles (e.g., carrier vehicles and loading agents) that must coordinate their movement, timing, and energy usage to sustain high throughput.
+Designing controllers for such multi-robot systems is challenging due to large discrete action spaces, partial observability, sparse rewards, and safety constraints such as battery depletion.
+
+This thesis investigates whether off-the-shelf \glspl{llm} can be used as high-level decision-makers for heterogeneous robot collaboration in a task-assignment warehouse environment with battery dynamics.
+The approach converts the current multi-agent state into a compact natural-language description, queries an \gls{llm} to choose an action for each agent, and enforces feasibility through action-mask validation and rule-based fallbacks.
+Different model sizes and prompt designs are compared against a heuristic baseline in the Battery-TA-RWARE environment.
+
+The current work contributes (i) an end-to-end evaluation pipeline for \gls{llm}-driven multi-agent control, (ii) prompt and validation patterns tailored to discrete warehouse actions, and (iii) preliminary experimental results showing a significant performance gap between a plain-language \gls{llm} policy and a domain heuristic, highlighting the need for stronger structure, grounding, and coordination mechanisms.

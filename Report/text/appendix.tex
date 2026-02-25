@@ -1,0 +1,51 @@
+\section{Appendix}
+\label{app:appendix}
+
+\subsection{Reproducibility: Running the Controllers}
+\label{app:repro}
+The experiments in this thesis are executed from the Battery-TA-RWARE repository in this workspace.
+Example commands:
+
+\begin{lstlisting}[caption=Run the LLM controller for one episode., label=listing:run_llm]
+python Battery-TA-RWARE/scripts/run_llm.py \
+  --env_id tarware-tiny-1agvs-1pickers-partialobs-chg-v1 \
+  --seed 0 \
+  --num_episodes 1 \
+  --model llama3.2:3b
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Run the heuristic baseline for one episode., label=listing:run_heuristic]
+python Battery-TA-RWARE/scripts/run_heuristic.py \
+  --env_id tarware-tiny-1agvs-1pickers-partialobs-chg-v1 \
+  --seed 0 \
+  --num_episodes 1
+\end{lstlisting}
+
+\subsection{Prompt Excerpt (Illustrative)}
+\label{app:prompt_excerpt}
+The \gls{llm} is prompted with an explicit mapping from relevant state elements to discrete action identifiers.
+The full prompt is generated programmatically; the excerpt below illustrates the format (line breaks and ordering may vary):
+
+\begin{lstlisting}[caption=Illustrative prompt excerpt., label=listing:prompt_excerpt]
+Current global state:
+- Requested shelves:
+  - Requested shelf 24 is at position (11,5). To go there, choose action id 50.
+  - Requested shelf 39 is at position (6,8). To go there, choose action id 29.
+...
+You are agent_0 (type=AGV).
+Choose exactly one action_id from the candidate list.
+Output format: action_id=<integer>
+\end{lstlisting}
+
+\subsection{Metric Definitions}
+\label{app:metrics}
+\begin{itemize}
+    \item \textbf{Total shelf deliveries:} number of requested shelves delivered to goal locations during an episode.
+    \item \textbf{Overall pick rate:} deliveries/hour computed as
+    \[
+        \text{pick\_rate} = \frac{\text{deliveries} \cdot 3600}{5 \cdot \text{episode\_steps}},
+    \]
+    where 5 steps/second is the environment's time scale used by the logging script.
+    \item \textbf{Clashes and stuck events:} environment-defined counts related to collision resolution and deadlock-like behaviour.
+    \item \textbf{Global episode return:} sum of environment rewards across all agents and time steps.
+\end{itemize}

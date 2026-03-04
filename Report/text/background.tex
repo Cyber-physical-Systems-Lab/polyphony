@@ -2,10 +2,21 @@
 \glspl{mrs} study how multiple embodied agents share resources, divide work, communicate, and avoid conflicts while pursuing a common objective.
 The term \gls{mas} is broader and can include purely software agents, whereas \gls{mrs} typically emphasizes physical robots operating under motion, sensing, and actuation constraints.
 Classical overviews of cooperative robotics highlight recurring concerns such as group architectures, resource conflicts, and learning~\cite{cao1997cooperative}.
+Survey treatments vary in terminology and scope (e.g., differences in how \gls{mas} and \gls{mrs} are framed, and how communication and coordination taxonomies are defined)~\cite{yan2013mrscoordination,arai2002advances}.
+For broader multi-agent coordination perspectives, conference proceedings such as AAMAS provide additional representative examples, including coordinated MARL methods that explicitly trade off coordination benefits against communication bandwidth~\cite{zhang2013coordinatingmarl}.
 In heterogeneous teams, these concerns intensify because roles and capabilities differ, and success often requires explicit synchronization (e.g., meeting at the same physical location at the same time).
 
 In this thesis, \emph{collaboration} refers to interdependent task execution among heterogeneous roles, where agents must coordinate to complete an operation (e.g., a load/unload interaction).
 \emph{Coordination} refers to mechanisms that prevent conflicts and deadlocks (e.g., collision avoidance and congestion handling), and \emph{cooperation} refers to pursuing a shared objective even when agents may act more independently.
+These terms are not used consistently across communities; some \gls{mas} discussions historically emphasize distributed stationary nodes, whereas modern multi-agent learning often includes mobile, embodied agents.
+To reduce ambiguity, the thesis primarily uses \gls{mrs} when referring to embodied robots and uses \gls{mas} to denote the broader class of multi-agent systems.
+
+Coordination strategies can be described as \emph{static} (offline, convention-based) or \emph{dynamic} (online, reactive), depending on whether coordination rules are established prior to execution or synthesized during execution from sensed/communicated information~\cite{yan2013mrscoordination}.
+Communication can likewise be categorized as \emph{implicit} (information inferred via sensing or environment traces) versus \emph{explicit} (direct message passing), trading off scalability against accuracy and bandwidth~\cite{yan2013mrscoordination}.
+
+Planning is a central lens for collaboration: multi-robot planning is often discussed as task planning (who does what) and motion planning (how to move), with optimal formulations typically being NP-hard and thus motivating approximate methods and heuristics~\cite{yan2013mrscoordination}.
+In particular, multi-robot task planning includes task decomposition (splitting a mission into subtasks) and task allocation (assigning subtasks to agents), with much of the literature focusing on allocation due to tractability and benchmarking convenience~\cite{yan2013mrscoordination}.
+This observation aligns with the thesis hypothesis: \glspl{llm} may be useful as a structured decision module for decomposition and allocation when paired with explicit grounding, feasibility constraints, and environment feedback.
 
 \subsection{Warehouse Task Assignment Environments}
 Warehouse domains provide a structured but challenging testbed for multi-agent decision-making.
@@ -27,10 +38,14 @@ One influential pattern is to constrain the \gls{llm} to select among validated,
 For example, SayCan combines language-level reasoning with an affordance model to filter actions that are executable in the current state~\cite{ahn2022do}.
 Other work frames \glspl{llm} as planners that can propose action sequences given a symbolic interface to the environment, often coupled with explicit checking and replanning~\cite{huang2022lmp}.
 In language-only settings, prompting patterns such as interleaving reasoning and actions have been studied to improve decision quality under tool or environment feedback~\cite{yao2022react}.
+Recent multi-robot systems work explores \emph{multi-agent} prompting where each robot maintains a separate dialog context and coordination emerges through structured communication plus environment feedback (e.g., collision checking and in-context plan revision)~\cite{mandi2024roco}.
+Recent work argues that closed-loop state feedback and a separation between high-level planning and low-level control can reduce hallucinated actions and improve long-horizon goal satisfaction in robot task planning with \glspl{llm}~\cite{bhat2025closedloopgrounding}.
+In multi-robot task planning contexts, prior thesis work also emphasizes the need for a symbolic abstraction layer that translates sensor/state representations into language-level predicates that \glspl{llm} can reliably consume~\cite{huang2025collabmrtp}.
 
 These ideas motivate the design in this thesis: use a prompt that provides a compact but explicit mapping from environment state to action identifiers, require outputs to be parseable into discrete actions, and validate them against the environment's current action constraints.
 
 \subsection{Why Study Model Size and Prompt Design?}
 In applied robotics and embedded contexts, compute and latency budgets may favour smaller models.
 However, smaller models may require more structured prompting, tighter candidate sets, and stronger validation to reach acceptable performance.
+Recent robotics work explicitly motivates prompt design as a lever for compensating limited model capacity and improving decision quality in constrained deployments~\cite{xiao2026probingprompt,mandi2024roco}.
 By evaluating multiple model sizes and prompt variants under the same environment and metrics, the thesis aims to clarify which components (model capacity, prompt structure, validation) most strongly affect feasibility, coordination quality, and throughput.

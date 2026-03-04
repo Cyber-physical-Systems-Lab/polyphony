@@ -1,6 +1,12 @@
-Modern warehouses increasingly rely on fleets of autonomous agents to move inventory from storage to packing stations.
-Even in simplified settings, achieving high throughput requires more than path planning: agents must continuously decide \emph{which} tasks to execute, \emph{when} to coordinate with other roles, and \emph{when} to recharge to avoid downtime.
-These decisions become harder in heterogeneous teams where agents have different capabilities and constraints.
+In studies of human communication, language use has been framed as a form of joint action in which participants coordinate their individual contributions toward shared outcomes~\cite{clark1996usinglanguage}.
+Accounts of language origins likewise emphasize the role of cooperative motives and shared intentionality in enabling coordination and collaboration~\cite{tomasello2008origins}.
+Language has also been linked to social bonding and group-level coordination in evolutionary accounts of human sociality~\cite{dunbar1996grooming}.
+
+Motivated by these perspectives, this thesis adopts the working hypothesis that language-capable models with general reasoning ability can serve as high-level decision-makers in multi-agent settings, thereby supporting collaboration and coordination without task-specific training for every new configuration.
+
+To evaluate this hypothesis in a concrete and measurable way, the thesis uses a simplified but structured multi-agent testbed.
+When autonomous agent fleets operate in a shared environment, high throughput typically requires more than path planning: agents must decide \emph{which} tasks to execute, \emph{when} to coordinate with other roles, and \emph{when} to allocate time to maintenance actions such as recharging.
+These decisions are particularly challenging in heterogeneous teams where agents have different capabilities and constraints.
 
 Research on \glspl{mrs} spans architectures, communication, and coordination strategies.
 Early surveys emphasized fundamental axes such as group architecture, resource conflicts, and learning~\cite{cao1997cooperative}.
@@ -10,6 +16,8 @@ In practical logistics domains, these themes manifest as repeated, interdependen
 Many approaches address such problems using optimization, hand-engineered heuristics, or \gls{marl}.
 Optimization and heuristics can be strong and efficient, but they often require careful domain-specific design.
 \gls{marl} can learn sophisticated joint behaviour, but training is expensive, sensitive to reward shaping and partial observability, and may generalize poorly when the environment parameters change.
+Benchmarking studies highlight that algorithm comparisons are highly task- and metric-dependent, motivating careful protocol design and reporting~\cite{papoudakis2020benchmarking}.
+Recent work in heterogeneous multi-robot settings also introduces bio-inspired \emph{symbiosis} framings and reward shaping strategies, often combined with centralized training and decentralized execution, to stabilize learning and improve cooperative outcomes~\cite{niu2025icpssymbiosis,niu2025icrassymbiosisrewards}.
 
 Recent \glspl{llm} offer a complementary direction: instead of learning a policy from scratch for each environment, an \gls{llm} can be prompted with a structured description of the current state and asked to output a high-level decision.
 In robotics, \glspl{llm} have been used for instruction following and planning by combining language reasoning with explicit grounding and feasibility checks; for example, by selecting from validated affordances rather than unconstrained free-form actions~\cite{ahn2022do}.
@@ -17,24 +25,29 @@ However, applying \glspl{llm} to multi-agent control introduces additional chall
 
 This thesis studies \gls{llm}-driven decision-making in a heterogeneous multi-robot warehouse domain with explicit battery dynamics.
 The experimental platform is Battery-TA-RWARE, an adaptation of the Task-Assignment Robotic Warehouse environment~\cite{krnjaic2022scalable}, featuring two agent types: carrier \glspl{agv} and picker agents that must meet at shelf locations for load/unload operations.
-At each decision point, the current global state is summarized into a compact textual prompt, the \gls{llm} proposes an action id per agent, and a validation layer enforces action feasibility via action masks and rule-based fallbacks.
+At each decision point, the current global state is summarized into a compact textual prompt, the \gls{llm} proposes an action id per agent, and a validation layer enforces action feasibility via action masks.
 
 \subsection{Research Questions}
 \label{sec:rq}
-The work is organized around the following research questions:
+The thesis is guided by the following main research question:
+\begin{quote}
+    \textbf{Main research question:} How can \glspl{llm} be used in heterogeneous multi-robot systems to improve collaboration?
+\end{quote}
+To support a systematic investigation of the main research question, the study considers two sub-questions:
 \begin{enumerate}
-    \item \textbf{RQ1 (Feasibility and safety):} Can an off-the-shelf \gls{llm} reliably produce \emph{valid} actions under dynamic constraints (busy states, collisions, role restrictions) while avoiding battery-depletion failures?
-    \item \textbf{RQ2 (Coordination quality):} How well can \gls{llm}-based control synchronize heterogeneous roles (carrier--picker meetings) compared to a domain heuristic?
-    \item \textbf{RQ3 (Model and prompt sensitivity):} How do model size/architecture and prompt design choices (candidate action restriction, per-agent vs. shared context, replan triggers) affect throughput and robustness?
+    \item \textbf{RQ1 (Model size):} How do \glspl{llm} of different sizes influence the quality and effectiveness of collaboration in heterogeneous multi-robot systems?
+    \item \textbf{RQ2 (Integration architecture):} Which integration architecture, centralized or decentralized, enables the most effective use of \glspl{llm} for coordinating heterogeneous multi-robot teams?
 \end{enumerate}
+
+In this thesis, architectural choices include how environment state is translated into language, how proposed decisions are mapped back to executable actions, whether decision-making is performed per-agent or jointly, and how feasibility constraints are imposed (e.g., by restricting/validating candidate actions and using environment feedback for replanning).
 
 \subsection{Contributions}
 \label{sec:contrib}
 The current thesis work contributes:
 \begin{itemize}
-    \item An end-to-end pipeline for running and evaluating \gls{llm}-driven multi-agent control in Battery-TA-RWARE, including prompt generation, output parsing, and feasibility validation.
-    \item A set of prompt patterns tailored to discrete warehouse actions (requested shelves, goal locations, charging stations) and heterogeneous coordination constraints.
-    \item Preliminary results and an error analysis comparing a plain-language \gls{llm} policy against a heuristic baseline.
+    \item An end-to-end pipeline for running and evaluating \gls{llm}-driven heterogeneous multi-robot control in Battery-TA-RWARE, including state-to-language encoding, action-id grounding, output parsing, and feasibility validation.
+    \item An experimental setup for comparing models of different sizes and for evaluating centralized versus decentralized \gls{llm} integration patterns.
+    \item Preliminary results and an error analysis comparing an \gls{llm}-based controller against a heuristic baseline.
 \end{itemize}
 
 \subsection{Report Outline}

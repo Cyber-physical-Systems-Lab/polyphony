@@ -37,7 +37,7 @@ The \gls{llm} policy is implemented as a text-in / discrete-action-out controlle
     \item \textbf{Prompting:} generate a per-agent prompt describing the agent role and the current state, including explicit mappings from requested objects to action ids.
     \item \textbf{Querying:} send the prompt to a local inference server (Ollama) and obtain a text response.
     \item \textbf{Parsing:} parse an integer action id (and optionally an action hold duration) from the response.
-    \item \textbf{Validation and fallback:} if the action is invalid under the current mask, replace it with a rule-based fallback action.
+    \item \textbf{Validation:} validate the parsed action id against the current valid-action mask; invalid outputs are discarded and trigger replanning.
     \item \textbf{Execution:} apply the validated joint action in the environment for one step (or hold the action for multiple steps, depending on configuration).
 \end{enumerate}
 

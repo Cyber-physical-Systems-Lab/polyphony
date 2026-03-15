@@ -1,0 +1,29 @@
+Episode Summary
+Created: 2026-03-13 17:18:24 UTC
+Episode: 0
+Seed: 0
+Environment: tarware-tiny-1agvs-1pickers-partialobs-chg-v1
+Model: llama3.2:3b
+Backend: langchain
+Experiment mode: message_or_action
+Elapsed seconds: 142.97
+
+Key Metrics
+- Deliveries: 0
+- Clashes: 1
+- Messages sent: 3
+- Messages handled: 0
+
+Additional Metrics
+- Episode length: 200
+- Global return: -0.30
+- Overall pick rate: 0.00
+- LLM calls: 132
+- LLM failures: 0
+- Messages delivered: 2
+- Messages activated: 0
+- Pending messages at end: 2
+- Episode end reason: env_max_inactivity_steps_reached(200/200)
+- Episode end reasons: ['env_max_inactivity_steps_reached(200/200)']
+
+Transcript: transcripts/episode_000_seed_0.json

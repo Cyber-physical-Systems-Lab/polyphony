@@ -1,0 +1,1483 @@
+{
+  "episode_idx": 16,
+  "seed": 16,
+  "experiment_mode": "message_or_action",
+  "llm_backend": "langchain",
+  "system_goal": "Increase total shelf deliveries by using timely AGV/Picker support messaging.",
+  "delivery_metric": "shelf_deliveries",
+  "reflection_message_samples": 12,
+  "steps": [
+    {
+      "step": 0,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "prompt": "You are controlling one warehouse agent.\\nAt this step you must choose exactly one primary decision:\\n- ACTION: take one valid environment action now.\\n- MESSAGE: send one coordination message to another agent now.\\nChoose MESSAGE when communication is more valuable than immediate movement, such as support-request timing, plan-intent coordination, battery coordination, or shelf handoff coordination.\\nChoose ACTION when immediate execution is more valuable than messaging.\\nIf you choose ACTION, the action id must be one of the valid candidate action ids.\\nIf you choose MESSAGE, do not invent an action id; leave the Action line blank.\\nChoose a suitable Steps value.\\nFewer LLM calls improve performance, so use a larger Steps value when the chosen action is stable and unlikely to need revision.\\nBut do not overcommit: use a smaller Steps value when message handling, support timing, battery changes, or environment changes may require a quick replanning response.\\nStep: 0\\nAgent: agent_0 (AGV)\\nSelf state: pos=(1,5), target=none, busy=False, battery=66.0 (not_needed), carrying=None\\nPending messages for you:\\n- none\\nCurrent priority message:\\n- none\\nRecently handled messages:\\n- none\\nRequested shelves:\\n- Requested shelf 3 is at position (6,2). To go there, choose action id 23.\n- Requested shelf 1 is at position (2,2). To go there, choose action id 7.\n- Requested shelf 30 is at position (11,6). To go there, choose action id 51.\n- Requested shelf 45 is at position (6,9). To go there, choose action id 30.\n- Requested shelf 36 is at position (11,7). To go there, choose action id 52.\n- Requested shelf 27 is at position (6,6). To go there, choose action id 27.\n- Requested shelf 29 is at position (10,6). To go there, choose action id 43.\n- Requested shelf 24 is at position (11,5). To go there, choose action id 50.\n- Requested shelf 15 is at position (6,4). To go there, choose action id 25.\n- Requested shelf 43 is at position (2,9). To go there, choose action id 14.\n- Reques\n...[TRUNCATED 7426 chars]",
+          "fallback_used": false,
+          "llm_output": "Decision:\nACTION\nAction Detail: The current state does not require immediate movement, as there are no pending messages or urgent requests that need to be handled. However, the system goal emphasizes the importance of timely AGV/Picker support, which may be achieved by taking a stable action and revising it if necessary in future turns.\nSteps: 5\nTo: \nAction: 0:NOOP (distance_steps=0)",
+          "action": 0,
+          "action_steps": 5
+        },
+        {
+          "agent_id": 1,
+          "prompt": "You are controlling one warehouse agent.\\nAt this step you must choose exactly one primary decision:\\n- ACTION: take one valid environment action now.\\n- MESSAGE: send one coordination message to another agent now.\\nChoose MESSAGE when communication is more valuable than immediate movement, such as support-request timing, plan-intent coordination, battery coordination, or shelf handoff coordination.\\nChoose ACTION when immediate execution is more valuable than messaging.\\nIf you choose ACTION, the action id must be one of the valid candidate action ids.\\nIf you choose MESSAGE, do not invent an action id; leave the Action line blank.\\nChoose a suitable Steps value.\\nFewer LLM calls improve performance, so use a larger Steps value when the chosen action is stable and unlikely to need revision.\\nBut do not overcommit: use a smaller Steps value when message handling, support timing, battery changes, or environment changes may require a quick replanning response.\\nStep: 0\\nAgent: agent_1 (PICKER)\\nSelf state: pos=(7,0), target=none, busy=False, battery=80.0 (not_needed), carrying=None\\nPending messages for you:\\n- none\\nCurrent priority message:\\n- none\\nRecently handled messages:\\n- none\\nRequested shelves:\\n- Requested shelf 3 is at position (6,2). To go there, choose action id 23.\n- Requested shelf 1 is at position (2,2). To go there, choose action id 7.\n- Requested shelf 30 is at position (11,6). To go there, choose action id 51.\n- Requested shelf 45 is at position (6,9). To go there, choose action id 30.\n- Requested shelf 36 is at position (11,7). To go there, choose action id 52.\n- Requested shelf 27 is at position (6,6). To go there, choose action id 27.\n- Requested shelf 29 is at position (10,6). To go there, choose action id 43.\n- Requested shelf 24 is at position (11,5). To go there, choose action id 50.\n- Requested shelf 15 is at position (6,4). To go there, choose action id 25.\n- Requested shelf 43 is at position (2,9). To go there, choose action id 14.\n- Req\n...[TRUNCATED 5431 chars]",
+          "fallback_used": false,
+          "llm_output": "Decision: ACTION\nAction Detail: Moving towards requested shelf 3 is more valuable than messaging right now, as it's a high-priority request with a specific target position.\nSteps: 2\nTo: agent_0\nAction: 23",
+          "action": 23,
+          "action_steps": 2
+        }
+      ],
+      "actions": [
+        0,
+        23
+      ],
+      "state_change": "agent_1 type=PICKER: target 0->23; busy False->True",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 1,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 0,
+          "action_steps": 4,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "reused_action": true,
+          "action": 23,
+          "action_steps": 1,
+          "fallback_used": false
+        }
+      ],
+      "actions": [
+        0,
+        23
+      ],
+      "state_change": "agent_1 type=PICKER: pos (7,0)->(6,0); battery 80.0->79.0",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 2,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 0,
+          "action_steps": 3,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "prompt": "You are controlling one warehouse agent.\\nAt this step you must choose exactly one primary decision:\\n- ACTION: take one valid environment action now.\\n- MESSAGE: send one coordination message to another agent now.\\nChoose MESSAGE when communication is more valuable than immediate movement, such as support-request timing, plan-intent coordination, battery coordination, or shelf handoff coordination.\\nChoose ACTION when immediate execution is more valuable than messaging.\\nIf you choose ACTION, the action id must be one of the valid candidate action ids.\\nIf you choose MESSAGE, do not invent an action id; leave the Action line blank.\\nChoose a suitable Steps value.\\nFewer LLM calls improve performance, so use a larger Steps value when the chosen action is stable and unlikely to need revision.\\nBut do not overcommit: use a smaller Steps value when message handling, support timing, battery changes, or environment changes may require a quick replanning response.\\nStep: 2\\nAgent: agent_1 (PICKER)\\nSelf state: pos=(6,0), target=23:SHELF@(6,2), busy=True, battery=79.0 (not_needed), carrying=None\\nPending messages for you:\\n- none\\nCurrent priority message:\\n- none\\nRecently handled messages:\\n- none\\nRequested shelves:\\n- Requested shelf 3 is at position (6,2). To go there, choose action id 23.\n- Requested shelf 1 is at position (2,2). To go there, choose action id 7.\n- Requested shelf 30 is at position (11,6). To go there, choose action id 51.\n- Requested shelf 45 is at position (6,9). To go there, choose action id 30.\n- Requested shelf 36 is at position (11,7). To go there, choose action id 52.\n- Requested shelf 27 is at position (6,6). To go there, choose action id 27.\n- Requested shelf 29 is at position (10,6). To go there, choose action id 43.\n- Requested shelf 24 is at position (11,5). To go there, choose action id 50.\n- Requested shelf 15 is at position (6,4). To go there, choose action id 25.\n- Requested shelf 43 is at position (2,9). To go there, choose action id \n...[TRUNCATED 5449 chars]",
+          "fallback_used": false,
+          "llm_output": "Decision:\nACTION\nAction Detail: I need to move towards my target shelf before I can start picking items, so I choose the 23:SHELF action id.\nSteps: 2\nTo: \nAction: 23\nMessage Status: KEEP\nFocus Message: \nReasoning: I should prioritize moving towards my target shelf over sending a message at this time because I need to physically move to that location before I can start picking items. This will allow me to efficiently complete the task and avoid unnecessary communication.\nDecision Detail: Sending a message now would delay my movement and potentially cause inefficiencies in the process, so it's better for me to focus on executing the action first.\nMessage: \nAction Detail: none\nRules:",
+          "action": 23,
+          "action_steps": 2
+        }
+      ],
+      "actions": [
+        0,
+        23
+      ],
+      "state_change": "no_state_change",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 3,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 0,
+          "action_steps": 2,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "reused_action": true,
+          "action": 23,
+          "action_steps": 1,
+          "fallback_used": false
+        }
+      ],
+      "actions": [
+        0,
+        23
+      ],
+      "state_change": "agent_1 type=PICKER: pos (6,0)->(6,1); battery 79.0->78.0",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 4,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 0,
+          "action_steps": 1,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "prompt": "You are controlling one warehouse agent.\\nAt this step you must choose exactly one primary decision:\\n- ACTION: take one valid environment action now.\\n- MESSAGE: send one coordination message to another agent now.\\nChoose MESSAGE when communication is more valuable than immediate movement, such as support-request timing, plan-intent coordination, battery coordination, or shelf handoff coordination.\\nChoose ACTION when immediate execution is more valuable than messaging.\\nIf you choose ACTION, the action id must be one of the valid candidate action ids.\\nIf you choose MESSAGE, do not invent an action id; leave the Action line blank.\\nChoose a suitable Steps value.\\nFewer LLM calls improve performance, so use a larger Steps value when the chosen action is stable and unlikely to need revision.\\nBut do not overcommit: use a smaller Steps value when message handling, support timing, battery changes, or environment changes may require a quick replanning response.\\nStep: 4\\nAgent: agent_1 (PICKER)\\nSelf state: pos=(6,1), target=23:SHELF@(6,2), busy=True, battery=78.0 (not_needed), carrying=None\\nPending messages for you:\\n- none\\nCurrent priority message:\\n- none\\nRecently handled messages:\\n- none\\nRequested shelves:\\n- Requested shelf 3 is at position (6,2). To go there, choose action id 23.\n- Requested shelf 1 is at position (2,2). To go there, choose action id 7.\n- Requested shelf 30 is at position (11,6). To go there, choose action id 51.\n- Requested shelf 45 is at position (6,9). To go there, choose action id 30.\n- Requested shelf 36 is at position (11,7). To go there, choose action id 52.\n- Requested shelf 27 is at position (6,6). To go there, choose action id 27.\n- Requested shelf 29 is at position (10,6). To go there, choose action id 43.\n- Requested shelf 24 is at position (11,5). To go there, choose action id 50.\n- Requested shelf 15 is at position (6,4). To go there, choose action id 25.\n- Requested shelf 43 is at position (2,9). To go there, choose action id \n...[TRUNCATED 5449 chars]",
+          "fallback_used": false,
+          "llm_output": "Decision: ACTION\nAction Detail: I need to move towards my target shelf 23:SHELF@(6,2) as it is the closest one to me and I am currently carrying nothing.\nSteps: 3\nTo: agent_0\nAction: 23",
+          "action": 23,
+          "action_steps": 3
+        }
+      ],
+      "actions": [
+        0,
+        23
+      ],
+      "state_change": "no_state_change",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 5,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "prompt": "You are controlling one warehouse agent.\\nAt this step you must choose exactly one primary decision:\\n- ACTION: take one valid environment action now.\\n- MESSAGE: send one coordination message to another agent now.\\nChoose MESSAGE when communication is more valuable than immediate movement, such as support-request timing, plan-intent coordination, battery coordination, or shelf handoff coordination.\\nChoose ACTION when immediate execution is more valuable than messaging.\\nIf you choose ACTION, the action id must be one of the valid candidate action ids.\\nIf you choose MESSAGE, do not invent an action id; leave the Action line blank.\\nChoose a suitable Steps value.\\nFewer LLM calls improve performance, so use a larger Steps value when the chosen action is stable and unlikely to need revision.\\nBut do not overcommit: use a smaller Steps value when message handling, support timing, battery changes, or environment changes may require a quick replanning response.\\nStep: 5\\nAgent: agent_0 (AGV)\\nSelf state: pos=(1,5), target=none, busy=False, battery=66.0 (not_needed), carrying=None\\nPending messages for you:\\n- none\\nCurrent priority message:\\n- none\\nRecently handled messages:\\n- none\\nRequested shelves:\\n- Requested shelf 3 is at position (6,2). To go there, choose action id 23.\n- Requested shelf 1 is at position (2,2). To go there, choose action id 7.\n- Requested shelf 30 is at position (11,6). To go there, choose action id 51.\n- Requested shelf 45 is at position (6,9). To go there, choose action id 30.\n- Requested shelf 36 is at position (11,7). To go there, choose action id 52.\n- Requested shelf 27 is at position (6,6). To go there, choose action id 27.\n- Requested shelf 29 is at position (10,6). To go there, choose action id 43.\n- Requested shelf 24 is at position (11,5). To go there, choose action id 50.\n- Requested shelf 15 is at position (6,4). To go there, choose action id 25.\n- Requested shelf 43 is at position (2,9). To go there, choose action id 14.\n- Reques\n...[TRUNCATED 7435 chars]",
+          "fallback_used": false,
+          "llm_output": "Decision:\nACTION\nAction Detail: The agent needs to move towards the requested shelves, so it chooses an action that moves it closer to the target position.\nSteps: 8\nTo: \nMessage: \nMessage Detail: None\nFocus Message: \nMessage Status: KEEP\nStatus Detail: No message is relevant at this time.\nAction: \nReasoning: The agent needs to take immediate action to move towards the requested shelves, so it chooses an action that moves it closer to the target position.",
+          "action": 8,
+          "action_steps": 8
+        },
+        {
+          "agent_id": 1,
+          "reused_action": true,
+          "action": 23,
+          "action_steps": 2,
+          "fallback_used": false
+        }
+      ],
+      "actions": [
+        8,
+        23
+      ],
+      "state_change": "agent_0 type=AGV: target 0->8; busy False->True; pos (1,5)->(1,4); battery 66.0->65.0",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 6,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 8,
+          "action_steps": 7,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "reused_action": true,
+          "action": 23,
+          "action_steps": 1,
+          "fallback_used": false
+        }
+      ],
+      "actions": [
+        8,
+        23
+      ],
+      "state_change": "agent_0 type=AGV: pos (1,4)->(1,3); battery 65.0->64.0",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 7,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 8,
+          "action_steps": 6,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "prompt": "You are controlling one warehouse agent.\\nAt this step you must choose exactly one primary decision:\\n- ACTION: take one valid environment action now.\\n- MESSAGE: send one coordination message to another agent now.\\nChoose MESSAGE when communication is more valuable than immediate movement, such as support-request timing, plan-intent coordination, battery coordination, or shelf handoff coordination.\\nChoose ACTION when immediate execution is more valuable than messaging.\\nIf you choose ACTION, the action id must be one of the valid candidate action ids.\\nIf you choose MESSAGE, do not invent an action id; leave the Action line blank.\\nChoose a suitable Steps value.\\nFewer LLM calls improve performance, so use a larger Steps value when the chosen action is stable and unlikely to need revision.\\nBut do not overcommit: use a smaller Steps value when message handling, support timing, battery changes, or environment changes may require a quick replanning response.\\nStep: 7\\nAgent: agent_1 (PICKER)\\nSelf state: pos=(6,1), target=23:SHELF@(6,2), busy=True, battery=78.0 (not_needed), carrying=None\\nPending messages for you:\\n- none\\nCurrent priority message:\\n- none\\nRecently handled messages:\\n- none\\nRequested shelves:\\n- Requested shelf 3 is at position (6,2). To go there, choose action id 23.\n- Requested shelf 1 is at position (2,2). To go there, choose action id 7.\n- Requested shelf 30 is at position (11,6). To go there, choose action id 51.\n- Requested shelf 45 is at position (6,9). To go there, choose action id 30.\n- Requested shelf 36 is at position (11,7). To go there, choose action id 52.\n- Requested shelf 27 is at position (6,6). To go there, choose action id 27.\n- Requested shelf 29 is at position (10,6). To go there, choose action id 43.\n- Requested shelf 24 is at position (11,5). To go there, choose action id 50.\n- Requested shelf 15 is at position (6,4). To go there, choose action id 25.\n- Requested shelf 43 is at position (2,9). To go there, choose action id \n...[TRUNCATED 5492 chars]",
+          "fallback_used": false,
+          "llm_output": "Decision: ACTION\nAction Detail: I choose ACTION because immediate execution is more valuable than messaging, given that my target shelf is already within reach and I'm busy but not carrying anything.\nSteps: 2\nTo: agent_0\nAction: 8:SHELF@(2,3)\nAction Detail: I need to pick up the item from the shelf before I can proceed with my task.",
+          "action": 8,
+          "action_steps": 2
+        }
+      ],
+      "actions": [
+        8,
+        8
+      ],
+      "state_change": "no_state_change",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 8,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 8,
+          "action_steps": 5,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "reused_action": true,
+          "action": 8,
+          "action_steps": 1,
+          "fallback_used": false
+        }
+      ],
+      "actions": [
+        8,
+        8
+      ],
+      "state_change": "agent_0 type=AGV: pos (1,3)->(2,3); battery 64.0->63.0",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 9,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 8,
+          "action_steps": 4,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "prompt": "You are controlling one warehouse agent.\\nAt this step you must choose exactly one primary decision:\\n- ACTION: take one valid environment action now.\\n- MESSAGE: send one coordination message to another agent now.\\nChoose MESSAGE when communication is more valuable than immediate movement, such as support-request timing, plan-intent coordination, battery coordination, or shelf handoff coordination.\\nChoose ACTION when immediate execution is more valuable than messaging.\\nIf you choose ACTION, the action id must be one of the valid candidate action ids.\\nIf you choose MESSAGE, do not invent an action id; leave the Action line blank.\\nChoose a suitable Steps value.\\nFewer LLM calls improve performance, so use a larger Steps value when the chosen action is stable and unlikely to need revision.\\nBut do not overcommit: use a smaller Steps value when message handling, support timing, battery changes, or environment changes may require a quick replanning response.\\nStep: 9\\nAgent: agent_1 (PICKER)\\nSelf state: pos=(6,1), target=23:SHELF@(6,2), busy=True, battery=78.0 (not_needed), carrying=None\\nPending messages for you:\\n- none\\nCurrent priority message:\\n- none\\nRecently handled messages:\\n- none\\nRequested shelves:\\n- Requested shelf 3 is at position (6,2). To go there, choose action id 23.\n- Requested shelf 1 is at position (2,2). To go there, choose action id 7.\n- Requested shelf 30 is at position (11,6). To go there, choose action id 51.\n- Requested shelf 45 is at position (6,9). To go there, choose action id 30.\n- Requested shelf 36 is at position (11,7). To go there, choose action id 52.\n- Requested shelf 27 is at position (6,6). To go there, choose action id 27.\n- Requested shelf 29 is at position (10,6). To go there, choose action id 43.\n- Requested shelf 24 is at position (11,5). To go there, choose action id 50.\n- Requested shelf 15 is at position (6,4). To go there, choose action id 25.\n- Requested shelf 43 is at position (2,9). To go there, choose action id \n...[TRUNCATED 5492 chars]",
+          "fallback_used": false,
+          "llm_output": "Decision: ACTION\nAction Detail: I choose to take action id 23, as my current target is already set to the requested shelf position (6,2), and taking no action would not move me closer to completing the task.\nSteps: 3\nTo: agent_1\nAction: 23",
+          "action": 23,
+          "action_steps": 3
+        }
+      ],
+      "actions": [
+        8,
+        23
+      ],
+      "state_change": "no_state_change",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 10,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 8,
+          "action_steps": 3,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "reused_action": true,
+          "action": 23,
+          "action_steps": 2,
+          "fallback_used": false
+        }
+      ],
+      "actions": [
+        8,
+        23
+      ],
+      "state_change": "no_state_change",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 11,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 8,
+          "action_steps": 2,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "reused_action": true,
+          "action": 23,
+          "action_steps": 1,
+          "fallback_used": false
+        }
+      ],
+      "actions": [
+        8,
+        23
+      ],
+      "state_change": "no_state_change",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 12,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 8,
+          "action_steps": 1,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "prompt": "You are controlling one warehouse agent.\\nAt this step you must choose exactly one primary decision:\\n- ACTION: take one valid environment action now.\\n- MESSAGE: send one coordination message to another agent now.\\nChoose MESSAGE when communication is more valuable than immediate movement, such as support-request timing, plan-intent coordination, battery coordination, or shelf handoff coordination.\\nChoose ACTION when immediate execution is more valuable than messaging.\\nIf you choose ACTION, the action id must be one of the valid candidate action ids.\\nIf you choose MESSAGE, do not invent an action id; leave the Action line blank.\\nChoose a suitable Steps value.\\nFewer LLM calls improve performance, so use a larger Steps value when the chosen action is stable and unlikely to need revision.\\nBut do not overcommit: use a smaller Steps value when message handling, support timing, battery changes, or environment changes may require a quick replanning response.\\nStep: 12\\nAgent: agent_1 (PICKER)\\nSelf state: pos=(6,1), target=23:SHELF@(6,2), busy=True, battery=78.0 (not_needed), carrying=None\\nPending messages for you:\\n- none\\nCurrent priority message:\\n- none\\nRecently handled messages:\\n- none\\nRequested shelves:\\n- Requested shelf 3 is at position (6,2). To go there, choose action id 23.\n- Requested shelf 1 is at position (2,2). To go there, choose action id 7.\n- Requested shelf 30 is at position (11,6). To go there, choose action id 51.\n- Requested shelf 45 is at position (6,9). To go there, choose action id 30.\n- Requested shelf 36 is at position (11,7). To go there, choose action id 52.\n- Requested shelf 27 is at position (6,6). To go there, choose action id 27.\n- Requested shelf 29 is at position (10,6). To go there, choose action id 43.\n- Requested shelf 24 is at position (11,5). To go there, choose action id 50.\n- Requested shelf 15 is at position (6,4). To go there, choose action id 25.\n- Requested shelf 43 is at position (2,9). To go there, choose action id\n...[TRUNCATED 5493 chars]",
+          "fallback_used": false,
+          "llm_output": "Decision: ACTION\nAction Detail: I need to move to my target position to fulfill the requested shelves, as I am currently busy and cannot carry any items yet.\nSteps: 2\nTo: \nAction: 23",
+          "action": 23,
+          "action_steps": 2
+        }
+      ],
+      "actions": [
+        8,
+        23
+      ],
+      "state_change": "no_state_change",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 13,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "prompt": "You are controlling one warehouse agent.\\nAt this step you must choose exactly one primary decision:\\n- ACTION: take one valid environment action now.\\n- MESSAGE: send one coordination message to another agent now.\\nChoose MESSAGE when communication is more valuable than immediate movement, such as support-request timing, plan-intent coordination, battery coordination, or shelf handoff coordination.\\nChoose ACTION when immediate execution is more valuable than messaging.\\nIf you choose ACTION, the action id must be one of the valid candidate action ids.\\nIf you choose MESSAGE, do not invent an action id; leave the Action line blank.\\nChoose a suitable Steps value.\\nFewer LLM calls improve performance, so use a larger Steps value when the chosen action is stable and unlikely to need revision.\\nBut do not overcommit: use a smaller Steps value when message handling, support timing, battery changes, or environment changes may require a quick replanning response.\\nStep: 13\\nAgent: agent_0 (AGV)\\nSelf state: pos=(2,3), target=8:SHELF@(2,3), busy=True, battery=63.0 (not_needed), carrying=None\\nPending messages for you:\\n- none\\nCurrent priority message:\\n- none\\nRecently handled messages:\\n- none\\nRequested shelves:\\n- Requested shelf 3 is at position (6,2). To go there, choose action id 23.\n- Requested shelf 1 is at position (2,2). To go there, choose action id 7.\n- Requested shelf 30 is at position (11,6). To go there, choose action id 51.\n- Requested shelf 45 is at position (6,9). To go there, choose action id 30.\n- Requested shelf 36 is at position (11,7). To go there, choose action id 52.\n- Requested shelf 27 is at position (6,6). To go there, choose action id 27.\n- Requested shelf 29 is at position (10,6). To go there, choose action id 43.\n- Requested shelf 24 is at position (11,5). To go there, choose action id 50.\n- Requested shelf 15 is at position (6,4). To go there, choose action id 25.\n- Requested shelf 43 is at position (2,9). To go there, choose action id 14.\n...[TRUNCATED 7451 chars]",
+          "fallback_used": false,
+          "llm_output": "Decision: ACTION\nAction Detail: The current state is that the agent is busy and needs to move towards its target position, so taking a specific action to reach the shelf is more valuable than sending a message at this time.\nSteps: 8\nTo: \nAction: 7:SHELF@(2,2) (distance_steps=1)\nAction Detail: The agent should move to the requested shelf at position (2,2).",
+          "action": 7,
+          "action_steps": 8
+        },
+        {
+          "agent_id": 1,
+          "reused_action": true,
+          "action": 23,
+          "action_steps": 1,
+          "fallback_used": false
+        }
+      ],
+      "actions": [
+        7,
+        23
+      ],
+      "state_change": "no_state_change",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 14,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 7,
+          "action_steps": 7,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "prompt": "You are controlling one warehouse agent.\\nAt this step you must choose exactly one primary decision:\\n- ACTION: take one valid environment action now.\\n- MESSAGE: send one coordination message to another agent now.\\nChoose MESSAGE when communication is more valuable than immediate movement, such as support-request timing, plan-intent coordination, battery coordination, or shelf handoff coordination.\\nChoose ACTION when immediate execution is more valuable than messaging.\\nIf you choose ACTION, the action id must be one of the valid candidate action ids.\\nIf you choose MESSAGE, do not invent an action id; leave the Action line blank.\\nChoose a suitable Steps value.\\nFewer LLM calls improve performance, so use a larger Steps value when the chosen action is stable and unlikely to need revision.\\nBut do not overcommit: use a smaller Steps value when message handling, support timing, battery changes, or environment changes may require a quick replanning response.\\nStep: 14\\nAgent: agent_1 (PICKER)\\nSelf state: pos=(6,1), target=23:SHELF@(6,2), busy=True, battery=78.0 (not_needed), carrying=None\\nPending messages for you:\\n- none\\nCurrent priority message:\\n- none\\nRecently handled messages:\\n- none\\nRequested shelves:\\n- Requested shelf 3 is at position (6,2). To go there, choose action id 23.\n- Requested shelf 1 is at position (2,2). To go there, choose action id 7.\n- Requested shelf 30 is at position (11,6). To go there, choose action id 51.\n- Requested shelf 45 is at position (6,9). To go there, choose action id 30.\n- Requested shelf 36 is at position (11,7). To go there, choose action id 52.\n- Requested shelf 27 is at position (6,6). To go there, choose action id 27.\n- Requested shelf 29 is at position (10,6). To go there, choose action id 43.\n- Requested shelf 24 is at position (11,5). To go there, choose action id 50.\n- Requested shelf 15 is at position (6,4). To go there, choose action id 25.\n- Requested shelf 43 is at position (2,9). To go there, choose action id\n...[TRUNCATED 5493 chars]",
+          "fallback_used": false,
+          "llm_output": "Decision: ACTION\nAction Detail: I choose ACTION because immediate execution is more valuable than messaging, given that my target shelf is already within reach and I'm busy but not carrying anything.\nSteps: 2\nTo: \nAction: 23",
+          "action": 23,
+          "action_steps": 2
+        }
+      ],
+      "actions": [
+        7,
+        23
+      ],
+      "state_change": "no_state_change",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 15,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 7,
+          "action_steps": 6,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "reused_action": true,
+          "action": 23,
+          "action_steps": 1,
+          "fallback_used": false
+        }
+      ],
+      "actions": [
+        7,
+        23
+      ],
+      "state_change": "no_state_change",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 16,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 7,
+          "action_steps": 5,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "prompt": "You are controlling one warehouse agent.\\nAt this step you must choose exactly one primary decision:\\n- ACTION: take one valid environment action now.\\n- MESSAGE: send one coordination message to another agent now.\\nChoose MESSAGE when communication is more valuable than immediate movement, such as support-request timing, plan-intent coordination, battery coordination, or shelf handoff coordination.\\nChoose ACTION when immediate execution is more valuable than messaging.\\nIf you choose ACTION, the action id must be one of the valid candidate action ids.\\nIf you choose MESSAGE, do not invent an action id; leave the Action line blank.\\nChoose a suitable Steps value.\\nFewer LLM calls improve performance, so use a larger Steps value when the chosen action is stable and unlikely to need revision.\\nBut do not overcommit: use a smaller Steps value when message handling, support timing, battery changes, or environment changes may require a quick replanning response.\\nStep: 16\\nAgent: agent_1 (PICKER)\\nSelf state: pos=(6,1), target=23:SHELF@(6,2), busy=True, battery=78.0 (not_needed), carrying=None\\nPending messages for you:\\n- none\\nCurrent priority message:\\n- none\\nRecently handled messages:\\n- none\\nRequested shelves:\\n- Requested shelf 3 is at position (6,2). To go there, choose action id 23.\n- Requested shelf 1 is at position (2,2). To go there, choose action id 7.\n- Requested shelf 30 is at position (11,6). To go there, choose action id 51.\n- Requested shelf 45 is at position (6,9). To go there, choose action id 30.\n- Requested shelf 36 is at position (11,7). To go there, choose action id 52.\n- Requested shelf 27 is at position (6,6). To go there, choose action id 27.\n- Requested shelf 29 is at position (10,6). To go there, choose action id 43.\n- Requested shelf 24 is at position (11,5). To go there, choose action id 50.\n- Requested shelf 15 is at position (6,4). To go there, choose action id 25.\n- Requested shelf 43 is at position (2,9). To go there, choose action id\n...[TRUNCATED 5493 chars]",
+          "fallback_used": false,
+          "llm_output": "Decision: ACTION\nAction Detail: I need to move to my target position (6,2) as it is requested by the system goal.\nSteps: 3\nTo: \nAction: 23",
+          "action": 23,
+          "action_steps": 3
+        }
+      ],
+      "actions": [
+        7,
+        23
+      ],
+      "state_change": "no_state_change",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 17,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 7,
+          "action_steps": 4,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "reused_action": true,
+          "action": 23,
+          "action_steps": 2,
+          "fallback_used": false
+        }
+      ],
+      "actions": [
+        7,
+        23
+      ],
+      "state_change": "no_state_change",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 18,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 7,
+          "action_steps": 3,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "reused_action": true,
+          "action": 23,
+          "action_steps": 1,
+          "fallback_used": false
+        }
+      ],
+      "actions": [
+        7,
+        23
+      ],
+      "state_change": "no_state_change",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 19,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 7,
+          "action_steps": 2,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "prompt": "You are controlling one warehouse agent.\\nAt this step you must choose exactly one primary decision:\\n- ACTION: take one valid environment action now.\\n- MESSAGE: send one coordination message to another agent now.\\nChoose MESSAGE when communication is more valuable than immediate movement, such as support-request timing, plan-intent coordination, battery coordination, or shelf handoff coordination.\\nChoose ACTION when immediate execution is more valuable than messaging.\\nIf you choose ACTION, the action id must be one of the valid candidate action ids.\\nIf you choose MESSAGE, do not invent an action id; leave the Action line blank.\\nChoose a suitable Steps value.\\nFewer LLM calls improve performance, so use a larger Steps value when the chosen action is stable and unlikely to need revision.\\nBut do not overcommit: use a smaller Steps value when message handling, support timing, battery changes, or environment changes may require a quick replanning response.\\nStep: 19\\nAgent: agent_1 (PICKER)\\nSelf state: pos=(6,1), target=23:SHELF@(6,2), busy=True, battery=78.0 (not_needed), carrying=None\\nPending messages for you:\\n- none\\nCurrent priority message:\\n- none\\nRecently handled messages:\\n- none\\nRequested shelves:\\n- Requested shelf 3 is at position (6,2). To go there, choose action id 23.\n- Requested shelf 1 is at position (2,2). To go there, choose action id 7.\n- Requested shelf 30 is at position (11,6). To go there, choose action id 51.\n- Requested shelf 45 is at position (6,9). To go there, choose action id 30.\n- Requested shelf 36 is at position (11,7). To go there, choose action id 52.\n- Requested shelf 27 is at position (6,6). To go there, choose action id 27.\n- Requested shelf 29 is at position (10,6). To go there, choose action id 43.\n- Requested shelf 24 is at position (11,5). To go there, choose action id 50.\n- Requested shelf 15 is at position (6,4). To go there, choose action id 25.\n- Requested shelf 43 is at position (2,9). To go there, choose action id\n...[TRUNCATED 5493 chars]",
+          "fallback_used": false,
+          "llm_output": "Decision: ACTION\nAction Detail: I need to move to my target position (6,2) to fulfill the requested shelf 23.\nSteps: 3\nTo: agent_1\nAction: 8:SHELF@(6,2)\nAction Detail: I will move to the target position to pick up the requested shelf.",
+          "action": 8,
+          "action_steps": 3
+        }
+      ],
+      "actions": [
+        7,
+        8
+      ],
+      "state_change": "no_state_change",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 20,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 7,
+          "action_steps": 1,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "reused_action": true,
+          "action": 8,
+          "action_steps": 2,
+          "fallback_used": false
+        }
+      ],
+      "actions": [
+        7,
+        8
+      ],
+      "state_change": "agent_1 type=PICKER: busy True->False",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 21,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "prompt": "You are controlling one warehouse agent.\\nAt this step you must choose exactly one primary decision:\\n- ACTION: take one valid environment action now.\\n- MESSAGE: send one coordination message to another agent now.\\nChoose MESSAGE when communication is more valuable than immediate movement, such as support-request timing, plan-intent coordination, battery coordination, or shelf handoff coordination.\\nChoose ACTION when immediate execution is more valuable than messaging.\\nIf you choose ACTION, the action id must be one of the valid candidate action ids.\\nIf you choose MESSAGE, do not invent an action id; leave the Action line blank.\\nChoose a suitable Steps value.\\nFewer LLM calls improve performance, so use a larger Steps value when the chosen action is stable and unlikely to need revision.\\nBut do not overcommit: use a smaller Steps value when message handling, support timing, battery changes, or environment changes may require a quick replanning response.\\nStep: 21\\nAgent: agent_0 (AGV)\\nSelf state: pos=(2,3), target=8:SHELF@(2,3), busy=True, battery=63.0 (not_needed), carrying=None\\nPending messages for you:\\n- none\\nCurrent priority message:\\n- none\\nRecently handled messages:\\n- none\\nRequested shelves:\\n- Requested shelf 3 is at position (6,2). To go there, choose action id 23.\n- Requested shelf 1 is at position (2,2). To go there, choose action id 7.\n- Requested shelf 30 is at position (11,6). To go there, choose action id 51.\n- Requested shelf 45 is at position (6,9). To go there, choose action id 30.\n- Requested shelf 36 is at position (11,7). To go there, choose action id 52.\n- Requested shelf 27 is at position (6,6). To go there, choose action id 27.\n- Requested shelf 29 is at position (10,6). To go there, choose action id 43.\n- Requested shelf 24 is at position (11,5). To go there, choose action id 50.\n- Requested shelf 15 is at position (6,4). To go there, choose action id 25.\n- Requested shelf 43 is at position (2,9). To go there, choose action id 14.\n...[TRUNCATED 7452 chars]",
+          "fallback_used": false,
+          "llm_output": "Decision: ACTION\nAction Detail: The current state is that I am at position (2,3) with a target at the same location, which means I can move to the next step without needing to send a message first.\nReasoning: Since my target is already at the same location as my current position, there's no need for me to send a message to coordinate or request support. Instead, I can take immediate action to move towards my target.\nFocus Message:\nMessage Status: KEEP\nAction: 8:SHELF@(2,3)\nSteps: 6",
+          "action": 8,
+          "action_steps": 6
+        },
+        {
+          "agent_id": 1,
+          "reused_action": true,
+          "action": 8,
+          "action_steps": 1,
+          "fallback_used": false
+        }
+      ],
+      "actions": [
+        8,
+        8
+      ],
+      "state_change": "agent_1 type=PICKER: target 23->8; busy False->True",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 22,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 8,
+          "action_steps": 5,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "prompt": "You are controlling one warehouse agent.\\nAt this step you must choose exactly one primary decision:\\n- ACTION: take one valid environment action now.\\n- MESSAGE: send one coordination message to another agent now.\\nChoose MESSAGE when communication is more valuable than immediate movement, such as support-request timing, plan-intent coordination, battery coordination, or shelf handoff coordination.\\nChoose ACTION when immediate execution is more valuable than messaging.\\nIf you choose ACTION, the action id must be one of the valid candidate action ids.\\nIf you choose MESSAGE, do not invent an action id; leave the Action line blank.\\nChoose a suitable Steps value.\\nFewer LLM calls improve performance, so use a larger Steps value when the chosen action is stable and unlikely to need revision.\\nBut do not overcommit: use a smaller Steps value when message handling, support timing, battery changes, or environment changes may require a quick replanning response.\\nStep: 22\\nAgent: agent_1 (PICKER)\\nSelf state: pos=(6,1), target=8:SHELF@(2,3), busy=True, battery=78.0 (not_needed), carrying=None\\nPending messages for you:\\n- none\\nCurrent priority message:\\n- none\\nRecently handled messages:\\n- none\\nRequested shelves:\\n- Requested shelf 3 is at position (6,2). To go there, choose action id 23.\n- Requested shelf 1 is at position (2,2). To go there, choose action id 7.\n- Requested shelf 30 is at position (11,6). To go there, choose action id 51.\n- Requested shelf 45 is at position (6,9). To go there, choose action id 30.\n- Requested shelf 36 is at position (11,7). To go there, choose action id 52.\n- Requested shelf 27 is at position (6,6). To go there, choose action id 27.\n- Requested shelf 29 is at position (10,6). To go there, choose action id 43.\n- Requested shelf 24 is at position (11,5). To go there, choose action id 50.\n- Requested shelf 15 is at position (6,4). To go there, choose action id 25.\n- Requested shelf 43 is at position (2,9). To go there, choose action id \n...[TRUNCATED 5491 chars]",
+          "fallback_used": false,
+          "llm_output": "Decision: ACTION\nAction Detail: I choose to take the action 8:SHELF@(2,3) as it is a stable and immediate execution that aligns with my current target position and reduces the need for further messaging or replanning.\nSteps: 2\nTo: \nAction: 8:SHELF@(2,3)\nMessage Detail: none",
+          "action": 8,
+          "action_steps": 2
+        }
+      ],
+      "actions": [
+        8,
+        8
+      ],
+      "state_change": "agent_1 type=PICKER: pos (6,1)->(5,1); battery 78.0->77.0",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 23,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 8,
+          "action_steps": 4,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "reused_action": true,
+          "action": 8,
+          "action_steps": 1,
+          "fallback_used": false
+        }
+      ],
+      "actions": [
+        8,
+        8
+      ],
+      "state_change": "agent_1 type=PICKER: pos (5,1)->(4,1); battery 77.0->76.0",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 24,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 8,
+          "action_steps": 3,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "prompt": "You are controlling one warehouse agent.\\nAt this step you must choose exactly one primary decision:\\n- ACTION: take one valid environment action now.\\n- MESSAGE: send one coordination message to another agent now.\\nChoose MESSAGE when communication is more valuable than immediate movement, such as support-request timing, plan-intent coordination, battery coordination, or shelf handoff coordination.\\nChoose ACTION when immediate execution is more valuable than messaging.\\nIf you choose ACTION, the action id must be one of the valid candidate action ids.\\nIf you choose MESSAGE, do not invent an action id; leave the Action line blank.\\nChoose a suitable Steps value.\\nFewer LLM calls improve performance, so use a larger Steps value when the chosen action is stable and unlikely to need revision.\\nBut do not overcommit: use a smaller Steps value when message handling, support timing, battery changes, or environment changes may require a quick replanning response.\\nStep: 24\\nAgent: agent_1 (PICKER)\\nSelf state: pos=(4,1), target=8:SHELF@(2,3), busy=True, battery=76.0 (not_needed), carrying=None\\nPending messages for you:\\n- none\\nCurrent priority message:\\n- none\\nRecently handled messages:\\n- none\\nRequested shelves:\\n- Requested shelf 3 is at position (6,2). To go there, choose action id 23.\n- Requested shelf 1 is at position (2,2). To go there, choose action id 7.\n- Requested shelf 30 is at position (11,6). To go there, choose action id 51.\n- Requested shelf 45 is at position (6,9). To go there, choose action id 30.\n- Requested shelf 36 is at position (11,7). To go there, choose action id 52.\n- Requested shelf 27 is at position (6,6). To go there, choose action id 27.\n- Requested shelf 29 is at position (10,6). To go there, choose action id 43.\n- Requested shelf 24 is at position (11,5). To go there, choose action id 50.\n- Requested shelf 15 is at position (6,4). To go there, choose action id 25.\n- Requested shelf 43 is at position (2,9). To go there, choose action id \n...[TRUNCATED 5491 chars]",
+          "fallback_used": false,
+          "llm_output": "Decision: ACTION\nAction Detail: I choose to take action 8:SHELF@(2,3) as it is the closest requested shelf to my current position (4,1), which will allow me to make progress towards completing my task without having to send a message first. This action also aligns with the goal of increasing total shelf deliveries.\nSteps: 2\nTo: \nMessage: \nFocus Message: \nMessage Status: \nStatus Detail: \nAction: \nAction Detail: \nReasoning: Taking this action now will allow me to make progress on my task and increase the chances of completing it efficiently.",
+          "action": 8,
+          "action_steps": 2
+        }
+      ],
+      "actions": [
+        8,
+        8
+      ],
+      "state_change": "agent_1 type=PICKER: pos (4,1)->(3,1); battery 76.0->75.0",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 25,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 8,
+          "action_steps": 2,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "reused_action": true,
+          "action": 8,
+          "action_steps": 1,
+          "fallback_used": false
+        }
+      ],
+      "actions": [
+        8,
+        8
+      ],
+      "state_change": "agent_1 type=PICKER: pos (3,1)->(2,1); battery 75.0->74.0",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 26,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 8,
+          "action_steps": 1,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "prompt": "You are controlling one warehouse agent.\\nAt this step you must choose exactly one primary decision:\\n- ACTION: take one valid environment action now.\\n- MESSAGE: send one coordination message to another agent now.\\nChoose MESSAGE when communication is more valuable than immediate movement, such as support-request timing, plan-intent coordination, battery coordination, or shelf handoff coordination.\\nChoose ACTION when immediate execution is more valuable than messaging.\\nIf you choose ACTION, the action id must be one of the valid candidate action ids.\\nIf you choose MESSAGE, do not invent an action id; leave the Action line blank.\\nChoose a suitable Steps value.\\nFewer LLM calls improve performance, so use a larger Steps value when the chosen action is stable and unlikely to need revision.\\nBut do not overcommit: use a smaller Steps value when message handling, support timing, battery changes, or environment changes may require a quick replanning response.\\nStep: 26\\nAgent: agent_1 (PICKER)\\nSelf state: pos=(2,1), target=8:SHELF@(2,3), busy=True, battery=74.0 (not_needed), carrying=None\\nPending messages for you:\\n- none\\nCurrent priority message:\\n- none\\nRecently handled messages:\\n- none\\nRequested shelves:\\n- Requested shelf 3 is at position (6,2). To go there, choose action id 23.\n- Requested shelf 1 is at position (2,2). To go there, choose action id 7.\n- Requested shelf 30 is at position (11,6). To go there, choose action id 51.\n- Requested shelf 45 is at position (6,9). To go there, choose action id 30.\n- Requested shelf 36 is at position (11,7). To go there, choose action id 52.\n- Requested shelf 27 is at position (6,6). To go there, choose action id 27.\n- Requested shelf 29 is at position (10,6). To go there, choose action id 43.\n- Requested shelf 24 is at position (11,5). To go there, choose action id 50.\n- Requested shelf 15 is at position (6,4). To go there, choose action id 25.\n- Requested shelf 43 is at position (2,9). To go there, choose action id \n...[TRUNCATED 5491 chars]",
+          "fallback_used": false,
+          "llm_output": "Decision: ACTION\nAction Detail: I choose to take action 8:SHELF@(2,3) as it is the closest requested shelf to my current position (2,1), which will allow me to fulfill the request efficiently without incurring additional distance steps.\nSteps: 2\nTo: \nMessage: \nMessage Detail: \nReasoning: Taking immediate action towards the closest requested shelf reduces unnecessary movement and allows for a more efficient delivery process.",
+          "action": 8,
+          "action_steps": 2
+        }
+      ],
+      "actions": [
+        8,
+        8
+      ],
+      "state_change": "agent_1 type=PICKER: pos (2,1)->(1,1); battery 74.0->73.0",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 27,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "prompt": "You are controlling one warehouse agent.\\nAt this step you must choose exactly one primary decision:\\n- ACTION: take one valid environment action now.\\n- MESSAGE: send one coordination message to another agent now.\\nChoose MESSAGE when communication is more valuable than immediate movement, such as support-request timing, plan-intent coordination, battery coordination, or shelf handoff coordination.\\nChoose ACTION when immediate execution is more valuable than messaging.\\nIf you choose ACTION, the action id must be one of the valid candidate action ids.\\nIf you choose MESSAGE, do not invent an action id; leave the Action line blank.\\nChoose a suitable Steps value.\\nFewer LLM calls improve performance, so use a larger Steps value when the chosen action is stable and unlikely to need revision.\\nBut do not overcommit: use a smaller Steps value when message handling, support timing, battery changes, or environment changes may require a quick replanning response.\\nStep: 27\\nAgent: agent_0 (AGV)\\nSelf state: pos=(2,3), target=8:SHELF@(2,3), busy=True, battery=63.0 (not_needed), carrying=None\\nPending messages for you:\\n- none\\nCurrent priority message:\\n- none\\nRecently handled messages:\\n- none\\nRequested shelves:\\n- Requested shelf 3 is at position (6,2). To go there, choose action id 23.\n- Requested shelf 1 is at position (2,2). To go there, choose action id 7.\n- Requested shelf 30 is at position (11,6). To go there, choose action id 51.\n- Requested shelf 45 is at position (6,9). To go there, choose action id 30.\n- Requested shelf 36 is at position (11,7). To go there, choose action id 52.\n- Requested shelf 27 is at position (6,6). To go there, choose action id 27.\n- Requested shelf 29 is at position (10,6). To go there, choose action id 43.\n- Requested shelf 24 is at position (11,5). To go there, choose action id 50.\n- Requested shelf 15 is at position (6,4). To go there, choose action id 25.\n- Requested shelf 43 is at position (2,9). To go there, choose action id 14.\n...[TRUNCATED 7450 chars]",
+          "fallback_used": false,
+          "llm_output": "Decision: ACTION\nAction Detail: Moving towards Requested shelf 8 is a stable and immediate action that fits my current state, as I am already at the target position (2,3) and can proceed to deliver the item without further messaging.\nSteps: 7\nTo: agent_0",
+          "action": 8,
+          "action_steps": 7
+        },
+        {
+          "agent_id": 1,
+          "reused_action": true,
+          "action": 8,
+          "action_steps": 1,
+          "fallback_used": false
+        }
+      ],
+      "actions": [
+        8,
+        8
+      ],
+      "state_change": "no_state_change",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 28,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 8,
+          "action_steps": 6,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "prompt": "You are controlling one warehouse agent.\\nAt this step you must choose exactly one primary decision:\\n- ACTION: take one valid environment action now.\\n- MESSAGE: send one coordination message to another agent now.\\nChoose MESSAGE when communication is more valuable than immediate movement, such as support-request timing, plan-intent coordination, battery coordination, or shelf handoff coordination.\\nChoose ACTION when immediate execution is more valuable than messaging.\\nIf you choose ACTION, the action id must be one of the valid candidate action ids.\\nIf you choose MESSAGE, do not invent an action id; leave the Action line blank.\\nChoose a suitable Steps value.\\nFewer LLM calls improve performance, so use a larger Steps value when the chosen action is stable and unlikely to need revision.\\nBut do not overcommit: use a smaller Steps value when message handling, support timing, battery changes, or environment changes may require a quick replanning response.\\nStep: 28\\nAgent: agent_1 (PICKER)\\nSelf state: pos=(1,1), target=8:SHELF@(2,3), busy=True, battery=73.0 (not_needed), carrying=None\\nPending messages for you:\\n- none\\nCurrent priority message:\\n- none\\nRecently handled messages:\\n- none\\nRequested shelves:\\n- Requested shelf 3 is at position (6,2). To go there, choose action id 23.\n- Requested shelf 1 is at position (2,2). To go there, choose action id 7.\n- Requested shelf 30 is at position (11,6). To go there, choose action id 51.\n- Requested shelf 45 is at position (6,9). To go there, choose action id 30.\n- Requested shelf 36 is at position (11,7). To go there, choose action id 52.\n- Requested shelf 27 is at position (6,6). To go there, choose action id 27.\n- Requested shelf 29 is at position (10,6). To go there, choose action id 43.\n- Requested shelf 24 is at position (11,5). To go there, choose action id 50.\n- Requested shelf 15 is at position (6,4). To go there, choose action id 25.\n- Requested shelf 43 is at position (2,9). To go there, choose action id \n...[TRUNCATED 5491 chars]",
+          "fallback_used": false,
+          "llm_output": "Decision: ACTION\nAction Detail: I choose to take action 8:SHELF@(2,3) as it is the closest requested shelf to my current position (1,1), which will allow me to make progress towards completing my task without having to send a message first. This action also aligns with the goal of increasing total shelf deliveries.\nSteps: 2\nTo: \nMessage: \nFocus Message: \nMessage Status: KEEP\nAction: \nAction Detail: \nReasoning: Taking immediate action is more valuable than messaging in this situation, as it allows me to make progress towards completing my task without having to wait for a message from another agent.",
+          "action": 8,
+          "action_steps": 2
+        }
+      ],
+      "actions": [
+        8,
+        8
+      ],
+      "state_change": "agent_1 type=PICKER: pos (1,1)->(1,2); battery 73.0->72.0",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 29,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 8,
+          "action_steps": 5,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "reused_action": true,
+          "action": 8,
+          "action_steps": 1,
+          "fallback_used": false
+        }
+      ],
+      "actions": [
+        8,
+        8
+      ],
+      "state_change": "agent_1 type=PICKER: pos (1,2)->(1,3); battery 72.0->71.0",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 30,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 8,
+          "action_steps": 4,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "prompt": "You are controlling one warehouse agent.\\nAt this step you must choose exactly one primary decision:\\n- ACTION: take one valid environment action now.\\n- MESSAGE: send one coordination message to another agent now.\\nChoose MESSAGE when communication is more valuable than immediate movement, such as support-request timing, plan-intent coordination, battery coordination, or shelf handoff coordination.\\nChoose ACTION when immediate execution is more valuable than messaging.\\nIf you choose ACTION, the action id must be one of the valid candidate action ids.\\nIf you choose MESSAGE, do not invent an action id; leave the Action line blank.\\nChoose a suitable Steps value.\\nFewer LLM calls improve performance, so use a larger Steps value when the chosen action is stable and unlikely to need revision.\\nBut do not overcommit: use a smaller Steps value when message handling, support timing, battery changes, or environment changes may require a quick replanning response.\\nStep: 30\\nAgent: agent_1 (PICKER)\\nSelf state: pos=(1,3), target=8:SHELF@(2,3), busy=True, battery=71.0 (not_needed), carrying=None\\nPending messages for you:\\n- none\\nCurrent priority message:\\n- none\\nRecently handled messages:\\n- none\\nRequested shelves:\\n- Requested shelf 3 is at position (6,2). To go there, choose action id 23.\n- Requested shelf 1 is at position (2,2). To go there, choose action id 7.\n- Requested shelf 30 is at position (11,6). To go there, choose action id 51.\n- Requested shelf 45 is at position (6,9). To go there, choose action id 30.\n- Requested shelf 36 is at position (11,7). To go there, choose action id 52.\n- Requested shelf 27 is at position (6,6). To go there, choose action id 27.\n- Requested shelf 29 is at position (10,6). To go there, choose action id 43.\n- Requested shelf 24 is at position (11,5). To go there, choose action id 50.\n- Requested shelf 15 is at position (6,4). To go there, choose action id 25.\n- Requested shelf 43 is at position (2,9). To go there, choose action id \n...[TRUNCATED 5491 chars]",
+          "fallback_used": false,
+          "llm_output": "Decision: ACTION\nAction Detail: I choose ACTION because immediate execution is more valuable than messaging, given that my target shelf is already within reach and I'm busy but not carrying anything. Taking the NOOP action would be unnecessary, and moving to a different location might cause delays or collisions with other agents.\nAction: 0:NOOP (distance_steps=0)\nSteps: 1\nTo: \nMessage: \nMessage Detail: \nFocus Message: \nMessage Status: KEEP",
+          "action": 0,
+          "action_steps": 1
+        }
+      ],
+      "actions": [
+        8,
+        0
+      ],
+      "state_change": "no_state_change",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 31,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 8,
+          "action_steps": 3,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "prompt": "You are controlling one warehouse agent.\\nAt this step you must choose exactly one primary decision:\\n- ACTION: take one valid environment action now.\\n- MESSAGE: send one coordination message to another agent now.\\nChoose MESSAGE when communication is more valuable than immediate movement, such as support-request timing, plan-intent coordination, battery coordination, or shelf handoff coordination.\\nChoose ACTION when immediate execution is more valuable than messaging.\\nIf you choose ACTION, the action id must be one of the valid candidate action ids.\\nIf you choose MESSAGE, do not invent an action id; leave the Action line blank.\\nChoose a suitable Steps value.\\nFewer LLM calls improve performance, so use a larger Steps value when the chosen action is stable and unlikely to need revision.\\nBut do not overcommit: use a smaller Steps value when message handling, support timing, battery changes, or environment changes may require a quick replanning response.\\nStep: 31\\nAgent: agent_1 (PICKER)\\nSelf state: pos=(1,3), target=8:SHELF@(2,3), busy=True, battery=71.0 (not_needed), carrying=None\\nPending messages for you:\\n- none\\nCurrent priority message:\\n- none\\nRecently handled messages:\\n- none\\nRequested shelves:\\n- Requested shelf 3 is at position (6,2). To go there, choose action id 23.\n- Requested shelf 1 is at position (2,2). To go there, choose action id 7.\n- Requested shelf 30 is at position (11,6). To go there, choose action id 51.\n- Requested shelf 45 is at position (6,9). To go there, choose action id 30.\n- Requested shelf 36 is at position (11,7). To go there, choose action id 52.\n- Requested shelf 27 is at position (6,6). To go there, choose action id 27.\n- Requested shelf 29 is at position (10,6). To go there, choose action id 43.\n- Requested shelf 24 is at position (11,5). To go there, choose action id 50.\n- Requested shelf 15 is at position (6,4). To go there, choose action id 25.\n- Requested shelf 43 is at position (2,9). To go there, choose action id \n...[TRUNCATED 5491 chars]",
+          "fallback_used": false,
+          "llm_output": "Decision: ACTION\nAction Detail: I choose ACTION because immediate execution is more valuable than messaging, as I need to pick up the requested shelves and move them to their target positions without delay.\nSteps: 2\nTo: agent_0\nAction: 8:SHELF@(2,3)\nAction Detail: I will move to the shelf at position (2,3) to start picking it up.\nMessage Status: KEEP",
+          "action": 8,
+          "action_steps": 2
+        }
+      ],
+      "actions": [
+        8,
+        8
+      ],
+      "state_change": "agent_0 type=AGV: picker_at_same_cell False->True\nagent_1 type=PICKER: pos (1,3)->(2,3); battery 71.0->70.0",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 32,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 8,
+          "action_steps": 2,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "reused_action": true,
+          "action": 8,
+          "action_steps": 1,
+          "fallback_used": false
+        }
+      ],
+      "actions": [
+        8,
+        8
+      ],
+      "state_change": "agent_0 type=AGV: load_event carrying None->7; busy True->False; battery 63.0->61.0\nagent_1 type=PICKER: busy True->False",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 33,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 8,
+          "action_steps": 1,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "prompt": "You are controlling one warehouse agent.\\nAt this step you must choose exactly one primary decision:\\n- ACTION: take one valid environment action now.\\n- MESSAGE: send one coordination message to another agent now.\\nChoose MESSAGE when communication is more valuable than immediate movement, such as support-request timing, plan-intent coordination, battery coordination, or shelf handoff coordination.\\nChoose ACTION when immediate execution is more valuable than messaging.\\nIf you choose ACTION, the action id must be one of the valid candidate action ids.\\nIf you choose MESSAGE, do not invent an action id; leave the Action line blank.\\nChoose a suitable Steps value.\\nFewer LLM calls improve performance, so use a larger Steps value when the chosen action is stable and unlikely to need revision.\\nBut do not overcommit: use a smaller Steps value when message handling, support timing, battery changes, or environment changes may require a quick replanning response.\\nStep: 33\\nAgent: agent_1 (PICKER)\\nSelf state: pos=(2,3), target=8:SHELF@(2,3), busy=False, battery=70.0 (not_needed), carrying=None\\nPending messages for you:\\n- none\\nCurrent priority message:\\n- none\\nRecently handled messages:\\n- none\\nRequested shelves:\\n- Requested shelf 3 is at position (6,2). To go there, choose action id 23.\n- Requested shelf 1 is at position (2,2). To go there, choose action id 7.\n- Requested shelf 30 is at position (11,6). To go there, choose action id 51.\n- Requested shelf 45 is at position (6,9). To go there, choose action id 30.\n- Requested shelf 36 is at position (11,7). To go there, choose action id 52.\n- Requested shelf 27 is at position (6,6). To go there, choose action id 27.\n- Requested shelf 29 is at position (10,6). To go there, choose action id 43.\n- Requested shelf 24 is at position (11,5). To go there, choose action id 50.\n- Requested shelf 15 is at position (6,4). To go there, choose action id 25.\n- Requested shelf 43 is at position (2,9). To go there, choose action id\n...[TRUNCATED 5491 chars]",
+          "fallback_used": false,
+          "llm_output": "Decision: ACTION\nAction Detail: Moving towards the target shelf 8:SHELF@(2,3) is more valuable than messaging right now as it aligns with the primary decision to take one valid environment action now.\nSteps: 2\nTo: \nAction: 8:SHELF@(2,3)\nAction Detail: The agent needs to move towards the target shelf 8:SHELF@(2,3) to fulfill its task.",
+          "action": 8,
+          "action_steps": 2
+        }
+      ],
+      "actions": [
+        8,
+        8
+      ],
+      "state_change": "agent_0 type=AGV: target 8->0\nagent_1 type=PICKER: target 8->0",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 34,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "prompt": "You are controlling one warehouse agent.\\nAt this step you must choose exactly one primary decision:\\n- ACTION: take one valid environment action now.\\n- MESSAGE: send one coordination message to another agent now.\\nChoose MESSAGE when communication is more valuable than immediate movement, such as support-request timing, plan-intent coordination, battery coordination, or shelf handoff coordination.\\nChoose ACTION when immediate execution is more valuable than messaging.\\nIf you choose ACTION, the action id must be one of the valid candidate action ids.\\nIf you choose MESSAGE, do not invent an action id; leave the Action line blank.\\nChoose a suitable Steps value.\\nFewer LLM calls improve performance, so use a larger Steps value when the chosen action is stable and unlikely to need revision.\\nBut do not overcommit: use a smaller Steps value when message handling, support timing, battery changes, or environment changes may require a quick replanning response.\\nStep: 34\\nAgent: agent_0 (AGV)\\nSelf state: pos=(2,3), target=none, busy=False, battery=61.0 (not_needed), carrying=7\\nPending messages for you:\\n- none\\nCurrent priority message:\\n- none\\nRecently handled messages:\\n- none\\nRequested shelves:\\n- Requested shelf 3 is at position (6,2). To go there, choose action id 23.\n- Requested shelf 1 is at position (2,2). To go there, choose action id 7.\n- Requested shelf 30 is at position (11,6). To go there, choose action id 51.\n- Requested shelf 45 is at position (6,9). To go there, choose action id 30.\n- Requested shelf 36 is at position (11,7). To go there, choose action id 52.\n- Requested shelf 27 is at position (6,6). To go there, choose action id 27.\n- Requested shelf 29 is at position (10,6). To go there, choose action id 43.\n- Requested shelf 24 is at position (11,5). To go there, choose action id 50.\n- Requested shelf 15 is at position (6,4). To go there, choose action id 25.\n- Requested shelf 43 is at position (2,9). To go there, choose action id 14.\n- Requeste\n...[TRUNCATED 7420 chars]",
+          "fallback_used": false,
+          "llm_output": "Decision: ACTION\nAction Detail: The agent should take action id 7, which is SHELF@(2,2), to fulfill the requested task of delivering shelf 1 at position (2,2).\nSteps: 8\nTo: agent_0\nMessage: \nReasoning: Since there are no pending messages for me and my current target is none, taking immediate action to fulfill the requested task is more valuable than messaging. The action id 7 is a valid candidate action id that aligns with my current state and the requested task.\nDecision Detail: Taking immediate action will allow me to fulfill the requested task efficiently, which is crucial for achieving the system goal of increasing total shelf deliveries.",
+          "action": 7,
+          "action_steps": 8
+        },
+        {
+          "agent_id": 1,
+          "reused_action": true,
+          "action": 8,
+          "action_steps": 1,
+          "fallback_used": false
+        }
+      ],
+      "actions": [
+        7,
+        8
+      ],
+      "state_change": "agent_0 type=AGV: target 0->7; busy False->True",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 35,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 7,
+          "action_steps": 7,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "prompt": "You are controlling one warehouse agent.\\nAt this step you must choose exactly one primary decision:\\n- ACTION: take one valid environment action now.\\n- MESSAGE: send one coordination message to another agent now.\\nChoose MESSAGE when communication is more valuable than immediate movement, such as support-request timing, plan-intent coordination, battery coordination, or shelf handoff coordination.\\nChoose ACTION when immediate execution is more valuable than messaging.\\nIf you choose ACTION, the action id must be one of the valid candidate action ids.\\nIf you choose MESSAGE, do not invent an action id; leave the Action line blank.\\nChoose a suitable Steps value.\\nFewer LLM calls improve performance, so use a larger Steps value when the chosen action is stable and unlikely to need revision.\\nBut do not overcommit: use a smaller Steps value when message handling, support timing, battery changes, or environment changes may require a quick replanning response.\\nStep: 35\\nAgent: agent_1 (PICKER)\\nSelf state: pos=(2,3), target=none, busy=False, battery=70.0 (not_needed), carrying=None\\nPending messages for you:\\n- none\\nCurrent priority message:\\n- none\\nRecently handled messages:\\n- none\\nRequested shelves:\\n- Requested shelf 3 is at position (6,2). To go there, choose action id 23.\n- Requested shelf 1 is at position (2,2). To go there, choose action id 7.\n- Requested shelf 30 is at position (11,6). To go there, choose action id 51.\n- Requested shelf 45 is at position (6,9). To go there, choose action id 30.\n- Requested shelf 36 is at position (11,7). To go there, choose action id 52.\n- Requested shelf 27 is at position (6,6). To go there, choose action id 27.\n- Requested shelf 29 is at position (10,6). To go there, choose action id 43.\n- Requested shelf 24 is at position (11,5). To go there, choose action id 50.\n- Requested shelf 15 is at position (6,4). To go there, choose action id 25.\n- Requested shelf 43 is at position (2,9). To go there, choose action id 14.\n- Re\n...[TRUNCATED 5472 chars]",
+          "fallback_used": false,
+          "llm_output": "Decision: ACTION\nAction Detail: I choose to take action id 7:SHELF@(2,2) as it is the closest requested shelf to my current position (2,3), which will allow me to fulfill the request efficiently without wasting time on long-distance movements.\nSteps: 2",
+          "action": 7,
+          "action_steps": 2
+        }
+      ],
+      "actions": [
+        7,
+        7
+      ],
+      "state_change": "agent_0 type=AGV: busy True->False\nagent_1 type=PICKER: target 0->7; busy False->True",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 36,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 7,
+          "action_steps": 6,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "reused_action": true,
+          "action": 7,
+          "action_steps": 1,
+          "fallback_used": false
+        }
+      ],
+      "actions": [
+        7,
+        7
+      ],
+      "state_change": "agent_0 type=AGV: busy False->True; pos (2,3)->(2,2); battery 61.0->60.0; picker_at_same_cell True->False",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 37,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 7,
+          "action_steps": 5,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "prompt": "You are controlling one warehouse agent.\\nAt this step you must choose exactly one primary decision:\\n- ACTION: take one valid environment action now.\\n- MESSAGE: send one coordination message to another agent now.\\nChoose MESSAGE when communication is more valuable than immediate movement, such as support-request timing, plan-intent coordination, battery coordination, or shelf handoff coordination.\\nChoose ACTION when immediate execution is more valuable than messaging.\\nIf you choose ACTION, the action id must be one of the valid candidate action ids.\\nIf you choose MESSAGE, do not invent an action id; leave the Action line blank.\\nChoose a suitable Steps value.\\nFewer LLM calls improve performance, so use a larger Steps value when the chosen action is stable and unlikely to need revision.\\nBut do not overcommit: use a smaller Steps value when message handling, support timing, battery changes, or environment changes may require a quick replanning response.\\nStep: 37\\nAgent: agent_1 (PICKER)\\nSelf state: pos=(2,3), target=7:SHELF@(2,2), busy=True, battery=70.0 (not_needed), carrying=None\\nPending messages for you:\\n- none\\nCurrent priority message:\\n- none\\nRecently handled messages:\\n- none\\nRequested shelves:\\n- Requested shelf 3 is at position (6,2). To go there, choose action id 23.\n- Requested shelf 1 is at position (2,2). To go there, choose action id 7.\n- Requested shelf 30 is at position (11,6). To go there, choose action id 51.\n- Requested shelf 45 is at position (6,9). To go there, choose action id 30.\n- Requested shelf 36 is at position (11,7). To go there, choose action id 52.\n- Requested shelf 27 is at position (6,6). To go there, choose action id 27.\n- Requested shelf 29 is at position (10,6). To go there, choose action id 43.\n- Requested shelf 24 is at position (11,5). To go there, choose action id 50.\n- Requested shelf 15 is at position (6,4). To go there, choose action id 25.\n- Requested shelf 43 is at position (2,9). To go there, choose action id \n...[TRUNCATED 5488 chars]",
+          "fallback_used": false,
+          "llm_output": "Decision: ACTION\nAction Detail: I choose ACTION because immediate execution is more valuable than messaging, given that my target shelf is already within reach and I'm busy but have a sufficient battery level.\nSteps: 2\nTo: \nAction: 7:SHELF@(2,2)",
+          "action": 7,
+          "action_steps": 2
+        }
+      ],
+      "actions": [
+        7,
+        7
+      ],
+      "state_change": "agent_0 type=AGV: busy True->False; picker_at_same_cell False->True\nagent_1 type=PICKER: pos (2,3)->(2,2); battery 70.0->69.0",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 38,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 7,
+          "action_steps": 4,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "reused_action": true,
+          "action": 7,
+          "action_steps": 1,
+          "fallback_used": false
+        }
+      ],
+      "actions": [
+        7,
+        7
+      ],
+      "state_change": "agent_0 type=AGV: target 7->0\nagent_1 type=PICKER: busy True->False",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 39,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 7,
+          "action_steps": 3,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "prompt": "You are controlling one warehouse agent.\\nAt this step you must choose exactly one primary decision:\\n- ACTION: take one valid environment action now.\\n- MESSAGE: send one coordination message to another agent now.\\nChoose MESSAGE when communication is more valuable than immediate movement, such as support-request timing, plan-intent coordination, battery coordination, or shelf handoff coordination.\\nChoose ACTION when immediate execution is more valuable than messaging.\\nIf you choose ACTION, the action id must be one of the valid candidate action ids.\\nIf you choose MESSAGE, do not invent an action id; leave the Action line blank.\\nChoose a suitable Steps value.\\nFewer LLM calls improve performance, so use a larger Steps value when the chosen action is stable and unlikely to need revision.\\nBut do not overcommit: use a smaller Steps value when message handling, support timing, battery changes, or environment changes may require a quick replanning response.\\nStep: 39\\nAgent: agent_1 (PICKER)\\nSelf state: pos=(2,2), target=7:SHELF@(2,2), busy=False, battery=69.0 (not_needed), carrying=None\\nPending messages for you:\\n- none\\nCurrent priority message:\\n- none\\nRecently handled messages:\\n- none\\nRequested shelves:\\n- Requested shelf 3 is at position (6,2). To go there, choose action id 23.\n- Requested shelf 1 is at position (2,2). To go there, choose action id 7.\n- Requested shelf 30 is at position (11,6). To go there, choose action id 51.\n- Requested shelf 45 is at position (6,9). To go there, choose action id 30.\n- Requested shelf 36 is at position (11,7). To go there, choose action id 52.\n- Requested shelf 27 is at position (6,6). To go there, choose action id 27.\n- Requested shelf 29 is at position (10,6). To go there, choose action id 43.\n- Requested shelf 24 is at position (11,5). To go there, choose action id 50.\n- Requested shelf 15 is at position (6,4). To go there, choose action id 25.\n- Requested shelf 43 is at position (2,9). To go there, choose action id\n...[TRUNCATED 5447 chars]",
+          "fallback_used": false,
+          "llm_output": "Decision: ACTION\nAction Detail: Moving towards requested shelf 3 is more valuable than messaging right now, as it will help to increase the total shelf deliveries and bring the agent closer to its goal of picking up items from the shelves.\nSteps: 2\nTo: \nAction: 23",
+          "action": 23,
+          "action_steps": 2
+        }
+      ],
+      "actions": [
+        7,
+        23
+      ],
+      "state_change": "agent_1 type=PICKER: target 7->23; busy False->True",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 40,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 7,
+          "action_steps": 2,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "reused_action": true,
+          "action": 23,
+          "action_steps": 1,
+          "fallback_used": false
+        }
+      ],
+      "actions": [
+        7,
+        23
+      ],
+      "state_change": "no_state_change",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 41,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 7,
+          "action_steps": 1,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "prompt": "You are controlling one warehouse agent.\\nAt this step you must choose exactly one primary decision:\\n- ACTION: take one valid environment action now.\\n- MESSAGE: send one coordination message to another agent now.\\nChoose MESSAGE when communication is more valuable than immediate movement, such as support-request timing, plan-intent coordination, battery coordination, or shelf handoff coordination.\\nChoose ACTION when immediate execution is more valuable than messaging.\\nIf you choose ACTION, the action id must be one of the valid candidate action ids.\\nIf you choose MESSAGE, do not invent an action id; leave the Action line blank.\\nChoose a suitable Steps value.\\nFewer LLM calls improve performance, so use a larger Steps value when the chosen action is stable and unlikely to need revision.\\nBut do not overcommit: use a smaller Steps value when message handling, support timing, battery changes, or environment changes may require a quick replanning response.\\nStep: 41\\nAgent: agent_1 (PICKER)\\nSelf state: pos=(2,2), target=23:SHELF@(6,2), busy=True, battery=69.0 (not_needed), carrying=None\\nPending messages for you:\\n- none\\nCurrent priority message:\\n- none\\nRecently handled messages:\\n- none\\nRequested shelves:\\n- Requested shelf 3 is at position (6,2). To go there, choose action id 23.\n- Requested shelf 1 is at position (2,2). To go there, choose action id 7.\n- Requested shelf 30 is at position (11,6). To go there, choose action id 51.\n- Requested shelf 45 is at position (6,9). To go there, choose action id 30.\n- Requested shelf 36 is at position (11,7). To go there, choose action id 52.\n- Requested shelf 27 is at position (6,6). To go there, choose action id 27.\n- Requested shelf 29 is at position (10,6). To go there, choose action id 43.\n- Requested shelf 24 is at position (11,5). To go there, choose action id 50.\n- Requested shelf 15 is at position (6,4). To go there, choose action id 25.\n- Requested shelf 43 is at position (2,9). To go there, choose action id\n...[TRUNCATED 5447 chars]",
+          "fallback_used": false,
+          "llm_output": "Decision:\nACTION\nAction Detail: I need to move to the target shelf 23:SHELF@(6,2) before I can start picking from it.\nSteps: 3\nTo: agent_0\nAction: 23",
+          "action": 23,
+          "action_steps": 3
+        }
+      ],
+      "actions": [
+        7,
+        23
+      ],
+      "state_change": "no_state_change",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 42,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "prompt": "You are controlling one warehouse agent.\\nAt this step you must choose exactly one primary decision:\\n- ACTION: take one valid environment action now.\\n- MESSAGE: send one coordination message to another agent now.\\nChoose MESSAGE when communication is more valuable than immediate movement, such as support-request timing, plan-intent coordination, battery coordination, or shelf handoff coordination.\\nChoose ACTION when immediate execution is more valuable than messaging.\\nIf you choose ACTION, the action id must be one of the valid candidate action ids.\\nIf you choose MESSAGE, do not invent an action id; leave the Action line blank.\\nChoose a suitable Steps value.\\nFewer LLM calls improve performance, so use a larger Steps value when the chosen action is stable and unlikely to need revision.\\nBut do not overcommit: use a smaller Steps value when message handling, support timing, battery changes, or environment changes may require a quick replanning response.\\nStep: 42\\nAgent: agent_0 (AGV)\\nSelf state: pos=(2,2), target=none, busy=False, battery=60.0 (not_needed), carrying=7\\nPending messages for you:\\n- none\\nCurrent priority message:\\n- none\\nRecently handled messages:\\n- none\\nRequested shelves:\\n- Requested shelf 3 is at position (6,2). To go there, choose action id 23.\n- Requested shelf 1 is at position (2,2). To go there, choose action id 7.\n- Requested shelf 30 is at position (11,6). To go there, choose action id 51.\n- Requested shelf 45 is at position (6,9). To go there, choose action id 30.\n- Requested shelf 36 is at position (11,7). To go there, choose action id 52.\n- Requested shelf 27 is at position (6,6). To go there, choose action id 27.\n- Requested shelf 29 is at position (10,6). To go there, choose action id 43.\n- Requested shelf 24 is at position (11,5). To go there, choose action id 50.\n- Requested shelf 15 is at position (6,4). To go there, choose action id 25.\n- Requested shelf 43 is at position (2,9). To go there, choose action id 14.\n- Requeste\n...[TRUNCATED 7422 chars]",
+          "fallback_used": false,
+          "llm_output": "Decision:\nACTION\nAction Detail: The current state is that agent_0 (AGV) has a target of none, busy=False, battery=60.0 carrying=7, and requested shelves include Requested shelf 3 at position (6,2), which requires action id 23.\nSteps: 5",
+          "action": 0,
+          "action_steps": 5
+        },
+        {
+          "agent_id": 1,
+          "reused_action": true,
+          "action": 23,
+          "action_steps": 2,
+          "fallback_used": false
+        }
+      ],
+      "actions": [
+        0,
+        23
+      ],
+      "state_change": "no_state_change",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 43,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 0,
+          "action_steps": 4,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "reused_action": true,
+          "action": 23,
+          "action_steps": 1,
+          "fallback_used": false
+        }
+      ],
+      "actions": [
+        0,
+        23
+      ],
+      "state_change": "no_state_change",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 44,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 0,
+          "action_steps": 3,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "prompt": "You are controlling one warehouse agent.\\nAt this step you must choose exactly one primary decision:\\n- ACTION: take one valid environment action now.\\n- MESSAGE: send one coordination message to another agent now.\\nChoose MESSAGE when communication is more valuable than immediate movement, such as support-request timing, plan-intent coordination, battery coordination, or shelf handoff coordination.\\nChoose ACTION when immediate execution is more valuable than messaging.\\nIf you choose ACTION, the action id must be one of the valid candidate action ids.\\nIf you choose MESSAGE, do not invent an action id; leave the Action line blank.\\nChoose a suitable Steps value.\\nFewer LLM calls improve performance, so use a larger Steps value when the chosen action is stable and unlikely to need revision.\\nBut do not overcommit: use a smaller Steps value when message handling, support timing, battery changes, or environment changes may require a quick replanning response.\\nStep: 44\\nAgent: agent_1 (PICKER)\\nSelf state: pos=(2,2), target=23:SHELF@(6,2), busy=True, battery=69.0 (not_needed), carrying=None\\nPending messages for you:\\n- none\\nCurrent priority message:\\n- none\\nRecently handled messages:\\n- none\\nRequested shelves:\\n- Requested shelf 3 is at position (6,2). To go there, choose action id 23.\n- Requested shelf 1 is at position (2,2). To go there, choose action id 7.\n- Requested shelf 30 is at position (11,6). To go there, choose action id 51.\n- Requested shelf 45 is at position (6,9). To go there, choose action id 30.\n- Requested shelf 36 is at position (11,7). To go there, choose action id 52.\n- Requested shelf 27 is at position (6,6). To go there, choose action id 27.\n- Requested shelf 29 is at position (10,6). To go there, choose action id 43.\n- Requested shelf 24 is at position (11,5). To go there, choose action id 50.\n- Requested shelf 15 is at position (6,4). To go there, choose action id 25.\n- Requested shelf 43 is at position (2,9). To go there, choose action id\n...[TRUNCATED 5447 chars]",
+          "fallback_used": false,
+          "llm_output": "Decision:\nACTION\nAction Detail: I need to move to the target shelf 23:SHELF@(6,2) before I can start picking from it.\nSteps: 3\nTo: agent_0\nAction: 23",
+          "action": 23,
+          "action_steps": 3
+        }
+      ],
+      "actions": [
+        0,
+        23
+      ],
+      "state_change": "no_state_change",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 45,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 0,
+          "action_steps": 2,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "reused_action": true,
+          "action": 23,
+          "action_steps": 2,
+          "fallback_used": false
+        }
+      ],
+      "actions": [
+        0,
+        23
+      ],
+      "state_change": "no_state_change",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 46,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 0,
+          "action_steps": 1,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "reused_action": true,
+          "action": 23,
+          "action_steps": 1,
+          "fallback_used": false
+        }
+      ],
+      "actions": [
+        0,
+        23
+      ],
+      "state_change": "no_state_change",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 47,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "prompt": "You are controlling one warehouse agent.\\nAt this step you must choose exactly one primary decision:\\n- ACTION: take one valid environment action now.\\n- MESSAGE: send one coordination message to another agent now.\\nChoose MESSAGE when communication is more valuable than immediate movement, such as support-request timing, plan-intent coordination, battery coordination, or shelf handoff coordination.\\nChoose ACTION when immediate execution is more valuable than messaging.\\nIf you choose ACTION, the action id must be one of the valid candidate action ids.\\nIf you choose MESSAGE, do not invent an action id; leave the Action line blank.\\nChoose a suitable Steps value.\\nFewer LLM calls improve performance, so use a larger Steps value when the chosen action is stable and unlikely to need revision.\\nBut do not overcommit: use a smaller Steps value when message handling, support timing, battery changes, or environment changes may require a quick replanning response.\\nStep: 47\\nAgent: agent_0 (AGV)\\nSelf state: pos=(2,2), target=none, busy=False, battery=60.0 (not_needed), carrying=7\\nPending messages for you:\\n- none\\nCurrent priority message:\\n- none\\nRecently handled messages:\\n- none\\nRequested shelves:\\n- Requested shelf 3 is at position (6,2). To go there, choose action id 23.\n- Requested shelf 1 is at position (2,2). To go there, choose action id 7.\n- Requested shelf 30 is at position (11,6). To go there, choose action id 51.\n- Requested shelf 45 is at position (6,9). To go there, choose action id 30.\n- Requested shelf 36 is at position (11,7). To go there, choose action id 52.\n- Requested shelf 27 is at position (6,6). To go there, choose action id 27.\n- Requested shelf 29 is at position (10,6). To go there, choose action id 43.\n- Requested shelf 24 is at position (11,5). To go there, choose action id 50.\n- Requested shelf 15 is at position (6,4). To go there, choose action id 25.\n- Requested shelf 43 is at position (2,9). To go there, choose action id 14.\n- Requeste\n...[TRUNCATED 7422 chars]",
+          "fallback_used": false,
+          "llm_output": "Decision:\nACTION\nAction Detail: Taking action id 7 to go to requested shelf 1 at position (2,2)\nSteps: 8\nTo: agent_0\nAction Detail: The current state is that the AGV is at position (2,2) and needs to move to the requested shelf.",
+          "action": 7,
+          "action_steps": 8
+        },
+        {
+          "agent_id": 1,
+          "prompt": "You are controlling one warehouse agent.\\nAt this step you must choose exactly one primary decision:\\n- ACTION: take one valid environment action now.\\n- MESSAGE: send one coordination message to another agent now.\\nChoose MESSAGE when communication is more valuable than immediate movement, such as support-request timing, plan-intent coordination, battery coordination, or shelf handoff coordination.\\nChoose ACTION when immediate execution is more valuable than messaging.\\nIf you choose ACTION, the action id must be one of the valid candidate action ids.\\nIf you choose MESSAGE, do not invent an action id; leave the Action line blank.\\nChoose a suitable Steps value.\\nFewer LLM calls improve performance, so use a larger Steps value when the chosen action is stable and unlikely to need revision.\\nBut do not overcommit: use a smaller Steps value when message handling, support timing, battery changes, or environment changes may require a quick replanning response.\\nStep: 47\\nAgent: agent_1 (PICKER)\\nSelf state: pos=(2,2), target=23:SHELF@(6,2), busy=True, battery=69.0 (not_needed), carrying=None\\nPending messages for you:\\n- none\\nCurrent priority message:\\n- none\\nRecently handled messages:\\n- none\\nRequested shelves:\\n- Requested shelf 3 is at position (6,2). To go there, choose action id 23.\n- Requested shelf 1 is at position (2,2). To go there, choose action id 7.\n- Requested shelf 30 is at position (11,6). To go there, choose action id 51.\n- Requested shelf 45 is at position (6,9). To go there, choose action id 30.\n- Requested shelf 36 is at position (11,7). To go there, choose action id 52.\n- Requested shelf 27 is at position (6,6). To go there, choose action id 27.\n- Requested shelf 29 is at position (10,6). To go there, choose action id 43.\n- Requested shelf 24 is at position (11,5). To go there, choose action id 50.\n- Requested shelf 15 is at position (6,4). To go there, choose action id 25.\n- Requested shelf 43 is at position (2,9). To go there, choose action id\n...[TRUNCATED 5447 chars]",
+          "fallback_used": false,
+          "llm_output": "Decision:\nACTION\nAction Detail: I need to move towards the target shelf 23:SHELF@(6,2) before I can start picking from it.\nSteps: 3\nTo: agent_0\nAction: 23",
+          "action": 23,
+          "action_steps": 3
+        }
+      ],
+      "actions": [
+        7,
+        23
+      ],
+      "state_change": "no_state_change",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 48,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 7,
+          "action_steps": 7,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "reused_action": true,
+          "action": 23,
+          "action_steps": 2,
+          "fallback_used": false
+        }
+      ],
+      "actions": [
+        7,
+        23
+      ],
+      "state_change": "no_state_change",
+      "shelf_deliveries": 0
+    },
+    {
+      "step": 49,
+      "messages_delivered": [],
+      "messages_sent": [],
+      "message_status_updates": [],
+      "agents": [
+        {
+          "agent_id": 0,
+          "reused_action": true,
+          "action": 7,
+          "action_steps": 6,
+          "fallback_used": false
+        },
+        {
+          "agent_id": 1,
+          "reused_action": true,
+          "action": 23,
+          "action_steps": 1,
+          "fallback_used": false
+        }
+      ],
+      "actions": [
+        7,
+        23
+      ],
+      "state_change": "no_state_change",
+      "shelf_deliveries": 0
+    }
+  ],
+  "total_steps": 50,
+  "llm_calls": 30,
+  "llm_failures": 0,
+  "delivery_happened": false,
+  "total_shelf_deliveries": 0,
+  "final_pending_messages": [
+    {
+      "agent_id": 0,
+      "messages": []
+    },
+    {
+      "agent_id": 1,
+      "messages": []
+    }
+  ],
+  "handled_messages": [
+    {
+      "agent_id": 0,
+      "messages": []
+    },
+    {
+      "agent_id": 1,
+      "messages": []
+    }
+  ],
+  "message_summary": {
+    "total_messages_sent": 0,
+    "total_messages_delivered": 0,
+    "messages_by_scenario": {},
+    "messages_by_pair": {},
+    "delivery_after_message_window_steps": 6,
+    "messages_with_delivery_within_window": 0,
+    "message_to_delivery_window_ratio": 0.0,
+    "message_status_counts": {},
+    "message_status_updates_by_agent": {},
+    "total_messages_activated": 0,
+    "total_messages_handled": 0,
+    "active_message_ids": [],
+    "activated_message_ids": [],
+    "handled_message_ids": [],
+    "total_messages_pending_end": 0
+  }
+}

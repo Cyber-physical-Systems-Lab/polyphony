@@ -1,7 +1,13 @@
 import json
 import re
+import shutil
+import subprocess
+import sys
 import time
 from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
+from collections import deque
+from datetime import datetime
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 from urllib import error, request
 
@@ -20,7 +26,31 @@ parser.add_argument("--env_id", default="tarware-tiny-1agvs-1pickers-partialobs-
 parser.add_argument("--num_episodes", default=1, type=int, help="Number of episodes")
 parser.add_argument("--seed", default=0, type=int, help="Base seed")
 parser.add_argument("--model", default="llama3.2:3b", type=str, help="Ollama model name")
+parser.add_argument(
+    "--experiment_mode",
+    default="legacy_rich",
+    choices=["legacy_rich", "fixed_prompt_action", "agent_type_prompt", "message_or_action"],
+    help="Prompting strategy mode",
+)
+parser.add_argument(
+    "--config_path",
+    default="",
+    type=str,
+    help="Optional JSON experiment config with prompt templates",
+)
+parser.add_argument(
+    "--llm_backend",
+    default="native",
+    choices=["native", "langchain"],
+    help="LLM query backend: native urllib call or LangChain Ollama integration",
+)
 parser.add_argument("--ollama_url", default="http://localhost:11434/api/generate", type=str, help="Ollama generate endpoint")
+parser.add_argument(
+    "--ollama_base_url",
+    default="",
+    type=str,
+    help="Ollama base URL for LangChain backend, e.g. http://localhost:11434 (default derives from --ollama_url)",
+)
 parser.add_argument("--request_timeout_s", default=45, type=int, help="HTTP timeout")
 parser.add_argument("--max_steps_per_episode", default=250, type=int, help="Safety cap for episode length")
 parser.add_argument("--decision_interval", default=1, type=int, help="Query LLM every N steps")
@@ -62,6 +92,105 @@ parser.add_argument(
     action="store_true",
     help="Enable warehouse-level [COLLAB]/[DELIVERY] prints from the environment",
 )
+parser.add_argument(
+    "--rag_db_dir",
+    default="rag_db",
+    type=str,
+    help="Persistent vector DB directory for RAG index",
+)
+parser.add_argument(
+    "--rag_docs_dir",
+    default="knowledge",
+    type=str,
+    help="Knowledge documents directory (used when rebuilding index)",
+)
+parser.add_argument(
+    "--rag_top_k",
+    default=3,
+    type=int,
+    help="Number of retrieved chunks to inject into prompts",
+)
+parser.add_argument(
+    "--rag_max_chars",
+    default=3000,
+    type=int,
+    help="Max chars of retrieved context injected into each prompt",
+)
+parser.add_argument(
+    "--rag_embedding_model",
+    default="nomic-embed-text",
+    type=str,
+    help="Ollama embedding model used by RAG",
+)
+parser.add_argument(
+    "--rag_rebuild_index",
+    action="store_true",
+    help="Rebuild RAG index from rag_docs_dir before run",
+)
+parser.add_argument(
+    "--enable_episode_reflection",
+    action="store_true",
+    help="After each episode, use an LLM to generate a knowledge note from transcript",
+)
+parser.add_argument(
+    "--reflection_model",
+    default="",
+    type=str,
+    help="Model for episode reflection (default: same as --model)",
+)
+parser.add_argument(
+    "--reflection_backend",
+    default="auto",
+    choices=["auto", "native", "langchain"],
+    help="Backend for reflection LLM calls (auto uses --llm_backend)",
+)
+parser.add_argument(
+    "--reflection_timeout_s",
+    default=60,
+    type=int,
+    help="Timeout for reflection LLM calls",
+)
+parser.add_argument(
+    "--reflection_max_chars",
+    default=30000,
+    type=int,
+    help="Max transcript chars passed to reflection LLM",
+)
+parser.add_argument(
+    "--reflection_notes_dir",
+    default="knowledge/reflections",
+    type=str,
+    help="Directory where generated reflection markdown files are written",
+)
+parser.add_argument(
+    "--transcript_dir",
+    default="transcripts",
+    type=str,
+    help="Directory where episode transcript JSON files are written",
+)
+parser.add_argument(
+    "--transcript_text_chars",
+    default=2000,
+    type=int,
+    help="Max chars for prompt/output text stored in transcript (0 = no truncation)",
+)
+parser.add_argument(
+    "--episode_results_path",
+    default="results/llm_episode_results.jsonl",
+    type=str,
+    help="Path to newline-delimited JSON file where per-episode LLM results are appended",
+)
+parser.add_argument(
+    "--episode_summary_dir",
+    default="results/episode_summaries",
+    type=str,
+    help="Directory where per-episode human-readable summary files are written",
+)
+parser.add_argument(
+    "--reflection_skip_rag_rebuild",
+    action="store_true",
+    help="Do not rebuild RAG after writing reflection notes",
+)
 
 
 def log_block(tag: str, text: str) -> None:
@@ -72,6 +201,187 @@ def maybe_truncate(text: str, max_chars: int) -> str:
         return text
     remaining = len(text) - max_chars
     return text[:max_chars] + f"\n...[TRUNCATED {remaining} chars]"
+
+
+def default_experiment_config() -> Dict[str, Any]:
+    return {
+        "templates": {
+            "fixed_prompt_action": (
+                "You are controlling one warehouse agent.\n"
+                "Goal: maximize deliveries while keeping batteries safe.\n"
+                "Use only valid candidate action ids.\n"
+                "Choose a suitable Steps value.\n"
+                "Fewer LLM calls improve performance, so use a larger Steps value when the plan is stable and unlikely to need revision.\n"
+                "But do not overcommit: use a smaller Steps value when the environment may change soon, coordination may be needed, battery risk is rising, or urgent actions may appear.\n"
+                "Step: {step}\n"
+                "Agent: agent_{agent_id} ({agent_type})\n"
+                "Self state: {self_state}\n"
+                "Requested shelves:\n{requested_shelves}\n"
+                "All agents:\n{all_agents}\n"
+                "Candidate actions:\n{candidate_actions}\n"
+                "Respond in plain text only:\n"
+                "Reasoning: <short>\n"
+                "Action: <action_id>\n"
+                "Steps: <1..{max_hold_steps}>\n"
+            ),
+            "agent_type_prompt": {
+                "AGV": (
+                    "You are an AGV in a warehouse.\n"
+                    "Priorities: deliver requested shelves, then return shelves, then charge when needed.\n"
+                    "Choose a suitable Steps value.\n"
+                    "Fewer LLM calls improve performance, so use a larger Steps value when the plan is stable and unlikely to need revision.\n"
+                    "But do not overcommit: use a smaller Steps value when the environment may change soon, coordination may be needed, battery risk is rising, or urgent actions may appear.\n"
+                    "Step: {step}\n"
+                    "Self: {self_state}\n"
+                    "Requested shelves:\n{requested_shelves}\n"
+                    "All agents:\n{all_agents}\n"
+                    "Candidate actions:\n{candidate_actions}\n"
+                    "Respond in plain text only:\n"
+                    "Reasoning: <short>\n"
+                    "Action: <action_id>\n"
+                    "Steps: <1..{max_hold_steps}>\n"
+                ),
+                "PICKER": (
+                    "You are a Picker in a warehouse.\n"
+                    "Priorities: support AGVs at shelf interactions, avoid unnecessary charging.\n"
+                    "Choose a suitable Steps value.\n"
+                    "Fewer LLM calls improve performance, so use a larger Steps value when the plan is stable and unlikely to need revision.\n"
+                    "But do not overcommit: use a smaller Steps value when the environment may change soon, coordination may be needed, battery risk is rising, or urgent actions may appear.\n"
+                    "Step: {step}\n"
+                    "Self: {self_state}\n"
+                    "AGV support view:\n{picker_agv_tasks}\n"
+                    "All agents:\n{all_agents}\n"
+                    "Candidate actions:\n{candidate_actions}\n"
+                    "Respond in plain text only:\n"
+                    "Reasoning: <short>\n"
+                    "Action: <action_id>\n"
+                    "Steps: <1..{max_hold_steps}>\n"
+                ),
+                "default": (
+                    "You are controlling one warehouse agent.\n"
+                    "Choose a suitable Steps value.\n"
+                    "Fewer LLM calls improve performance, so use a larger Steps value when the plan is stable and unlikely to need revision.\n"
+                    "But do not overcommit: use a smaller Steps value when the environment may change soon, coordination may be needed, battery risk is rising, or urgent actions may appear.\n"
+                    "Step: {step}\n"
+                    "Self state: {self_state}\n"
+                    "Candidate actions:\n{candidate_actions}\n"
+                    "Respond in plain text only:\n"
+                    "Reasoning: <short>\n"
+                    "Action: <action_id>\n"
+                    "Steps: <1..{max_hold_steps}>\n"
+                ),
+            },
+            "message_or_action": (
+                "You are controlling one warehouse agent.\n"
+                "At this step you must choose exactly one primary decision:\n"
+                "- ACTION: take one valid environment action now.\n"
+                "- MESSAGE: send one coordination message to another agent now.\n"
+                "Choose MESSAGE when communication is more valuable than immediate movement, such as support-request timing, "
+                "plan-intent coordination, battery coordination, or shelf handoff coordination.\n"
+                "Choose ACTION when immediate execution is more valuable than messaging.\n"
+                "If you choose ACTION, the action id must be one of the valid candidate action ids.\n"
+                "If you choose MESSAGE, do not invent an action id; leave the Action line blank.\n"
+                "Choose a suitable Steps value.\n"
+                "Fewer LLM calls improve performance, so use a larger Steps value when the chosen action is stable and unlikely to need revision.\n"
+                "But do not overcommit: use a smaller Steps value when message handling, support timing, battery changes, or environment changes may require a quick replanning response.\n"
+                "Step: {step}\n"
+                "Agent: agent_{agent_id} ({agent_type})\n"
+                "Self state: {self_state}\n"
+                "Pending messages for you:\n{inbox_messages}\n"
+                "Current priority message:\n{active_message}\n"
+                "Recently handled messages:\n{recently_handled_messages}\n"
+                "Requested shelves:\n{requested_shelves}\n"
+                "All agents:\n{all_agents}\n"
+                "Candidate actions:\n{candidate_actions}\n"
+                "Respond in plain text only.\n"
+                "Use EXACTLY this field order so the output can be parsed:\n"
+                "Reasoning: <1-2 short sentences on why you chose ACTION or MESSAGE>\n"
+                "Decision: <ACTION or MESSAGE>\n"
+                "Decision Detail: <why this is better than the other option right now>\n"
+                "Focus Message: <message_id to work on now, or blank if no message is relevant>\n"
+                "Message Status: <KEEP, ACTIVE, or HANDLED>\n"
+                "Status Detail: <why the chosen message should stay pending, become active, or be marked handled>\n"
+                "Action: <valid action_id for ACTION, blank for MESSAGE>\n"
+                "Action Detail: <why this specific action fits the current state, or write none for MESSAGE>\n"
+                "Steps: <1..{max_hold_steps}>\n"
+                "To: <agent_id as integer, or blank for ACTION>\n"
+                "Message: <short coordination message, or blank for ACTION>\n"
+                "Message Detail: <why this specific message helps coordination now, or write none for ACTION>\n"
+                "Rules:\n"
+                "- Output exactly one block with the twelve fields above.\n"
+                "- Do not add bullets, code fences, JSON, or extra commentary.\n"
+                "- If a pending message should remain in progress, set Focus Message to its id and Message Status to ACTIVE.\n"
+                "- If a pending message has been fully dealt with or is no longer needed, set Focus Message to its id and Message Status to HANDLED.\n"
+                "- If no pending message should change state this turn, leave Focus Message blank and set Message Status to KEEP.\n"
+                "- For ACTION: fill Action and Steps, leave To and Message blank, set Message Detail to none.\n"
+                "- For MESSAGE: fill To and Message, leave Action blank, set Action Detail to none.\n"
+                "- Keep Message concise and operational.\n"
+            ),
+        },
+        "message_settings": {
+            "inbox_max_messages": 50,
+            "inbox_prompt_messages": 20,
+            "message_default_action": "noop",
+        },
+        "reflection_settings": {
+            "system_goal": "Increase total shelf deliveries through proactive AGV/Picker collaboration.",
+            "delivery_metric": "shelf_deliveries",
+            "message_samples": 12,
+            "delivery_after_message_window_steps": 6,
+        },
+    }
+
+
+def load_experiment_config(config_path: str) -> Dict[str, Any]:
+    cfg = default_experiment_config()
+    if not config_path.strip():
+        return cfg
+    path = Path(config_path)
+    if not path.exists():
+        raise FileNotFoundError(f"config_path not found: {config_path}")
+    with path.open("r", encoding="utf-8") as f:
+        user_cfg = json.load(f)
+    if not isinstance(user_cfg, dict):
+        raise ValueError("config_path JSON must be an object at top-level")
+    templates = user_cfg.get("templates")
+    if isinstance(templates, dict):
+        cfg_templates = cfg.setdefault("templates", {})
+        for k, v in templates.items():
+            cfg_templates[k] = v
+    for key in ("message_settings", "reflection_settings"):
+        user_obj = user_cfg.get(key)
+        if isinstance(user_obj, dict):
+            base = cfg.setdefault(key, {})
+            if isinstance(base, dict):
+                base.update(user_obj)
+    return cfg
+
+
+class _TemplateSafeDict(dict):
+    def __missing__(self, key):
+        return "{" + key + "}"
+
+
+def render_template(template: str, fields: Dict[str, Any]) -> str:
+    return template.format_map(_TemplateSafeDict(**fields))
+
+
+def message_settings_from_config(experiment_cfg: Dict[str, Any]) -> Dict[str, Any]:
+    default_settings = default_experiment_config().get("message_settings", {})
+    user_settings = experiment_cfg.get("message_settings", {})
+    merged = dict(default_settings)
+    if isinstance(user_settings, dict):
+        merged.update(user_settings)
+    return merged
+
+
+def reflection_settings_from_config(experiment_cfg: Dict[str, Any]) -> Dict[str, Any]:
+    default_settings = default_experiment_config().get("reflection_settings", {})
+    user_settings = experiment_cfg.get("reflection_settings", {})
+    merged = dict(default_settings)
+    if isinstance(user_settings, dict):
+        merged.update(user_settings)
+    return merged
 
 
 def info_statistics(infos: List[Dict[str, Any]], global_episode_return: float, episode_returns: np.ndarray) -> Dict[str, Any]:
@@ -578,6 +888,98 @@ def picker_support_priority_line(env, picker_idx: int) -> str:
     return " ".join(parts)
 
 
+def build_prompt_fields(
+    env,
+    agent_idx: int,
+    valid_masks: np.ndarray,
+    step_count: int,
+    max_candidate_ids: int,
+    max_action_hold_steps: int,
+    inbox_messages: Optional[List[Dict[str, Any]]] = None,
+    handled_messages: Optional[List[Dict[str, Any]]] = None,
+) -> Dict[str, Any]:
+    agent = env.agents[agent_idx]
+    candidate_ids = candidate_ids_for_prompt(env, agent_idx, valid_masks, max_candidate_ids)
+    candidate_text = "\n".join(
+        f"- {describe_action_id_for_agent(env, agent, aid)}" for aid in candidate_ids
+    )
+    requested = get_requested_shelves(env)
+    requested_text = "\n".join(f"- {row}" for row in requested) if requested else "- none"
+    all_agents_overview: List[str] = []
+    for i, a in enumerate(env.agents):
+        target_id = int(a.target)
+        target_coords = env.action_id_to_coords_map.get(target_id) if target_id > 0 else None
+        target_text = (
+            "none"
+            if target_coords is None
+            else f"{target_id}:{classify_action(env, target_id)}@({int(target_coords[1])},{int(target_coords[0])})"
+        )
+        all_agents_overview.append(
+            f"agent_{i} type={a.type.name} pos=({int(a.x)},{int(a.y)}) "
+            f"target={target_text} busy={bool(a.busy)} battery={float(a.battery):.1f} "
+            f"carrying={int(a.carrying_shelf.id) if a.carrying_shelf else None}"
+        )
+    picker_agv_tasks = get_picker_agv_task_view(env)
+
+    self_target_coords = env.action_id_to_coords_map.get(int(agent.target)) if int(agent.target) > 0 else None
+    self_target_text = (
+        "none"
+        if self_target_coords is None
+        else f"{int(agent.target)}:{classify_action(env, int(agent.target))}@({int(self_target_coords[1])},{int(self_target_coords[0])})"
+    )
+    self_state = (
+        f"pos=({int(agent.x)},{int(agent.y)}), "
+        f"target={self_target_text}, "
+        f"busy={bool(agent.busy)}, "
+        f"battery={float(agent.battery):.1f} ({battery_need_label(float(agent.battery))}), "
+        f"carrying={int(agent.carrying_shelf.id) if agent.carrying_shelf else None}"
+    )
+
+    pending_rows: List[str] = []
+    active_message_row = "- none"
+    unresolved_messages = list(inbox_messages or [])
+    for msg in unresolved_messages:
+        row = (
+            f"{msg.get('message_id', 'unknown')} status={msg.get('status', 'UNREAD')} "
+            f"from=agent_{int(msg.get('from_agent', -1))} "
+            f"sent_step={int(msg.get('step', -1))} delivered_step={int(msg.get('delivered_step', -1))} "
+            f"scenario={msg.get('scenario', 'unknown')} text={msg.get('text', '')}"
+        )
+        pending_rows.append(row)
+    if unresolved_messages:
+        active = next((m for m in unresolved_messages if str(m.get("status", "")).upper() == "ACTIVE"), None)
+        if active is None:
+            active = unresolved_messages[0]
+        active_message_row = (
+            f"- {active.get('message_id', 'unknown')} status={active.get('status', 'UNREAD')} "
+            f"from=agent_{int(active.get('from_agent', -1))} scenario={active.get('scenario', 'unknown')} "
+            f"text={active.get('text', '')}"
+        )
+
+    handled_rows: List[str] = []
+    for msg in list(handled_messages or [])[-3:]:
+        handled_rows.append(
+            f"{msg.get('message_id', 'unknown')} handled_step={int(msg.get('handled_step', -1))} "
+            f"from=agent_{int(msg.get('from_agent', -1))} scenario={msg.get('scenario', 'unknown')} "
+            f"text={msg.get('text', '')}"
+        )
+
+    return {
+        "step": step_count,
+        "agent_id": agent_idx,
+        "agent_type": agent.type.name,
+        "self_state": self_state,
+        "requested_shelves": requested_text,
+        "all_agents": "\n".join(f"- {row}" for row in all_agents_overview),
+        "candidate_actions": candidate_text,
+        "picker_agv_tasks": "\n".join(f"- {row}" for row in picker_agv_tasks) if picker_agv_tasks else "- none",
+        "max_hold_steps": max(1, int(max_action_hold_steps)),
+        "inbox_messages": "\n".join(f"- {row}" for row in pending_rows) if pending_rows else "- none",
+        "active_message": active_message_row,
+        "recently_handled_messages": "\n".join(f"- {row}" for row in handled_rows) if handled_rows else "- none",
+    }
+
+
 def build_agent_prompt(
     env,
     agent_idx: int,
@@ -845,6 +1247,86 @@ def build_agent_prompt(
     )
 
 
+def build_prompt_by_mode(
+    env,
+    args,
+    experiment_cfg: Dict[str, Any],
+    agent_idx: int,
+    valid_masks: np.ndarray,
+    step_count: int,
+    max_candidate_ids: int,
+    max_action_hold_steps: int,
+    inboxes: Optional[List[deque]] = None,
+    inboxes_handled: Optional[List[deque]] = None,
+    rag_retriever=None,
+) -> str:
+    prompt: str
+    if args.experiment_mode == "legacy_rich":
+        prompt = build_agent_prompt(
+            env,
+            agent_idx,
+            valid_masks,
+            step_count,
+            max_candidate_ids,
+            max_action_hold_steps,
+        )
+        rag_fields = build_prompt_fields(
+            env,
+            agent_idx,
+            valid_masks,
+            step_count,
+            max_candidate_ids,
+            max_action_hold_steps,
+            inbox_messages=[],
+            handled_messages=[],
+        )
+        rag_query = build_rag_query(rag_fields)
+        rag_context = retrieve_rag_context(rag_retriever, rag_query, args.rag_top_k, args.rag_max_chars)
+        return append_rag_context(prompt, rag_context)
+
+    msg_settings = message_settings_from_config(experiment_cfg)
+    prompt_window = max(0, int(msg_settings.get("inbox_prompt_messages", 20)))
+    agent_inbox = list(inboxes[agent_idx])[-prompt_window:] if inboxes is not None else []
+    handled_history = list(inboxes_handled[agent_idx]) if inboxes_handled is not None else []
+    fields = build_prompt_fields(
+        env,
+        agent_idx,
+        valid_masks,
+        step_count,
+        max_candidate_ids,
+        max_action_hold_steps,
+        inbox_messages=agent_inbox,
+        handled_messages=handled_history,
+    )
+    templates = experiment_cfg.get("templates", {})
+
+    if args.experiment_mode == "fixed_prompt_action":
+        template = templates.get("fixed_prompt_action", default_experiment_config()["templates"]["fixed_prompt_action"])
+        if not isinstance(template, str):
+            raise ValueError("templates.fixed_prompt_action must be a string")
+        prompt = render_template(template, fields)
+    elif args.experiment_mode == "agent_type_prompt":
+        role_templates = templates.get("agent_type_prompt", {})
+        if not isinstance(role_templates, dict):
+            raise ValueError("templates.agent_type_prompt must be an object")
+        agent_type = str(fields["agent_type"])
+        template = role_templates.get(agent_type) or role_templates.get("default")
+        if not isinstance(template, str):
+            raise ValueError(f"No template found for agent_type={agent_type}")
+        prompt = render_template(template, fields)
+    elif args.experiment_mode == "message_or_action":
+        template = templates.get("message_or_action", default_experiment_config()["templates"]["message_or_action"])
+        if not isinstance(template, str):
+            raise ValueError("templates.message_or_action must be a string")
+        prompt = render_template(template, fields)
+    else:
+        raise ValueError(f"Unsupported experiment_mode: {args.experiment_mode}")
+
+    rag_query = build_rag_query(fields)
+    rag_context = retrieve_rag_context(rag_retriever, rag_query, args.rag_top_k, args.rag_max_chars)
+    return append_rag_context(prompt, rag_context)
+
+
 def build_language_prompt(env, valid_masks: np.ndarray, step_count: int, max_candidate_ids: int) -> str:
     # Retained for backward compatibility with existing logs/tools.
     # New planning loop uses per-agent prompts via build_agent_prompt.
@@ -1010,6 +1492,424 @@ def query_ollama_text(model: str, ollama_url: str, prompt: str, timeout_s: int) 
     return str(body.get("response", "")).strip()
 
 
+def derive_ollama_base_url(ollama_url: str) -> str:
+    suffix = "/api/generate"
+    if ollama_url.endswith(suffix):
+        return ollama_url[: -len(suffix)]
+    return ollama_url
+
+
+def init_rag_retriever(args):
+    try:
+        from langchain_community.vectorstores import Chroma
+        from langchain_ollama import OllamaEmbeddings
+    except ImportError as exc:
+        raise ImportError(
+            "RAG requires additional dependencies. Install with: pip install -e .[llm]"
+        ) from exc
+
+    rag_db_dir = Path(args.rag_db_dir)
+    base_url = args.ollama_base_url.strip() or derive_ollama_base_url(args.ollama_url.strip())
+    embeddings = OllamaEmbeddings(model=args.rag_embedding_model, base_url=base_url)
+
+    if bool(args.rag_rebuild_index):
+        build_rag_index_from_docs(args)
+
+    if not rag_db_dir.exists():
+        raise FileNotFoundError(
+            f"RAG DB not found: {rag_db_dir}. Build it with --rag_rebuild_index --rag_docs_dir <dir>."
+        )
+    candidate_k = max(max(1, int(args.rag_top_k)) * 4, 12)
+    vectorstore = Chroma(persist_directory=str(rag_db_dir), embedding_function=embeddings)
+    return vectorstore.as_retriever(search_kwargs={"k": candidate_k})
+
+
+def build_rag_query(fields: Dict[str, Any]) -> str:
+    return (
+        "Warehouse coordination reflection query. "
+        f"agent_type={fields.get('agent_type', '')}; "
+        f"self_state={fields.get('self_state', '')}; "
+        f"requested={fields.get('requested_shelves', '')}; "
+        f"inbox={fields.get('inbox_messages', '')}; "
+        "Retrieve reusable coordination lessons for AGV/Picker teamwork, message strategy, "
+        "support-request timing, plan-intent communication, battery-aware coordination, "
+        "delivery-oriented action rules, and prompt additions that improve shelf deliveries."
+    )
+
+
+def retrieve_rag_context(rag_retriever, query: str, top_k: int, max_chars: int) -> str:
+    if rag_retriever is None:
+        return ""
+    if bool(getattr(rag_retriever, "_disabled_due_to_error", False)):
+        return ""
+
+    try:
+        docs = rag_retriever.invoke(query)
+    except Exception as exc:
+        try:
+            setattr(rag_retriever, "_disabled_due_to_error", True)
+        except Exception:
+            pass
+        log_block("RAG_QUERY_ERROR", f"{type(exc).__name__}: {exc!r}; disabling RAG for remainder of run")
+        return ""
+    if not docs:
+        return ""
+
+    reflection_prefix = "knowledge/reflections/"
+    filtered_docs = []
+    for d in docs:
+        source = str(d.metadata.get("source", "")) if hasattr(d, "metadata") else ""
+        normalized = source.replace("\\", "/")
+        if normalized.startswith(reflection_prefix) or f"/{reflection_prefix}" in normalized:
+            filtered_docs.append(d)
+
+    docs = filtered_docs[: max(1, int(top_k))]
+    if not docs:
+        return ""
+
+    pieces: List[str] = []
+    for d in docs[: max(1, int(top_k))]:
+        source = str(d.metadata.get("source", "unknown")) if hasattr(d, "metadata") else "unknown"
+        text = str(getattr(d, "page_content", "")).strip()
+        if not text:
+            continue
+        pieces.append(f"[source={source}]\n{text}")
+    out = "\n\n".join(pieces)
+    if max_chars > 0 and len(out) > max_chars:
+        out = out[:max_chars] + f"\n...[TRUNCATED {len(out) - max_chars} chars]"
+    return out
+
+
+def append_rag_context(prompt: str, rag_context: str) -> str:
+    if not rag_context:
+        return prompt
+    return (
+        prompt
+        + "\n"
+        + "Grounding context (retrieved knowledge):\n"
+        + rag_context
+        + "\n"
+        + "Use this context only when relevant. Current state and valid candidate action IDs are authoritative.\n"
+    )
+
+
+def query_text_with_backend(
+    backend: str,
+    model: str,
+    prompt: str,
+    timeout_s: int,
+    ollama_url: str,
+    ollama_base_url: str,
+) -> str:
+    if backend == "langchain":
+        return query_langchain_ollama_text(model, ollama_base_url, prompt, timeout_s)
+    return query_ollama_text(model, ollama_url, prompt, timeout_s)
+
+
+def build_reflection_input(transcript: Dict[str, Any], max_chars: int) -> str:
+    lines: List[str] = []
+    goal = str(transcript.get("system_goal", "maximize shelf deliveries"))
+    delivery_metric = str(transcript.get("delivery_metric", "shelf_deliveries"))
+    lines.append("Episode metadata:")
+    lines.append(
+        f"- episode={transcript.get('episode_idx')} seed={transcript.get('seed')} "
+        f"mode={transcript.get('experiment_mode')} total_steps={transcript.get('total_steps')}"
+    )
+    lines.append(f"- system_goal={goal}")
+    lines.append(f"- primary_metric={delivery_metric}")
+    lines.append(
+        f"- total_{delivery_metric}={transcript.get('total_shelf_deliveries', 0)} "
+        f"llm_calls={transcript.get('llm_calls', 0)} llm_failures={transcript.get('llm_failures', 0)}"
+    )
+    lines.append(f"- episode_end_reason={transcript.get('episode_end_reason', 'unknown')}")
+    lines.append(f"- episode_end_reasons={transcript.get('episode_end_reasons', [])}")
+
+    message_summary = transcript.get("message_summary", {})
+    lines.append("Messaging summary:")
+    lines.append(f"- total_messages_sent={message_summary.get('total_messages_sent', 0)}")
+    lines.append(f"- total_messages_delivered={message_summary.get('total_messages_delivered', 0)}")
+    lines.append(f"- total_messages_activated={message_summary.get('total_messages_activated', 0)}")
+    lines.append(f"- total_messages_handled={message_summary.get('total_messages_handled', 0)}")
+    lines.append(f"- total_messages_pending_end={message_summary.get('total_messages_pending_end', 0)}")
+    lines.append(
+        f"- messages_with_delivery_within_{message_summary.get('delivery_after_message_window_steps', 0)}_steps="
+        f"{message_summary.get('messages_with_delivery_within_window', 0)} "
+        f"(ratio={float(message_summary.get('message_to_delivery_window_ratio', 0.0)):.2f})"
+    )
+    lines.append(f"- messages_by_scenario={message_summary.get('messages_by_scenario', {})}")
+    lines.append(f"- messages_by_pair={message_summary.get('messages_by_pair', {})}")
+    lines.append(f"- message_status_counts={message_summary.get('message_status_counts', {})}")
+
+    sample_limit = max(1, int(transcript.get("reflection_message_samples", 12)))
+    samples: List[Dict[str, Any]] = []
+    for step in transcript.get("steps", []):
+        for evt in step.get("messages_sent", []):
+            if isinstance(evt, dict):
+                samples.append(evt)
+
+    # Prioritize examples that were followed by delivery within window.
+    samples.sort(key=lambda e: (not bool(e.get("delivery_within_window", False)), int(e.get("step", 0))))
+    lines.append(f"Message samples (up to {sample_limit}):")
+    for evt in samples[:sample_limit]:
+        lines.append(
+            f"- step={evt.get('step')} from=agent_{evt.get('from_agent')} to=agent_{evt.get('to_agent')} "
+            f"scenario={evt.get('scenario')} delivery_within_window={evt.get('delivery_within_window', False)} "
+            f"text={evt.get('text', '')}"
+        )
+
+    text = "\n".join(lines)
+    if max_chars > 0 and len(text) > max_chars:
+        text = text[:max_chars] + f"\n...[TRUNCATED {len(text) - max_chars} chars]"
+    return text
+
+
+def build_reflection_prompt(reflection_input: str) -> str:
+    return (
+        "You are analyzing a multi-agent warehouse episode transcript.\n"
+        "There are multiple agents involved and they are expected to communicate and coordinate to achieve the system goal.\n"
+        "The agents are controlled by an LLM and it is taking input from your suggestions.\n"
+        "You will see metrics of an episode, with number of messages, and what they messaged.\n"
+        "Your task is to reflect on how the messaging and coordination may have influenced the episode outcome, and how it could be improved.\n"
+        "If number of messages is low, consider encouraging the LLM agent controlling them to improve coordination.\n"
+        f"{reflection_input}\n"
+    )
+
+
+def write_json_file(path: Path, payload: Dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8") as f:
+        json.dump(payload, f, indent=2, ensure_ascii=True)
+
+
+def write_text_file(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+
+
+def append_jsonl(path: Path, payload: Dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(payload, ensure_ascii=True) + "\n")
+
+
+def build_episode_summary_text(
+    args,
+    episode_idx: int,
+    seed: int,
+    elapsed_s: float,
+    metrics: Dict[str, Any],
+    transcript: Dict[str, Any],
+    transcript_path: Path,
+) -> str:
+    message_summary = transcript.get("message_summary", {})
+    created_at = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
+    lines = [
+        "Episode Summary",
+        f"Created: {created_at}",
+        f"Episode: {episode_idx}",
+        f"Seed: {seed}",
+        f"Environment: {args.env_id}",
+        f"Model: {args.model}",
+        f"Backend: {args.llm_backend}",
+        f"Experiment mode: {args.experiment_mode}",
+        f"Elapsed seconds: {elapsed_s:.2f}",
+        "",
+        "Key Metrics",
+        f"- Deliveries: {int(metrics.get('total_deliveries', 0))}",
+        f"- Clashes: {int(metrics.get('total_clashes', 0))}",
+        f"- Messages sent: {int(message_summary.get('total_messages_sent', 0))}",
+        f"- Messages handled: {int(message_summary.get('total_messages_handled', 0))}",
+        "",
+        "Additional Metrics",
+        f"- Episode length: {int(metrics.get('episode_length', 0))}",
+        f"- Global return: {float(metrics.get('global_episode_return', 0.0)):.2f}",
+        f"- Overall pick rate: {float(metrics.get('overall_pick_rate', 0.0)):.2f}",
+        f"- LLM calls: {int(transcript.get('llm_calls', 0))}",
+        f"- LLM failures: {int(transcript.get('llm_failures', 0))}",
+        f"- Messages delivered: {int(message_summary.get('total_messages_delivered', 0))}",
+        f"- Messages activated: {int(message_summary.get('total_messages_activated', 0))}",
+        f"- Pending messages at end: {int(message_summary.get('total_messages_pending_end', 0))}",
+        f"- Episode end reason: {transcript.get('episode_end_reason', 'unknown')}",
+        f"- Episode end reasons: {transcript.get('episode_end_reasons', [])}",
+        "",
+        f"Transcript: {transcript_path}",
+    ]
+    return "\n".join(lines) + "\n"
+
+
+def rebuild_rag_index_via_subprocess(args) -> None:
+    script_path = Path(__file__).with_name("build_rag_index.py")
+    base_url = args.ollama_base_url.strip() or derive_ollama_base_url(args.ollama_url.strip())
+    cmd = [
+        sys.executable,
+        str(script_path),
+        "--docs_dir",
+        str(args.rag_docs_dir),
+        "--db_dir",
+        str(args.rag_db_dir),
+        "--embedding_model",
+        str(args.rag_embedding_model),
+        "--ollama_base_url",
+        str(base_url),
+    ]
+    proc = subprocess.run(cmd, capture_output=True, text=True)
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"rebuild_subprocess_failed rc={proc.returncode} "
+            f"stdout={proc.stdout.strip()} stderr={proc.stderr.strip()}"
+        )
+
+
+def build_rag_index_from_docs(args) -> None:
+    try:
+        from langchain_community.vectorstores import Chroma
+        from langchain_ollama import OllamaEmbeddings
+        from langchain_text_splitters import RecursiveCharacterTextSplitter
+        from langchain_core.documents import Document
+    except ImportError as exc:
+        raise ImportError(
+            "RAG requires additional dependencies. Install with: pip install -e .[llm]"
+        ) from exc
+
+    rag_db_dir = Path(args.rag_db_dir)
+    rag_docs_dir = Path(args.rag_docs_dir)
+    base_url = args.ollama_base_url.strip() or derive_ollama_base_url(args.ollama_url.strip())
+    embeddings = OllamaEmbeddings(model=args.rag_embedding_model, base_url=base_url)
+
+    if not rag_docs_dir.exists():
+        raise FileNotFoundError(f"rag_docs_dir not found: {rag_docs_dir}")
+    text_files = [p for p in rag_docs_dir.rglob("*") if p.is_file() and p.suffix.lower() in {".md", ".txt", ".rst"}]
+    if not text_files:
+        raise ValueError(f"No supported docs found in {rag_docs_dir} (.md/.txt/.rst)")
+    if rag_db_dir.exists():
+        shutil.rmtree(rag_db_dir)
+    raw_docs: List[Any] = []
+    for path in text_files:
+        try:
+            text = path.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            text = path.read_text(encoding="latin-1")
+        raw_docs.append(Document(page_content=text, metadata={"source": str(path)}))
+    splitter = RecursiveCharacterTextSplitter(chunk_size=1200, chunk_overlap=150)
+    chunks = splitter.split_documents(raw_docs)
+    vectorstore = Chroma.from_documents(chunks, embeddings, persist_directory=str(rag_db_dir))
+    try:
+        vectorstore.persist()
+    except Exception:
+        pass
+
+
+def query_langchain_ollama_text(
+    model: str,
+    ollama_base_url: str,
+    prompt: str,
+    timeout_s: int,
+) -> str:
+    try:
+        from langchain_ollama import OllamaLLM
+    except ImportError as exc:
+        raise ImportError(
+            "LangChain backend requires langchain-ollama. "
+            "Install with: pip install -e .[llm]"
+        ) from exc
+
+    llm_kwargs = {
+        "model": model,
+        "base_url": ollama_base_url,
+        "temperature": 0.1,
+        "num_predict": 700,
+    }
+
+    try:
+        llm = OllamaLLM(**llm_kwargs, client_kwargs={"timeout": timeout_s})
+    except TypeError:
+        llm = OllamaLLM(**llm_kwargs)
+
+    return str(llm.invoke(prompt)).strip()
+
+
+def query_llm_text(args, prompt: str) -> str:
+    if args.llm_backend == "langchain":
+        base_url = args.ollama_base_url.strip() or derive_ollama_base_url(args.ollama_url.strip())
+        return query_langchain_ollama_text(
+            model=args.model,
+            ollama_base_url=base_url,
+            prompt=prompt,
+            timeout_s=args.request_timeout_s,
+        )
+    return query_ollama_text(args.model, args.ollama_url, prompt, args.request_timeout_s)
+
+
+def normalize_message_status_update(raw_status: str) -> str:
+    text = str(raw_status or "").strip().upper()
+    if "HANDLED" in text or "DONE" in text or "RESOLVED" in text:
+        return "HANDLED"
+    if "ACTIVE" in text or "IN_PROGRESS" in text or "WORKING" in text:
+        return "ACTIVE"
+    return "KEEP"
+
+
+def apply_message_status_update(
+    inbox: deque,
+    handled_messages: deque,
+    focus_message_id: str,
+    status_update: str,
+    step_count: int,
+    agent_idx: int,
+    detail: str,
+) -> Optional[Dict[str, Any]]:
+    focus_message_id = str(focus_message_id or "").strip()
+    normalized_status = normalize_message_status_update(status_update)
+    if not focus_message_id or normalized_status == "KEEP":
+        return None
+
+    target_idx = -1
+    target_message: Optional[Dict[str, Any]] = None
+    for idx, msg in enumerate(inbox):
+        if str(msg.get("message_id", "")).strip() == focus_message_id:
+            target_idx = idx
+            target_message = msg
+            break
+    if target_message is None:
+        return {
+            "agent_id": int(agent_idx),
+            "message_id": focus_message_id,
+            "status": "INVALID",
+            "detail": str(detail or "").strip(),
+            "step": int(step_count),
+        }
+
+    old_status = str(target_message.get("status", "UNREAD")).upper()
+    target_message["last_status_detail"] = str(detail or "").strip()
+    target_message["last_status_step"] = int(step_count)
+    if normalized_status == "ACTIVE":
+        target_message["status"] = "ACTIVE"
+        target_message["active_step"] = int(step_count)
+        return {
+            "agent_id": int(agent_idx),
+            "message_id": focus_message_id,
+            "from_status": old_status,
+            "status": "ACTIVE",
+            "detail": str(detail or "").strip(),
+            "step": int(step_count),
+        }
+
+    handled_message = dict(target_message)
+    handled_message["status"] = "HANDLED"
+    handled_message["handled_step"] = int(step_count)
+    handled_message["handled_by_agent"] = int(agent_idx)
+    del inbox[target_idx]
+    handled_messages.append(handled_message)
+    return {
+        "agent_id": int(agent_idx),
+        "message_id": focus_message_id,
+        "from_status": old_status,
+        "status": "HANDLED",
+        "detail": str(detail or "").strip(),
+        "step": int(step_count),
+    }
+
+
 def parse_actions_from_text(text: str, num_agents: int) -> List[int]:
     actions = [0] * num_agents
     found = 0
@@ -1083,6 +1983,179 @@ def parse_action_and_steps_from_text(text: str, max_action_hold_steps: int) -> t
 
     steps = max(1, min(int(steps), max(1, int(max_action_hold_steps))))
     return int(action_id), int(steps)
+
+
+def parse_decision_message_action_from_text(
+    text: str,
+    num_agents: int,
+    max_action_hold_steps: int,
+) -> Dict[str, Any]:
+    decision = "ACTION"
+    decision_match = re.search(r"^\s*decision\s*[:=-]\s*([A-Za-z_ -]+)\s*$", text, flags=re.IGNORECASE | re.MULTILINE)
+    if decision_match:
+        parsed = decision_match.group(1).strip().upper()
+        if "MESSAGE" in parsed:
+            decision = "MESSAGE"
+        elif "ACTION" in parsed:
+            decision = "ACTION"
+
+    to_agent: Optional[int] = None
+    to_match = re.search(r"^\s*to\s*[:=-]\s*agent[_\s-]*(\d+)\s*$", text, flags=re.IGNORECASE | re.MULTILINE)
+    if to_match:
+        to_agent = int(to_match.group(1))
+    else:
+        to_match = re.search(r"^\s*to\s*[:=-]\s*(\d+)\s*$", text, flags=re.IGNORECASE | re.MULTILINE)
+        if to_match:
+            to_agent = int(to_match.group(1))
+
+    message_text = ""
+    msg_match = re.search(r"^\s*message\s*[:=-]\s*(.+)$", text, flags=re.IGNORECASE | re.MULTILINE)
+    if msg_match:
+        message_text = msg_match.group(1).strip()
+
+    focus_message_id = ""
+    focus_match = re.search(r"^\s*focus\s+message\s*[:=-]\s*(.+)$", text, flags=re.IGNORECASE | re.MULTILINE)
+    if focus_match:
+        focus_message_id = focus_match.group(1).strip()
+        if focus_message_id.lower() in {"none", "blank", "n/a"}:
+            focus_message_id = ""
+
+    message_status = "KEEP"
+    status_match = re.search(r"^\s*message\s+status\s*[:=-]\s*(.+)$", text, flags=re.IGNORECASE | re.MULTILINE)
+    if status_match:
+        message_status = normalize_message_status_update(status_match.group(1))
+
+    status_detail = ""
+    status_detail_match = re.search(r"^\s*status\s+detail\s*[:=-]\s*(.+)$", text, flags=re.IGNORECASE | re.MULTILINE)
+    if status_detail_match:
+        status_detail = status_detail_match.group(1).strip()
+
+    parsed_action: Optional[int] = None
+    explicit_action = re.search(r"^\s*action\s*[:=-]\s*(-?\d+)\s*$", text, flags=re.IGNORECASE | re.MULTILINE)
+    if explicit_action:
+        parsed_action = int(explicit_action.group(1))
+
+    steps = 1
+    step_patterns = [
+        r"^\s*steps?\s*[:=-]\s*(-?\d+)\b",
+        r"^\s*duration\s*[:=-]\s*(-?\d+)\b",
+        r"hold(?:_steps)?\s*[:=-]\s*(-?\d+)\b",
+    ]
+    for pattern in step_patterns:
+        m = re.search(pattern, text, flags=re.IGNORECASE | re.MULTILINE)
+        if m:
+            steps = int(m.group(1))
+            break
+    steps = max(1, min(int(steps), max(1, int(max_action_hold_steps))))
+
+    has_message = (
+        decision == "MESSAGE"
+        and to_agent is not None
+        and 0 <= int(to_agent) < int(num_agents)
+        and bool(message_text)
+    )
+    return {
+        "decision": decision,
+        "to_agent": int(to_agent) if to_agent is not None else None,
+        "message_text": message_text,
+        "has_message": bool(has_message),
+        "action_id": parsed_action,
+        "steps": int(steps),
+        "focus_message_id": focus_message_id,
+        "message_status": message_status,
+        "status_detail": status_detail,
+    }
+
+
+def infer_message_scenario(env, sender_idx: int) -> str:
+    agent = env.agents[int(sender_idx)]
+    target_id = int(agent.target)
+    target_type = classify_action(env, target_id) if target_id > 0 else "NOOP"
+    coords = env.action_id_to_coords_map.get(target_id) if target_id > 0 else None
+    at_target = bool(coords is not None and (int(agent.x), int(agent.y)) == (int(coords[1]), int(coords[0])))
+    picker_positions = {(int(a.x), int(a.y)) for a in env.agents if a.type == AgentType.PICKER}
+    picker_here = bool((int(agent.x), int(agent.y)) in picker_positions)
+
+    if float(agent.battery) < 20.0:
+        return "battery_critical"
+    if float(agent.battery) < 35.0:
+        return "battery_low"
+    if agent.type == AgentType.AGV and target_type == "SHELF" and at_target and not picker_here:
+        return "support_needed_now_at_shelf"
+    if agent.type == AgentType.AGV and target_type == "SHELF" and bool(agent.busy) and not at_target:
+        return "support_planning_for_shelf"
+    if agent.type == AgentType.PICKER:
+        return "picker_support_coordination"
+    return "plan_intent_coordination"
+
+
+def compute_message_summary(steps: List[Dict[str, Any]], delivery_window_steps: int) -> Dict[str, Any]:
+    sent_events: List[Dict[str, Any]] = []
+    delivery_steps: List[int] = []
+    by_scenario: Dict[str, int] = {}
+    by_pair: Dict[str, int] = {}
+    status_counts: Dict[str, int] = {}
+    status_by_agent: Dict[str, int] = {}
+    handled_message_ids: set[str] = set()
+    active_message_ids: set[str] = set()
+    activated_message_ids: set[str] = set()
+
+    for step in steps:
+        step_idx = int(step.get("step", 0))
+        if int(step.get("shelf_deliveries", 0)) > 0:
+            delivery_steps.append(step_idx)
+        for evt in step.get("messages_sent", []):
+            if not isinstance(evt, dict):
+                continue
+            sent_events.append(evt)
+            scenario = str(evt.get("scenario", "unknown"))
+            key = f"agent_{int(evt.get('from_agent', -1))}->agent_{int(evt.get('to_agent', -1))}"
+            by_scenario[scenario] = by_scenario.get(scenario, 0) + 1
+            by_pair[key] = by_pair.get(key, 0) + 1
+        for update in step.get("message_status_updates", []):
+            if not isinstance(update, dict):
+                continue
+            status = str(update.get("status", "UNKNOWN")).upper()
+            message_id = str(update.get("message_id", "")).strip()
+            status_counts[status] = status_counts.get(status, 0) + 1
+            if status in {"ACTIVE", "HANDLED"} and message_id:
+                agent_key = f"agent_{int(update.get('agent_id', -1))}"
+                status_by_agent[agent_key] = status_by_agent.get(agent_key, 0) + 1
+            if status == "ACTIVE" and message_id:
+                activated_message_ids.add(message_id)
+                active_message_ids.add(message_id)
+            if status == "HANDLED" and message_id:
+                handled_message_ids.add(message_id)
+                active_message_ids.discard(message_id)
+
+    window = max(1, int(delivery_window_steps))
+    worked = 0
+    for evt in sent_events:
+        sent_step = int(evt.get("step", -1))
+        if sent_step < 0:
+            continue
+        has_followup_delivery = any((d > sent_step and d <= sent_step + window) for d in delivery_steps)
+        if has_followup_delivery:
+            worked += 1
+        evt["delivery_within_window"] = bool(has_followup_delivery)
+        evt["window_steps"] = window
+
+    return {
+        "total_messages_sent": int(len(sent_events)),
+        "total_messages_delivered": int(sum(len(step.get("messages_delivered", [])) for step in steps)),
+        "messages_by_scenario": by_scenario,
+        "messages_by_pair": by_pair,
+        "delivery_after_message_window_steps": window,
+        "messages_with_delivery_within_window": int(worked),
+        "message_to_delivery_window_ratio": float(worked / len(sent_events)) if sent_events else 0.0,
+        "message_status_counts": status_counts,
+        "message_status_updates_by_agent": status_by_agent,
+        "total_messages_activated": int(len(activated_message_ids)),
+        "total_messages_handled": int(len(handled_message_ids)),
+        "active_message_ids": sorted(active_message_ids),
+        "activated_message_ids": sorted(activated_message_ids),
+        "handled_message_ids": sorted(handled_message_ids),
+    }
 
 
 def validate_actions(env, actions: List[int], valid_masks: np.ndarray) -> List[int]:
@@ -1160,6 +2233,36 @@ def explain_actions(env, actions: List[int]) -> str:
         )
     return "\n".join(lines)
 
+
+def explain_executing_actions(
+    env,
+    actions: List[int],
+    step_agent_records: List[Dict[str, Any]],
+    hold_steps_remaining: List[int],
+) -> str:
+    lines: List[str] = []
+    record_by_agent = {int(r.get("agent_id", -1)): r for r in step_agent_records}
+    for idx, action_id in enumerate(actions):
+        agent = env.agents[idx]
+        record = record_by_agent.get(idx, {})
+        source = "reused_plan" if bool(record.get("reused_action", False)) else "fresh_plan"
+        hold_total = int(record.get("action_steps", 1))
+        remaining = int(hold_steps_remaining[idx]) if idx < len(hold_steps_remaining) else 0
+        if int(action_id) == 0:
+            action_desc = "0:NOOP"
+        else:
+            action_type = classify_action(env, int(action_id))
+            coords = env.action_id_to_coords_map.get(int(action_id))
+            if coords is None:
+                action_desc = f"{int(action_id)}:{action_type}"
+            else:
+                action_desc = f"{int(action_id)}:{action_type}@({int(coords[1])},{int(coords[0])})"
+        lines.append(
+            f"step={source} agent_{idx} type={agent.type.name} executes action={action_desc} "
+            f"hold_steps_total={hold_total} remaining_reuse_steps={remaining}"
+        )
+    return "\n".join(lines)
+
 def explain_candidates(env, valid_masks: np.ndarray, max_candidate_ids: int) -> str:
     lines: List[str] = []
     for idx, agent in enumerate(env.agents):
@@ -1231,7 +2334,38 @@ def explain_state_changes(before: List[Dict[str, Any]], env) -> str:
     return "\n".join(lines) if lines else "no_state_change"
 
 
-def llm_episode(env, args, seed: int):
+def determine_episode_end_reasons(env, args, step_count: int, done: bool) -> List[str]:
+    reasons: List[str] = []
+    max_inactivity_steps = getattr(env, "max_inactivity_steps", None)
+    cur_inactive_steps = int(getattr(env, "_cur_inactive_steps", 0))
+    if max_inactivity_steps and cur_inactive_steps >= int(max_inactivity_steps):
+        reasons.append(f"env_max_inactivity_steps_reached({cur_inactive_steps}/{int(max_inactivity_steps)})")
+
+    env_max_steps = getattr(env, "max_steps", None)
+    cur_steps = int(getattr(env, "_cur_steps", 0))
+    if env_max_steps and cur_steps >= int(env_max_steps):
+        reasons.append(f"env_max_steps_reached({cur_steps}/{int(env_max_steps)})")
+
+    request_queue = getattr(env, "request_queue", [])
+    if len(request_queue) == 0:
+        reasons.append("request_queue_empty")
+
+    if not done and step_count >= int(args.max_steps_per_episode):
+        reasons.append(f"script_max_steps_per_episode_reached({step_count}/{int(args.max_steps_per_episode)})")
+
+    if not reasons:
+        reasons.append("unknown")
+    return reasons
+
+
+def llm_episode(
+    env,
+    args,
+    seed: int,
+    experiment_cfg: Dict[str, Any],
+    rag_retriever=None,
+    episode_idx: int = 0,
+):
     _ = env.reset(seed=seed)
     done = False
     step_count = 0
@@ -1244,15 +2378,70 @@ def llm_episode(env, args, seed: int):
     global_episode_return = 0.0
     persisted_actions = [0] * env.num_agents
     hold_steps_remaining = [0] * env.num_agents
+    msg_settings = message_settings_from_config(experiment_cfg)
+    reflection_settings = reflection_settings_from_config(experiment_cfg)
+    inbox_max = max(1, int(msg_settings.get("inbox_max_messages", 50)))
+    message_default_action = str(msg_settings.get("message_default_action", "noop")).strip().lower()
+    inboxes: List[deque] = [deque(maxlen=inbox_max) for _ in range(env.num_agents)]
+    handled_inboxes: List[deque] = [deque(maxlen=inbox_max) for _ in range(env.num_agents)]
+    pending_messages: List[Dict[str, Any]] = []
+    next_message_id = 1
+    total_shelf_deliveries = 0
+    transcript: Dict[str, Any] = {
+        "episode_idx": int(episode_idx),
+        "seed": int(seed),
+        "experiment_mode": str(args.experiment_mode),
+        "llm_backend": str(args.llm_backend),
+        "system_goal": str(reflection_settings.get("system_goal", "maximize shelf deliveries")),
+        "delivery_metric": str(reflection_settings.get("delivery_metric", "shelf_deliveries")),
+        "reflection_message_samples": int(reflection_settings.get("message_samples", 12)),
+        "steps": [],
+    }
 
-    log_block("START", f"seed={seed}, env={args.env_id}, agents={env.num_agents}")
+    log_block("START", f"seed={seed}, env={args.env_id}, agents={env.num_agents}, mode={args.experiment_mode}")
 
     while not done and step_count < args.max_steps_per_episode:
+        delivered_events: List[Dict[str, Any]] = []
+        message_status_updates: List[Dict[str, Any]] = []
+        if pending_messages:
+            for evt in pending_messages:
+                receiver = int(evt.get("to_agent", -1))
+                if 0 <= receiver < env.num_agents:
+                    delivered_event = {
+                        "message_id": str(evt.get("message_id", "")),
+                        "step": int(step_count),
+                        "sent_step": int(evt.get("step", -1)),
+                        "from_agent": int(evt.get("from_agent", -1)),
+                        "to_agent": receiver,
+                        "scenario": str(evt.get("scenario", "unknown")),
+                        "text": str(evt.get("text", "")),
+                        "status": "UNREAD",
+                        "delivered_step": int(step_count),
+                    }
+                    inboxes[receiver].append(delivered_event)
+                    delivered_events.append(dict(delivered_event))
+            pending_messages = []
+            if delivered_events:
+                log_block(
+                    "INBOX_DELIVERY",
+                    "\n".join(
+                        [
+                            (
+                                f"id={e['message_id']} to=agent_{int(e['to_agent'])} from=agent_{int(e['from_agent'])} "
+                                f"scenario={e['scenario']} text={e['text']}"
+                            )
+                            for e in delivered_events
+                        ]
+                    ),
+                )
+
         valid_masks = safe_valid_action_masks(env)
         log_block("STEP", f"step={step_count}")
         log_block("CANDIDATES", explain_candidates(env, valid_masks, args.max_candidate_ids))
         fallback = fallback_actions(env, valid_masks)
         actions = [0] * env.num_agents
+        outgoing_messages: List[Dict[str, Any]] = []
+        step_agent_records: List[Dict[str, Any]] = []
 
         for idx in range(env.num_agents):
             max_hold_for_agent = max(1, int(args.max_action_hold_steps))
@@ -1266,6 +2455,15 @@ def llm_episode(env, args, seed: int):
             ):
                 actions[idx] = persisted
                 hold_steps_remaining[idx] -= 1
+                step_agent_records.append(
+                    {
+                        "agent_id": int(idx),
+                        "reused_action": True,
+                        "action": int(persisted),
+                        "action_steps": int(hold_steps_remaining[idx] + 1),
+                        "fallback_used": False,
+                    }
+                )
                 log_block(
                     f"ACTION_REUSE_agent_{idx}",
                     f"action={persisted} remaining_reuse_steps={hold_steps_remaining[idx]}",
@@ -1279,38 +2477,118 @@ def llm_episode(env, args, seed: int):
                 )
                 hold_steps_remaining[idx] = 0
 
-            agent_prompt = build_agent_prompt(
+            agent_prompt = build_prompt_by_mode(
                 env,
+                args,
+                experiment_cfg,
                 idx,
                 valid_masks,
                 step_count,
                 args.max_candidate_ids,
                 max_hold_for_agent,
+                inboxes=inboxes,
+                inboxes_handled=handled_inboxes,
+                rag_retriever=rag_retriever,
             )
             log_block(f"PROMPT_agent_{idx}", maybe_truncate(agent_prompt, args.log_text_chars))
+            agent_record: Dict[str, Any] = {
+                "agent_id": int(idx),
+                "prompt": maybe_truncate(agent_prompt, int(args.transcript_text_chars)),
+                "fallback_used": False,
+            }
             try:
-                llm_text = query_ollama_text(args.model, args.ollama_url, agent_prompt, args.request_timeout_s)
+                llm_text = query_llm_text(args, agent_prompt)
                 llm_calls += 1
                 log_block(f"LLM_OUTPUT_agent_{idx}", maybe_truncate(llm_text, args.log_text_chars))
-                action_id, action_steps = parse_action_and_steps_from_text(llm_text, max_hold_for_agent)
+                agent_record["llm_output"] = maybe_truncate(llm_text, int(args.transcript_text_chars))
+                if args.experiment_mode == "message_or_action":
+                    parsed = parse_decision_message_action_from_text(
+                        llm_text,
+                        num_agents=env.num_agents,
+                        max_action_hold_steps=max_hold_for_agent,
+                    )
+                    action_id = parsed["action_id"]
+                    action_steps = int(parsed["steps"])
+                    if action_id is None:
+                        if parsed["decision"] == "MESSAGE":
+                            action_id = int(fallback[idx]) if message_default_action == "fallback" else 0
+                        else:
+                            action_id = parse_single_action_from_text(llm_text)
+                    if bool(parsed["has_message"]):
+                        message_event = {
+                            "message_id": f"msg_{next_message_id:04d}",
+                            "step": int(step_count),
+                            "from_agent": int(idx),
+                            "to_agent": int(parsed["to_agent"]),
+                            "text": str(parsed["message_text"]),
+                            "scenario": infer_message_scenario(env, idx),
+                        }
+                        next_message_id += 1
+                        outgoing_messages.append(message_event)
+                        agent_record["message_sent"] = {
+                            "message_id": str(message_event["message_id"]),
+                            "to_agent": int(parsed["to_agent"]),
+                            "text": str(parsed["message_text"]),
+                            "scenario": str(message_event["scenario"]),
+                        }
+                        log_block(
+                            f"MESSAGE_SEND_agent_{idx}",
+                            (
+                                f"id={message_event['message_id']} to=agent_{int(parsed['to_agent'])} "
+                                f"scenario={message_event['scenario']} "
+                                f"text={parsed['message_text']}"
+                            ),
+                        )
+                    status_update = apply_message_status_update(
+                        inboxes[idx],
+                        handled_inboxes[idx],
+                        parsed.get("focus_message_id", ""),
+                        parsed.get("message_status", "KEEP"),
+                        step_count,
+                        idx,
+                        parsed.get("status_detail", ""),
+                    )
+                    if status_update is not None:
+                        agent_record["message_status_update"] = status_update
+                        message_status_updates.append(status_update)
+                        log_block(
+                            f"MESSAGE_STATUS_agent_{idx}",
+                            (
+                                f"id={status_update.get('message_id')} "
+                                f"status={status_update.get('status')} "
+                                f"from_status={status_update.get('from_status', 'n/a')} "
+                                f"detail={status_update.get('detail', '')}"
+                            ),
+                        )
+                else:
+                    action_id, action_steps = parse_action_and_steps_from_text(llm_text, max_hold_for_agent)
                 if action_id < 0 or action_id >= env.action_size or valid_masks[idx, action_id] <= 0:
                     raise ValueError(f"action_id={action_id} invalid_by_mask")
                 actions[idx] = int(action_id)
                 persisted_actions[idx] = int(action_id)
                 hold_steps_remaining[idx] = max(0, int(action_steps) - 1)
+                agent_record["action"] = int(actions[idx])
+                agent_record["action_steps"] = int(action_steps)
+                step_agent_records.append(agent_record)
                 log_block(
                     f"ACTION_PLAN_agent_{idx}",
                     f"action={actions[idx]} hold_steps_total={action_steps} remaining_reuse_steps={hold_steps_remaining[idx]}",
                 )
-            except (error.URLError, TimeoutError, ValueError) as exc:
+            except (error.URLError, TimeoutError, ValueError, ImportError) as exc:
                 llm_failures += 1
                 actions[idx] = int(fallback[idx])
                 persisted_actions[idx] = int(actions[idx])
                 hold_steps_remaining[idx] = 0
+                agent_record["action"] = int(actions[idx])
+                agent_record["action_steps"] = 1
+                agent_record["fallback_used"] = True
+                agent_record["error"] = repr(exc)
+                step_agent_records.append(agent_record)
                 log_block(f"LLM_PARSE_ERROR_agent_{idx}", repr(exc))
                 log_block(f"FALLBACK_agent_{idx}", f"action={actions[idx]} hold_steps_total=1")
 
         log_block("VALIDATED_ACTIONS", str(actions))
+        log_block("EXECUTING_ACTIONS", explain_executing_actions(env, actions, step_agent_records, hold_steps_remaining))
         log_block("ACTION_EFFECT", explain_actions(env, actions))
 
         if args.render:
@@ -1318,12 +2596,28 @@ def llm_episode(env, args, seed: int):
 
         prev_agents = snapshot_agents(env)
         _, reward, terminated, truncated, info = env.step(actions)
-        log_block("STATE_CHANGE", explain_state_changes(prev_agents, env))
+        state_change_text = explain_state_changes(prev_agents, env)
+        log_block("STATE_CHANGE", state_change_text)
+        if outgoing_messages:
+            pending_messages.extend(outgoing_messages)
+        step_deliveries = int(info.get("shelf_deliveries", 0))
+        total_shelf_deliveries += step_deliveries
+        transcript["steps"].append(
+            {
+                "step": int(step_count),
+                "messages_delivered": delivered_events,
+                "messages_sent": outgoing_messages,
+                "message_status_updates": message_status_updates,
+                "agents": step_agent_records,
+                "actions": [int(a) for a in actions],
+                "state_change": state_change_text,
+                "shelf_deliveries": step_deliveries,
+            }
+        )
         infos.append(info)
         episode_returns += np.asarray(reward, dtype=np.float64)
         global_episode_return += float(np.sum(reward))
 
-        step_deliveries = int(info.get("shelf_deliveries", 0))
         if step_deliveries > 0:
             delivery_happened = True
             log_block("DELIVERY", f"step={step_count} shelf_deliveries={step_deliveries}")
@@ -1342,8 +2636,34 @@ def llm_episode(env, args, seed: int):
         infos[-1]["llm_calls"] = llm_calls
         infos[-1]["llm_failures"] = llm_failures
         infos[-1]["delivery_happened"] = delivery_happened
+    transcript["total_steps"] = int(step_count)
+    transcript["llm_calls"] = int(llm_calls)
+    transcript["llm_failures"] = int(llm_failures)
+    transcript["delivery_happened"] = bool(delivery_happened)
+    transcript["total_shelf_deliveries"] = int(total_shelf_deliveries)
+    transcript["episode_end_reasons"] = determine_episode_end_reasons(env, args, step_count, done)
+    transcript["episode_end_reason"] = str(transcript["episode_end_reasons"][0])
+    transcript["final_pending_messages"] = [
+        {
+            "agent_id": int(agent_idx),
+            "messages": [dict(msg) for msg in inbox],
+        }
+        for agent_idx, inbox in enumerate(inboxes)
+    ]
+    transcript["handled_messages"] = [
+        {
+            "agent_id": int(agent_idx),
+            "messages": [dict(msg) for msg in inbox],
+        }
+        for agent_idx, inbox in enumerate(handled_inboxes)
+    ]
+    transcript["message_summary"] = compute_message_summary(
+        transcript.get("steps", []),
+        int(reflection_settings.get("delivery_after_message_window_steps", 6)),
+    )
+    transcript["message_summary"]["total_messages_pending_end"] = int(sum(len(inbox) for inbox in inboxes))
 
-    return infos, global_episode_return, episode_returns, delivery_happened
+    return infos, global_episode_return, episode_returns, delivery_happened, transcript
 
 
 def print_episode_result(prefix: str, idx: int, elapsed: float, metrics: Dict[str, Any]):
@@ -1358,6 +2678,13 @@ def print_episode_result(prefix: str, idx: int, elapsed: float, metrics: Dict[st
         f"[Total Pickers distance={metrics.get('total_pickers_distance', 0):.2f}] "
         f"[Episode length={metrics.get('episode_length', 0)}] "
         f"[FPS={metrics.get('episode_length', 0) / elapsed if elapsed > 0 else 0.0:.2f}]\n"
+    )
+    print(
+        f"{prefix} Episode {idx} Summary: "
+        f"[Deliveries={int(metrics.get('total_deliveries', 0))}] "
+        f"[Clashes={int(metrics.get('total_clashes', 0))}] "
+        f"[Messages sent={int(metrics.get('total_messages_sent', 0))}] "
+        f"[Messages handled={int(metrics.get('total_messages_handled', 0))}]\n"
     )
 
 
@@ -1380,6 +2707,15 @@ def summarize_policy_results(name: str, metric_rows: List[Dict[str, Any]]) -> Di
 
 if __name__ == "__main__":
     args = parser.parse_args()
+    experiment_cfg = load_experiment_config(args.config_path)
+    rag_retriever = None
+    if args.llm_backend == "langchain":
+        log_block(
+            "RAG",
+            f"auto_enabled=true db={args.rag_db_dir} docs={args.rag_docs_dir} top_k={args.rag_top_k} max_chars={args.rag_max_chars}",
+        )
+    else:
+        log_block("RAG", "auto_enabled=false (backend is not langchain)")
 
     env = gym.make(args.env_id)
     env.unwrapped.verbose_events = bool(args.warehouse_event_logs)
@@ -1389,33 +2725,167 @@ if __name__ == "__main__":
 
     for ep in range(args.num_episodes):
         start = time.time()
-        infos, global_ret, ep_rets, delivery_happened = llm_episode(env.unwrapped, args, seed=args.seed + ep)
+        reflection_note_path: Optional[Path] = None
+        rag_retriever = None
+        if args.llm_backend == "langchain":
+            try:
+                rag_retriever = init_rag_retriever(args)
+                _ = retrieve_rag_context(rag_retriever, f"episode_{ep}_reflection_retrieval_check", 1, 200)
+                if bool(getattr(rag_retriever, "_disabled_due_to_error", False)):
+                    rag_retriever = None
+                log_block("RAG_EPISODE_INIT", f"episode={ep} enabled={str(rag_retriever is not None).lower()}")
+            except Exception as exc:
+                log_block("RAG_INIT_ERROR", f"episode={ep} {repr(exc)}")
+                log_block("RAG_EPISODE_INIT", f"episode={ep} enabled=false")
+                rag_retriever = None
+        infos, global_ret, ep_rets, delivery_happened, transcript = llm_episode(
+            env.unwrapped,
+            args,
+            seed=args.seed + ep,
+            experiment_cfg=experiment_cfg,
+            rag_retriever=rag_retriever,
+            episode_idx=ep,
+        )
         llm_delivery_any = llm_delivery_any or delivery_happened
         metrics = info_statistics(infos, global_ret, ep_rets)
+        metrics["total_messages_sent"] = int(transcript.get("message_summary", {}).get("total_messages_sent", 0))
+        metrics["total_messages_handled"] = int(transcript.get("message_summary", {}).get("total_messages_handled", 0))
         print_episode_result("LLM", ep, time.time() - start, metrics)
         llm_rows.append(metrics)
+
+        transcript_dir = Path(args.transcript_dir)
+        transcript_path = transcript_dir / f"episode_{ep:03d}_seed_{args.seed + ep}.json"
+        write_json_file(transcript_path, transcript)
+        log_block("TRANSCRIPT", f"saved={transcript_path}")
+
+        summary_dir = Path(args.episode_summary_dir)
+        summary_timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+        summary_path = summary_dir / f"episode_summary_ep_{ep:03d}_{summary_timestamp}.txt"
+        summary_text = build_episode_summary_text(
+            args=args,
+            episode_idx=ep,
+            seed=args.seed + ep,
+            elapsed_s=time.time() - start,
+            metrics=metrics,
+            transcript=transcript,
+            transcript_path=transcript_path,
+        )
+        write_text_file(summary_path, summary_text)
+        log_block("EPISODE_SUMMARY", f"saved={summary_path}")
+
+        if args.enable_episode_reflection:
+            reflection_backend = args.llm_backend if args.reflection_backend == "auto" else args.reflection_backend
+            reflection_model = args.reflection_model.strip() or args.model
+            reflection_input = build_reflection_input(transcript, max_chars=int(args.reflection_max_chars))
+            reflection_prompt = build_reflection_prompt(reflection_input)
+            reflection_text = ""
+            try:
+                reflection_text = query_text_with_backend(
+                    backend=reflection_backend,
+                    model=reflection_model,
+                    prompt=reflection_prompt,
+                    timeout_s=int(args.reflection_timeout_s),
+                    ollama_url=args.ollama_url,
+                    ollama_base_url=args.ollama_base_url.strip() or derive_ollama_base_url(args.ollama_url.strip()),
+                )
+            except Exception as exc:
+                log_block("REFLECTION_ERROR", repr(exc))
+                reflection_text = (
+                    "## Episode Summary\n"
+                    "Reflection generation failed.\n\n"
+                    "## Observed Success Patterns\n"
+                    "- none\n\n"
+                    "## Failure Patterns\n"
+                    "- reflection model call failed\n\n"
+                    "## Actionable Coordination Rules\n"
+                    "- keep previous prompt and inspect transcript manually\n\n"
+                    "## Prompt Additions (short bullet list)\n"
+                    "- none\n"
+                )
+
+            notes_dir = Path(args.reflection_notes_dir)
+            timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+            note_path = notes_dir / f"episode_{ep:03d}_{timestamp}.md"
+            header = (
+                f"# Reflection Note\n\n"
+                f"- episode: {ep}\n"
+                f"- seed: {args.seed + ep}\n"
+                f"- model: {reflection_model}\n"
+                f"- backend: {reflection_backend}\n"
+                f"- transcript: {transcript_path}\n\n"
+            )
+            write_text_file(note_path, header + reflection_text.strip() + "\n")
+            log_block("REFLECTION_NOTE", f"saved={note_path}")
+            reflection_note_path = note_path
+
+            if args.llm_backend == "langchain" and not args.reflection_skip_rag_rebuild:
+                try:
+                    # Release current retriever reference before rebuilding the DB on disk.
+                    rag_retriever = None
+                    rebuild_rag_index_via_subprocess(args)
+                    original_rebuild = bool(args.rag_rebuild_index)
+                    try:
+                        args.rag_rebuild_index = False
+                        rag_retriever = init_rag_retriever(args)
+                        _ = retrieve_rag_context(rag_retriever, "healthcheck reflection retrieval", 1, 200)
+                        if bool(getattr(rag_retriever, "_disabled_due_to_error", False)):
+                            rag_retriever = None
+                    finally:
+                        args.rag_rebuild_index = original_rebuild
+                    log_block("RAG_REBUILD", f"rebuilt_from={args.rag_docs_dir} db={args.rag_db_dir}")
+                except Exception as exc:
+                    log_block("RAG_REBUILD_ERROR", repr(exc))
+
+        append_jsonl(
+            Path(args.episode_results_path),
+            {
+                "episode": int(ep),
+                "seed": int(args.seed + ep),
+                "elapsed_seconds": float(time.time() - start),
+                "metrics": {
+                    "overall_pick_rate": float(metrics.get("overall_pick_rate", 0.0)),
+                    "global_episode_return": float(metrics.get("global_episode_return", 0.0)),
+                    "total_deliveries": float(metrics.get("total_deliveries", 0.0)),
+                    "total_clashes": float(metrics.get("total_clashes", 0.0)),
+                    "total_messages_sent": int(metrics.get("total_messages_sent", 0)),
+                    "total_messages_handled": int(transcript.get("message_summary", {}).get("total_messages_handled", 0)),
+                    "total_messages_activated": int(transcript.get("message_summary", {}).get("total_messages_activated", 0)),
+                    "total_messages_pending_end": int(transcript.get("message_summary", {}).get("total_messages_pending_end", 0)),
+                    "total_stuck": float(metrics.get("total_stuck", 0.0)),
+                    "total_agvs_distance": float(metrics.get("total_agvs_distance", 0.0)),
+                    "total_pickers_distance": float(metrics.get("total_pickers_distance", 0.0)),
+                    "episode_length": int(metrics.get("episode_length", 0)),
+                },
+                "delivery_happened": bool(delivery_happened),
+                "transcript_path": str(Path(args.transcript_dir) / f"episode_{ep:03d}_seed_{args.seed + ep}.json"),
+                "episode_summary_path": str(summary_path),
+                "reflection_note_path": str(reflection_note_path) if reflection_note_path is not None else "",
+            },
+        )
 
     llm_avg = summarize_policy_results("LLM", llm_rows)
     log_block("RESULT", f"delivery_happened_any_episode={llm_delivery_any}")
 
-    if not args.skip_heuristic:
-        heuristic_env = gym.make(args.env_id, max_steps=args.max_steps_per_episode)
-        heuristic_env.unwrapped.verbose_events = bool(args.warehouse_event_logs)
-        heuristic_rows: List[Dict[str, Any]] = []
-        for ep in range(args.num_episodes):
-            start = time.time()
-            infos, global_ret, ep_rets = heuristic_episode(
-                heuristic_env.unwrapped,
-                render=args.render,
-                seed=args.seed + ep,
-                save_gif=False,
-            )
-            metrics = info_statistics(infos, global_ret, ep_rets)
-            print_episode_result("HEURISTIC", ep, time.time() - start, metrics)
-            heuristic_rows.append(metrics)
-        heuristic_avg = summarize_policy_results("HEURISTIC", heuristic_rows)
-
-        print("\nCOMPARISON:\n")
-        print(f"Pick Rate delta (LLM-HEURISTIC): {llm_avg['overall_pick_rate'] - heuristic_avg['overall_pick_rate']:.2f}")
-        print(f"Return delta (LLM-HEURISTIC): {llm_avg['global_episode_return'] - heuristic_avg['global_episode_return']:.2f}")
-        print(f"Deliveries delta (LLM-HEURISTIC): {llm_avg['total_deliveries'] - heuristic_avg['total_deliveries']:.2f}")
+    # Heuristic baseline run intentionally disabled so this script only writes/prints LLM episode results.
+    # Re-enable by restoring the block below if you want LLM-vs-heuristic comparison in the same run.
+    # if not args.skip_heuristic:
+    #     heuristic_env = gym.make(args.env_id, max_steps=args.max_steps_per_episode)
+    #     heuristic_env.unwrapped.verbose_events = bool(args.warehouse_event_logs)
+    #     heuristic_rows: List[Dict[str, Any]] = []
+    #     for ep in range(args.num_episodes):
+    #         start = time.time()
+    #         infos, global_ret, ep_rets = heuristic_episode(
+    #             heuristic_env.unwrapped,
+    #             render=args.render,
+    #             seed=args.seed + ep,
+    #             save_gif=False,
+    #         )
+    #         metrics = info_statistics(infos, global_ret, ep_rets)
+    #         print_episode_result("HEURISTIC", ep, time.time() - start, metrics)
+    #         heuristic_rows.append(metrics)
+    #     heuristic_avg = summarize_policy_results("HEURISTIC", heuristic_rows)
+    #
+    #     print("\nCOMPARISON:\n")
+    #     print(f"Pick Rate delta (LLM-HEURISTIC): {llm_avg['overall_pick_rate'] - heuristic_avg['overall_pick_rate']:.2f}")
+    #     print(f"Return delta (LLM-HEURISTIC): {llm_avg['global_episode_return'] - heuristic_avg['global_episode_return']:.2f}")
+    #     print(f"Deliveries delta (LLM-HEURISTIC): {llm_avg['total_deliveries'] - heuristic_avg['total_deliveries']:.2f}")

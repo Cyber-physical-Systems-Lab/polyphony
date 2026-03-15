@@ -1,4 +1,8 @@
-sudo docker build -t ollama-battertarware:v1 .
+sudo docker build -t ollama-battertarware-gui:v1 .
+
+
+sudo docker build --no-cache -t ollama-battertarware-gui:v1 .
+
 
 sudo docker run --gpus all  -it -v /home/cpslab/Work/Thesis/rjm/polyphony/Battery-TA-RWARE:/docker-mount/Battery-TA-RWARE ollama-battertarware:v1
 
@@ -11,6 +15,7 @@ Another terminal:
 sudo docker exec -it infallible_maxwell bash
 
 python3 -m pip install --break-system-packages -e .
+
 python3 scripts/run_heuristic.py
 
 -- running the PPO
@@ -18,20 +23,24 @@ python3 scripts/run_heuristic.py
 
 python3 scripts/train_ppo.py
 
-pip install  --break-system-packages "ray[rllib]" torch
-pip install --break-system-packages -e . imageio
-python3 -m pip install --break-system-packages "gymnasium[all]"
-python3 -m pip install --break-system-packages opencv-python-headless
+
+
+pip uninstall pyglet -y
+pip install --break-system-packages pyglet==1.5.27
 
 
 
-
---------------------
+----------------- ---
 ollama serve
 this in one tab
 
 And 
 ollama pull llama3.2:3b
+
+--for rag
+ollama pull nomic-embed-text 
+
+
 ollama run llama3.2:3b
 In another to run the llm.
 
@@ -55,9 +64,136 @@ sudo docker run --name tarware-gui --gpus all -it \
   ollama-battertarware:v1
 
 
+
 Later to start
 
 
   sudo docker exec -it tarware-gui bash 
 
-  python3 scripts/run_llm.py --env_id tarware-tiny-1agvs-1pickers-partialobs-chg-v1 --num_episodes 1 --seed 0 --model llama3.2:3b --render --log_text_chars 0 -max_steps_per_episode 500 > log5.txt 
+  python3 scripts/run_llm.py --env_id tarware-tiny-1agvs-1pickers-partialobs-chg-v1 --num_episodes 1 --seed 0 --model llama3.2:3b --render --log_text_chars 0 --max_steps_per_episode 500 > log5.txt 
+
+
+    Install xauth
+
+
+
+ 
+
+   sudo docker run --name tarware --gpus all -it   -e DISPLAY=$DISPLAY           \
+        -e XAUTHORITY=$XAUTH          \
+        -v $XSOCK:$XSOCK:rw           \
+        -v $XAUTH:$XAUTH:rw           \
+        -v /tmp/.X11-unix:/tmp/.X11-unix \
+        -v /home/cpslab/Work/Thesis/rjm/polyphony/Battery-TA-RWARE:/docker-mount/Battery-TA-RWARE \ollama-battertarware:v1
+
+
+   Basic display test:
+
+   rjmro@RS-ThinkPad MINGW64 ~/Desktop
+$ echo $DISPLAY
+needs-to-be-defined
+
+rjmro@RS-ThinkPad MINGW64 ~/Desktop
+$ export DISPLAY=:0.0
+
+
+cpslab@cpslab-Tower-G9:~$ echo $DISPLAY
+localhost:11.0
+cpslab@cpslab-Tower-G9:~$ xeyes
+
+
+
+Eyes showing in vcxsrv and it shows one client connected, when I try to close.
+
+
+
+
+The docker, should have network capability --network=host for this to work
+
+export XSOCK=/tmp/.X11-unix
+export XAUTH=~/.docker.xauth
+touch $XAUTH
+xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f $XAUTH nmerge -
+sudo docker run --network=host --name tarware-remote-gui --gpus all -it  \
+-e DISPLAY=$DISPLAY \
+-e XAUTHORITY=$XAUTH \
+-v $XSOCK:$XSOCK:rw \
+-v $XAUTH:$XAUTH:rw \
+-v /home/cpslab/Work/Thesis/rjm/polyphony/Battery-TA-RWARE:/docker-mount/Battery-TA-RWARE ollama-battertarware-gui:v1
+
+
+python3 -m pip install --break-system-packages -e .
+python3 -m pip install --break-system-packages -e ".[llm]"
+
+For langchain..
+
+
+
+sudo docker start -ai tarware-remote-gui
+sudo docker exec -it tarware-remote-gui bash
+
+ollama pull llama3.2:3b
+ollama run llama3.2:3b
+python3 scripts/run_llm.py --env_id tarware-tiny-1agvs-1pickers-partialobs-chg-v1 --num_episodes 1 --seed 0 --model llama3.2:3b --render --log_text_chars 0 --max_steps_per_episode 500
+
+
+inside The docker it is coming now as 
+echo $DISPLAY
+localhost:10.0
+
+In git bash, after ssh
+ echo $DISPLAY
+localhost:10.0
+
+
+rjmro@RS-ThinkPad MINGW64 ~/Desktop
+$ echo $DISPLAY
+localhost:0.0
+
+
+
+sudo -E docker run --network=host \
+  --name tarware-remote-gui \
+  --gpus all \
+  -it \
+  -e DISPLAY=$DISPLAY \
+  -v /home/cpslab/.Xauthority:/root/.Xauthority:ro \
+  -v /home/cpslab/Work/Thesis/rjm/polyphony/Battery-TA-RWARE:/docker-mount/Battery-TA-RWARE \
+  ollama-battertarware-gui-t1:v1
+
+sudo -E docker run --network=host \
+  --name tarware-remote-gui-t2 \
+  --gpus all \
+  -it \
+  -e DISPLAY=$DISPLAY \
+  -v /home/cpslab/.Xauthority:/root/.Xauthority:ro \
+  -v /home/cpslab/Work/Thesis/rjm/polyphony/Battery-TA-RWARE:/docker-mount/Battery-TA-RWARE \
+  ollama-battertarware-gui:v1
+
+Fixed prompt
+python3 scripts/run_llm.py --env_id tarware-tiny-1agvs-1pickers-partialobs-chg-v1 --num_episodes 1 --seed 0 --model llama3.2:3b --render --log_text_chars 0 --max_steps_per_episode 500 --experiment_mode fixed_prompt_action
+
+Agent type prompt
+python3 scripts/run_llm.py --env_id tarware-tiny-1agvs-1pickers-partialobs-chg-v1 --num_episodes 1 --seed 0 --model llama3.2:3b --render --log_text_chars 0 --max_steps_per_episode 500 --experiment_mode agent_type_prompt --config_path scripts/experiment_config.example.json
+
+python3 scripts/run_llm.py \
+  --env_id tarware-tiny-1agvs-1pickers-partialobs-chg-v1 \
+  --num_episodes 1 --seed 0 --model llama3.2:3b \
+  --render --log_text_chars 0 --max_steps_per_episode 500 \
+  --experiment_mode message_or_action \
+  --config_path scripts/experiment_config.example.json
+
+
+
+
+  python3 scripts/run_llm.py --env_id tarware-tiny-1agvs-1pickers-partialobs-chg-v1 --num_episodes 2 --seed 0 --model llama3.2:3b --llm_backend langchain --experiment_mode message_or_action --config_path scripts/experiment_config.example.json --max_steps_per_episode 250 --enable_episode_reflection --reflection_notes_dir knowledge/reflections --transcript_dir transcripts --rag_docs_dir knowledge --rag_db_dir rag_db --log_text_chars 0 --render
+
+----------
+Clear rag
+  rm -f knowledge/reflections/*.md
+rm -rf rag_db
+rm -f transcripts/*
+python3 scripts/build_rag_index.py \
+  --docs_dir knowledge \
+  --db_dir rag_db \
+  --ollama_base_url http://localhost:11434

@@ -1,0 +1,27 @@
+Episode Summary
+Created: 2026-03-13 17:00:43 UTC
+Episode: 0
+Seed: 0
+Environment: tarware-tiny-1agvs-1pickers-partialobs-chg-v1
+Model: llama3.2:3b
+Backend: langchain
+Experiment mode: message_or_action
+Elapsed seconds: 138.16
+
+Key Metrics
+- Deliveries: 0
+- Clashes: 1
+- Messages sent: 17
+- Messages handled: 1
+
+Additional Metrics
+- Episode length: 200
+- Global return: -0.77
+- Overall pick rate: 0.00
+- LLM calls: 112
+- LLM failures: 0
+- Messages delivered: 16
+- Messages activated: 3
+- Pending messages at end: 15
+
+Transcript: transcripts/episode_000_seed_0.json

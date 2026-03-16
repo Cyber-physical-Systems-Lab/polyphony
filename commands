@@ -77,6 +77,8 @@ Later to start
 
 
 
+
+
  
 
    sudo docker run --name tarware --gpus all -it   -e DISPLAY=$DISPLAY           \
@@ -182,7 +184,6 @@ python3 scripts/run_llm.py \
   --render --log_text_chars 0 --max_steps_per_episode 500 \
   --experiment_mode message_or_action \
   --config_path scripts/experiment_config.example.json
-
 
 
 

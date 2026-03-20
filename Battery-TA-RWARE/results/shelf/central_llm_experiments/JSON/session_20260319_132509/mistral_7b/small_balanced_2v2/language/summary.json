@@ -1,0 +1,30 @@
+{
+  "stated_objective": "Increase the total shelf deliveries.",
+  "model": "mistral:7b",
+  "model_class": "MLM",
+  "scenario": "small_balanced_2v2",
+  "scenario_env_id": "tarware-small-2agvs-2pickers-globalobs-chg-v1",
+  "scenario_focus": "Balanced coordination at slightly higher concurrency.",
+  "prompt_format": "LANGUAGE",
+  "total_shelf_deliveries": 2,
+  "delivery_timeline": [
+    {
+      "step": 173,
+      "total_shelf_deliveries": 1,
+      "step_shelf_deliveries": 1
+    },
+    {
+      "step": 193,
+      "total_shelf_deliveries": 2,
+      "step_shelf_deliveries": 1
+    }
+  ],
+  "steps_executed": 393,
+  "max_steps": 1000,
+  "seed": 0,
+  "llm_calls": 186,
+  "llm_failures": 0,
+  "llm_missing_or_invalid_actions": 0,
+  "elapsed_seconds": 831.8656978607178,
+  "step_records_path": "results/central_llm_experiments/session_20260319_132509/mistral_7b/small_balanced_2v2/language/step_records.json"
+}

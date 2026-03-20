@@ -1,0 +1,10 @@
+Stated Objective: Increase the total shelf deliveries.
+Model: qwen2.5:14b (LLM)
+Scenario: tiny_balanced_1v1 [tarware-tiny-1agvs-1pickers-globalobs-chg-v1]
+Scenario Focus: Balanced baseline: reveal whether the model understands the normal AGV-Picker collaboration loop.
+Prompt format: LANGUAGE
+Total Shelf Delivery: 1
+Steps executed: 233
+LLM missing/invalid planned actions: 0
+Shelf delivery timeline:
+- step=33 delivered_this_step=1 total_shelf_deliveries=1

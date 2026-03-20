@@ -1,0 +1,4 @@
+[2026-03-19 13:31:33 UTC] Starting scenario=medium_balanced_4v4 env_id=tarware-medium-4agvs-4pickers-globalobs-chg-v1
+[2026-03-19 13:31:33 UTC] Scenario focus: Balanced scaling: larger warehouse and longer-horizon coordination.
+[2026-03-19 13:35:11 UTC] Delivery milestone step=161 cumulative_deliveries=1
+[2026-03-19 13:41:01 UTC] Completed scenario=medium_balanced_4v4 model=llama3.2:1b deliveries=1 steps=361 failures=0

@@ -1,0 +1,4 @@
+[2026-03-19 13:57:48 UTC] Starting scenario=tiny_balanced_1v1 env_id=tarware-tiny-1agvs-1pickers-globalobs-chg-v1
+[2026-03-19 13:57:48 UTC] Scenario focus: Balanced baseline: reveal whether the model understands the normal AGV-Picker collaboration loop.
+[2026-03-19 13:58:04 UTC] Delivery milestone step=53 cumulative_deliveries=1
+[2026-03-19 13:58:53 UTC] Completed scenario=tiny_balanced_1v1 model=llama3.2:3b deliveries=1 steps=253 failures=0

@@ -1,0 +1,25 @@
+{
+  "stated_objective": "Increase the total shelf deliveries.",
+  "model": "llama3.2:1b",
+  "model_class": "SLM",
+  "scenario": "medium_balanced_4v4",
+  "scenario_env_id": "tarware-medium-4agvs-4pickers-globalobs-chg-v1",
+  "scenario_focus": "Balanced scaling: larger warehouse and longer-horizon coordination.",
+  "prompt_format": "LANGUAGE",
+  "total_shelf_deliveries": 1,
+  "delivery_timeline": [
+    {
+      "step": 161,
+      "total_shelf_deliveries": 1,
+      "step_shelf_deliveries": 1
+    }
+  ],
+  "steps_executed": 361,
+  "max_steps": 1000,
+  "seed": 0,
+  "llm_calls": 197,
+  "llm_failures": 0,
+  "llm_missing_or_invalid_actions": 0,
+  "elapsed_seconds": 567.8297827243805,
+  "step_records_path": "results/central_llm_experiments/session_20260319_132509/llama3.2_1b/medium_balanced_4v4/language/step_records.json"
+}

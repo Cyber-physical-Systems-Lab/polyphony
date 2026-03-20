@@ -1,0 +1,10 @@
+Stated Objective: Increase the total shelf deliveries.
+Model: qwen2.5:14b (LLM)
+Scenario: small_picker_heavy_2v4 [tarware-small-2agvs-4pickers-globalobs-chg-v1]
+Scenario Focus: Picker-heavy: reveal underutilization, role confusion, and unnecessary movement.
+Prompt format: LANGUAGE
+Total Shelf Delivery: 0
+Steps executed: 200
+LLM missing/invalid planned actions: 0
+Shelf delivery timeline:
+- none

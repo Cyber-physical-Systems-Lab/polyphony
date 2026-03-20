@@ -1,0 +1,10 @@
+Stated Objective: Increase the total shelf deliveries.
+Model: llama3.2:3b (SLM)
+Scenario: tiny_balanced_1v1 [tarware-tiny-1agvs-1pickers-globalobs-chg-v1]
+Scenario Focus: Balanced baseline: reveal whether the model understands the normal AGV-Picker collaboration loop.
+Prompt format: LANGUAGE
+Total Shelf Delivery: 1
+Steps executed: 278
+LLM missing/invalid planned actions: 0
+Shelf delivery timeline:
+- step=78 delivered_this_step=1 total_shelf_deliveries=1

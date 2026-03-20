@@ -1,0 +1,25 @@
+{
+  "stated_objective": "Increase the total shelf deliveries.",
+  "model": "llama3.2:3b",
+  "model_class": "SLM",
+  "scenario": "small_picker_heavy_2v4",
+  "scenario_env_id": "tarware-small-2agvs-4pickers-globalobs-chg-v1",
+  "scenario_focus": "Picker-heavy: reveal underutilization, role confusion, and unnecessary movement.",
+  "prompt_format": "LANGUAGE",
+  "total_shelf_deliveries": 1,
+  "delivery_timeline": [
+    {
+      "step": 181,
+      "total_shelf_deliveries": 1,
+      "step_shelf_deliveries": 1
+    }
+  ],
+  "steps_executed": 381,
+  "max_steps": 1000,
+  "seed": 0,
+  "llm_calls": 253,
+  "llm_failures": 0,
+  "llm_missing_or_invalid_actions": 0,
+  "elapsed_seconds": 359.4393849372864,
+  "step_records_path": "results/central_llm_experiments/session_20260319_132509/llama3.2_3b/small_picker_heavy_2v4/language/step_records.json"
+}

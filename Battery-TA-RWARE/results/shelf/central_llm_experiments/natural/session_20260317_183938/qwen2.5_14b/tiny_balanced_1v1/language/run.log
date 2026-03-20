@@ -1,0 +1,4 @@
+[2026-03-18 15:30:14 UTC] Starting scenario=tiny_balanced_1v1 env_id=tarware-tiny-1agvs-1pickers-globalobs-chg-v1
+[2026-03-18 15:30:14 UTC] Scenario focus: Balanced baseline: reveal whether the model understands the normal AGV-Picker collaboration loop.
+[2026-03-18 15:32:01 UTC] Delivery milestone step=32 cumulative_deliveries=1
+[2026-03-18 15:39:52 UTC] Completed scenario=tiny_balanced_1v1 model=qwen2.5:14b deliveries=1 steps=232 failures=0

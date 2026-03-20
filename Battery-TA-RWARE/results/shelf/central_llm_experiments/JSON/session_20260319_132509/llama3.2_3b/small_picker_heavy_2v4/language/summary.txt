@@ -1,0 +1,10 @@
+Stated Objective: Increase the total shelf deliveries.
+Model: llama3.2:3b (SLM)
+Scenario: small_picker_heavy_2v4 [tarware-small-2agvs-4pickers-globalobs-chg-v1]
+Scenario Focus: Picker-heavy: reveal underutilization, role confusion, and unnecessary movement.
+Prompt format: LANGUAGE
+Total Shelf Delivery: 1
+Steps executed: 381
+LLM missing/invalid planned actions: 0
+Shelf delivery timeline:
+- step=181 delivered_this_step=1 total_shelf_deliveries=1

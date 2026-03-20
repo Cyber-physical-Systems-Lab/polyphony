@@ -1,0 +1,25 @@
+{
+  "stated_objective": "Increase the total shelf deliveries.",
+  "model": "qwen2.5:14b",
+  "model_class": "LLM",
+  "scenario": "tiny_balanced_1v1",
+  "scenario_env_id": "tarware-tiny-1agvs-1pickers-globalobs-chg-v1",
+  "scenario_focus": "Balanced baseline: reveal whether the model understands the normal AGV-Picker collaboration loop.",
+  "prompt_format": "LANGUAGE",
+  "total_shelf_deliveries": 1,
+  "delivery_timeline": [
+    {
+      "step": 32,
+      "total_shelf_deliveries": 1,
+      "step_shelf_deliveries": 1
+    }
+  ],
+  "steps_executed": 232,
+  "max_steps": 1000,
+  "seed": 0,
+  "llm_calls": 28,
+  "llm_failures": 0,
+  "llm_missing_or_invalid_actions": 0,
+  "elapsed_seconds": 578.2112905979156,
+  "step_records_path": "results/central_llm_experiments/session_20260317_183938/qwen2.5_14b/tiny_balanced_1v1/language/step_records.json"
+}

@@ -1,0 +1,11 @@
+Stated Objective: Increase the total shelf deliveries.
+Model: mistral:7b (MLM)
+Scenario: small_balanced_2v2 [tarware-small-2agvs-2pickers-globalobs-chg-v1]
+Scenario Focus: Balanced coordination at slightly higher concurrency.
+Prompt format: LANGUAGE
+Total Shelf Delivery: 2
+Steps executed: 393
+LLM missing/invalid planned actions: 0
+Shelf delivery timeline:
+- step=173 delivered_this_step=1 total_shelf_deliveries=1
+- step=193 delivered_this_step=1 total_shelf_deliveries=2

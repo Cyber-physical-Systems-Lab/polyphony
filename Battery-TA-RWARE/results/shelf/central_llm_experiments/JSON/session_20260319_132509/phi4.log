@@ -1,0 +1,2 @@
+[2026-03-19 17:20:31 UTC] Pulling model=phi4 class=LLM
+[2026-03-19 20:20:10 UTC] Removing model=phi4 to save disk space

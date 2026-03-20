@@ -1,0 +1,2 @@
+[2026-03-19 13:57:21 UTC] Pulling model=llama3.2:3b class=SLM
+[2026-03-19 14:27:41 UTC] Removing model=llama3.2:3b to save disk space

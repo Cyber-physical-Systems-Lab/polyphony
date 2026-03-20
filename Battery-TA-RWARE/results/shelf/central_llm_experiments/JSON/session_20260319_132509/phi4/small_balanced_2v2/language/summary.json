@@ -1,0 +1,30 @@
+{
+  "stated_objective": "Increase the total shelf deliveries.",
+  "model": "phi4",
+  "model_class": "LLM",
+  "scenario": "small_balanced_2v2",
+  "scenario_env_id": "tarware-small-2agvs-2pickers-globalobs-chg-v1",
+  "scenario_focus": "Balanced coordination at slightly higher concurrency.",
+  "prompt_format": "LANGUAGE",
+  "total_shelf_deliveries": 2,
+  "delivery_timeline": [
+    {
+      "step": 62,
+      "total_shelf_deliveries": 1,
+      "step_shelf_deliveries": 1
+    },
+    {
+      "step": 92,
+      "total_shelf_deliveries": 2,
+      "step_shelf_deliveries": 1
+    }
+  ],
+  "steps_executed": 292,
+  "max_steps": 1000,
+  "seed": 0,
+  "llm_calls": 140,
+  "llm_failures": 0,
+  "llm_missing_or_invalid_actions": 0,
+  "elapsed_seconds": 1162.892961025238,
+  "step_records_path": "results/central_llm_experiments/session_20260319_132509/phi4/small_balanced_2v2/language/step_records.json"
+}

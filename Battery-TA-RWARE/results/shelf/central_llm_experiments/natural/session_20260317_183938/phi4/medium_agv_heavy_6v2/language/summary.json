@@ -1,0 +1,19 @@
+{
+  "stated_objective": "Increase the total shelf deliveries.",
+  "model": "phi4",
+  "model_class": "LLM",
+  "scenario": "medium_agv_heavy_6v2",
+  "scenario_env_id": "tarware-medium-6agvs-2pickers-globalobs-chg-v1",
+  "scenario_focus": "Strongly AGV-heavy: stress-test support prioritization, waiting, and charging decisions.",
+  "prompt_format": "LANGUAGE",
+  "total_shelf_deliveries": 0,
+  "delivery_timeline": [],
+  "steps_executed": 200,
+  "max_steps": 1000,
+  "seed": 0,
+  "llm_calls": 172,
+  "llm_failures": 154,
+  "llm_missing_or_invalid_actions": 0,
+  "elapsed_seconds": 10092.010999917984,
+  "step_records_path": "results/central_llm_experiments/session_20260317_183938/phi4/medium_agv_heavy_6v2/language/step_records.json"
+}

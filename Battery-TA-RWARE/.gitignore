@@ -205,8 +205,6 @@ $RECYCLE.BIN/
 # End of https://www.gitignore.io/api/linux,python,windows,pycharm+all,visualstudiocode
 
 # Project specific ignores
-/log
-/results
 *.egg-info
 *.pyc
 __pycache__/

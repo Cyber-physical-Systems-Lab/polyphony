@@ -1,0 +1,3 @@
+[2026-03-17 18:58:40 UTC] Starting scenario=small_agv_heavy_4v2 env_id=tarware-small-4agvs-2pickers-globalobs-chg-v1
+[2026-03-17 18:58:40 UTC] Scenario focus: AGV-heavy: reveal picker-support scheduling weakness and AGV waiting behavior.
+[2026-03-17 19:05:19 UTC] Completed scenario=small_agv_heavy_4v2 model=llama3.2:1b deliveries=0 steps=200 failures=0

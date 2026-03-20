@@ -1,0 +1,4 @@
+[2026-03-19 19:55:15 UTC] Starting scenario=small_picker_heavy_2v4 env_id=tarware-small-2agvs-4pickers-globalobs-chg-v1
+[2026-03-19 19:55:15 UTC] Scenario focus: Picker-heavy: reveal underutilization, role confusion, and unnecessary movement.
+[2026-03-19 20:03:44 UTC] Delivery milestone step=137 cumulative_deliveries=1
+[2026-03-19 20:20:10 UTC] Completed scenario=small_picker_heavy_2v4 model=phi4 deliveries=1 steps=337 failures=0

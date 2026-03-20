@@ -505,9 +505,30 @@ def fallback_actions(env, valid_masks: np.ndarray) -> List[int]:
 
 
 def candidate_ids_for_agent(env, idx: int, valid_masks: np.ndarray, max_candidate_ids: int) -> List[int]:
-    valid_ids = sorted(int(i) for i in np.where(valid_masks[idx] > 0)[0].tolist())
+    agent = env.agents[idx]
+    valid_ids = [int(i) for i in np.where(valid_masks[idx] > 0)[0].tolist()]
     if not valid_ids:
         valid_ids = [0]
+    # Sort valid ids by type and proximity to agent, prioritizing NOOP, then GOAL/CHARGING, then SHELF actions, and within each type by nearest path length.
+    valid_ids.sort(
+        key=lambda action_id: (
+            0 if action_id == 0 else 1,
+            (
+                len(path)
+                if (
+                    action_id in env.action_id_to_coords_map
+                    and (path := env.find_path(
+                        (agent.y, agent.x),
+                        env.action_id_to_coords_map[action_id],
+                        agent,
+                        care_for_agents=False,
+                    ))
+                )
+                else float("inf")
+            ),
+            action_id,
+        )
+    )
     if max_candidate_ids and max_candidate_ids > 0:
         return valid_ids[:max_candidate_ids]
     return valid_ids
@@ -543,16 +564,6 @@ def battery_need_label(battery: float) -> str:
     if battery < 50.0:
         return "need_charging_soon"
     return "not_needed"
-
-
-def describe_action_id(env, action_id: int) -> str:
-    if int(action_id) == 0:
-        return "0:NOOP"
-    action_type = classify_action(env, int(action_id))
-    coords = env.action_id_to_coords_map.get(int(action_id))
-    if coords is None:
-        return f"{int(action_id)}:{action_type}"
-    return f"{int(action_id)}:{action_type}@({int(coords[1])},{int(coords[0])})"
 
 
 def describe_action_id_for_agent(env, agent, action_id: int) -> str:

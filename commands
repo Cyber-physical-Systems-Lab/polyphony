@@ -122,8 +122,9 @@ sudo docker run --network=host --name tarware-remote-gui --gpus all -it  \
 -v $XSOCK:$XSOCK:rw \
 -v $XAUTH:$XAUTH:rw \
 -v /home/cpslab/Work/Thesis/rjm/polyphony/Battery-TA-RWARE:/docker-mount/Battery-TA-RWARE ollama-battertarware-gui:v1
-
-
+   xauth \
+apt-get update 
+apt install x11-apps
 python3 -m pip install --break-system-packages -e .
 python3 -m pip install --break-system-packages -e ".[llm]"
 
@@ -164,12 +165,12 @@ sudo -E docker run --network=host \
   ollama-battertarware-gui-t1:v1
 
 sudo -E docker run --network=host \
-  --name tarware-remote-gui-t2 \
+  --name tarware-remote-gui-t1 \
   --gpus all \
   -it \
   -e DISPLAY=$DISPLAY \
-  -v /home/cpslab/.Xauthority:/root/.Xauthority:ro \
-  -v /home/cpslab/Work/Thesis/rjm/polyphony/Battery-TA-RWARE:/docker-mount/Battery-TA-RWARE \
+  -v /home/user-rjm/.Xauthority:/root/.Xauthority:ro \
+  -v /home/user-rjm/Work/Thesis/rjm/polyphony/Battery-TA-RWARE:/docker-mount/Battery-TA-RWARE \
   ollama-battertarware-gui:v1
 
 Fixed prompt
@@ -198,3 +199,13 @@ python3 scripts/build_rag_index.py \
   --docs_dir knowledge \
   --db_dir rag_db \
   --ollama_base_url http://localhost:11434
+
+
+python3 scripts/run_centralized_llm_experiments.py --prompt_format language
+
+python3 scripts/run_centralized_llm_experiments.py \
+  --prompt_format json \
+  --results_dir results/shelf/central_llm_experiments/JSON \
+  --session_dir results/shelf/central_llm_experiments/JSON/session_20260319_XXXXXX \
+  --max_steps 1000 \
+  --seed 0

@@ -6,7 +6,7 @@
 The experiments in this thesis are executed from the Battery-TA-RWARE repository in this workspace.
 Example commands:
 
-\begin{lstlisting}[caption=Run the LLM controller for one episode., label=listing:run_llm]
+\begin{lstlisting}[caption=Run the basic per-agent LLM controller for one episode., label=listing:run_llm]
 python Battery-TA-RWARE/scripts/run_llm.py \
   --env_id tarware-tiny-1agvs-1pickers-partialobs-chg-v1 \
   --seed 0 \
@@ -14,17 +14,49 @@ python Battery-TA-RWARE/scripts/run_llm.py \
   --model llama3.2:3b
 \end{lstlisting}
 
-\begin{lstlisting}[caption=Run the heuristic baseline for one episode., label=listing:run_heuristic]
+\begin{lstlisting}[caption=Run the centralized shelf-delivery experiments., label=listing:run_centralized]
+python Battery-TA-RWARE/scripts/run_centralized_llm_experiments.py \
+  --prompt_format language \
+  --seed 0
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Run the shared-context shelf-delivery experiments., label=listing:run_shared_context]
+python Battery-TA-RWARE/scripts/run_shared_context_llm_expt.py \
+  --prompt_format language \
+  --seed 0
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Run the Objective~2 shared-context call-aware experiments., label=listing:run_obj2]
+python Battery-TA-RWARE/scripts/run_obj2_shared_context_llm.py \
+  --prompt_format language \
+  --max_steps 0 \
+  --max_busy_steps_for_replan 10 \
+  --max_inactivity_steps 500 \
+  --disable_support_needed_soon \
+  --find_path_agent_aware_always \
+  --seed 0
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Run the heuristic policy for one episode., label=listing:run_heuristic]
 python Battery-TA-RWARE/scripts/run_heuristic.py \
   --env_id tarware-tiny-1agvs-1pickers-partialobs-chg-v1 \
   --seed 0 \
   --num_episodes 1
 \end{lstlisting}
 
+The main result folders discussed in the thesis are:
+\begin{itemize}
+    \item \nolinkurl{results/shelf/central_llm_experiments}: Objective~1, centralized planning.
+    \item \nolinkurl{results/shelf/shared_context_llm_experiments}: Objective~1, shared-context per-agent planning.
+    \item \nolinkurl{results/calls/shared_context}: Objective~2, shared-context per-agent planning with call-efficiency objective.
+    \item \nolinkurl{results/battery}: planned battery-oriented experiments (not yet populated with completed aggregate sessions at the time of writing).
+\end{itemize}
+
 \subsection{Prompt Excerpt (Illustrative)}
 \label{app:prompt_excerpt}
 The \gls{llm} is prompted with an explicit mapping from relevant state elements to discrete action identifiers.
-The full prompt is generated programmatically; the excerpt below illustrates the format (line breaks and ordering may vary):
+The exact prompt depends on the experiment family: centralized prompts describe all agents at once, while shared-context prompts describe one current agent together with selected global context.
+The full prompts are generated programmatically; the excerpt below illustrates the style (line breaks and ordering may vary):
 
 \begin{lstlisting}[caption=Illustrative prompt excerpt., label=listing:prompt_excerpt]
 Current global state:

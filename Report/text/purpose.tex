@@ -2,7 +2,7 @@
 Warehouse logistics in heterogeneous fleets can be framed as a continuous decision-making problem: at each time step, each agent must choose a discrete target (shelf, goal, or charging station), subject to dynamic constraints (valid targets, role restrictions, agent busy states) and safety constraints (battery depletion).
 The objective is to maximize delivery throughput while maintaining robust coordination between roles (carrier--picker interactions) and avoiding failure modes such as deadlocks, clashes, and out-of-charge immobilization.
 
-This thesis investigates \gls{llm}-based control as an alternative to purely hand-coded heuristics or fully learned \gls{marl} policies.
+This thesis investigates \gls{llm}-based control as a language-driven alternative for high-level multi-agent decision-making in a constrained warehouse setting.
 The central question is whether natural-language reasoning can be turned into \emph{actionable} multi-agent decisions once combined with explicit grounding and validation.
 
 \subsection{Purpose}
@@ -13,7 +13,7 @@ The concrete objectives are:
 \begin{enumerate}
     \item Implement an end-to-end \gls{llm} control loop for Battery-TA-RWARE, including prompt generation, output parsing, and feasibility validation.
     \item Define an evaluation protocol and metrics that capture throughput, coordination quality, and safety.
-    \item Compare different \gls{llm} sizes/architectures and prompt designs against a heuristic baseline (and, where available, learned \gls{rl} baselines).
+    \item Compare different \gls{llm} sizes, planning architectures, and prompt designs across the experiment objectives studied in this thesis.
     \item Identify and characterize failure modes (invalid actions, poor coordination, battery mismanagement) and propose mitigation strategies.
 \end{enumerate}
 
@@ -23,7 +23,8 @@ To keep the study focused and measurable, the following delimitations apply in t
     \item The work is evaluated in a simulated, discrete-time environment (Battery-TA-RWARE) rather than on physical robots.
     \item The \gls{llm} is used for high-level target selection; low-level navigation is handled by the environment (A* path planning and collision handling).
     \item The initial \gls{llm} policies are \emph{not} fine-tuned; they are prompted as general-purpose models accessed through a local inference server.
-    \item The present results focus on small-scale environments (``tiny'') to enable rapid iteration on prompting and validation before scaling to larger warehouses and more agents.
+    \item The reported experiments cover several warehouse sizes and role ratios, but they are still based on fixed seeds and a limited number of experimental sessions.
+    \item The battery-oriented objective family had not yet produced completed aggregate results at the time of writing.
 \end{itemize}
 
 \subsection{Ethical and Sustainability Considerations}

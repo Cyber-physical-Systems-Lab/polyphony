@@ -2,7 +2,7 @@
 \babel@toc {swedish}{}\relax 
 \babel@toc {english}{}\relax 
 \contentsline {paragraph}{Acknowledgement}{iii}{section*.2}%
-\contentsline {section}{Acronyms}{vi}{section*.4}%
+\contentsline {section}{Acronyms}{vii}{section*.4}%
 \contentsline {section}{\numberline {1}Introduction}{1}{section.1}%
 \contentsline {subsection}{\numberline {1.1}Research Questions}{2}{subsection.1.1}%
 \contentsline {subsection}{\numberline {1.2}Contributions}{3}{subsection.1.2}%
@@ -22,17 +22,34 @@
 \contentsline {subsection}{\numberline {4.1}Overview}{8}{subsection.4.1}%
 \contentsline {subsection}{\numberline {4.2}Environment: Battery-TA-RWARE}{8}{subsection.4.2}%
 \contentsline {subsection}{\numberline {4.3}LLM Control Loop}{9}{subsection.4.3}%
-\contentsline {subsection}{\numberline {4.4}Baselines}{10}{subsection.4.4}%
-\contentsline {subsection}{\numberline {4.5}Evaluation Metrics}{11}{subsection.4.5}%
-\contentsline {subsection}{\numberline {4.6}Experimental Protocol (Current Stage)}{11}{subsection.4.6}%
-\contentsline {section}{\numberline {5}Preliminary Results and Discussion}{11}{section.5}%
-\contentsline {subsection}{\numberline {5.1}Implementation Status}{11}{subsection.5.1}%
-\contentsline {subsection}{\numberline {5.2}Preliminary Experiment}{12}{subsection.5.2}%
-\contentsline {subsection}{\numberline {5.3}Observed Failure Modes}{13}{subsection.5.3}%
-\contentsline {subsection}{\numberline {5.4}Discussion}{13}{subsection.5.4}%
-\contentsline {section}{\numberline {6}Conclusions and Future Work}{13}{section.6}%
-\contentsline {subsection}{\numberline {6.1}Future Work}{14}{subsection.6.1}%
-\contentsline {section}{\numberline {A}Appendix}{17}{appendix.A}%
-\contentsline {subsection}{\numberline {A.1}Reproducibility: Running the Controllers}{17}{subsection.A.1}%
-\contentsline {subsection}{\numberline {A.2}Prompt Excerpt (Illustrative)}{17}{subsection.A.2}%
-\contentsline {subsection}{\numberline {A.3}Metric Definitions}{18}{subsection.A.3}%
+\contentsline {subsection}{\numberline {4.4}Experiment Families and Objectives}{10}{subsection.4.4}%
+\contentsline {paragraph}{Objective 1: maximize total shelf deliveries.}{10}{section*.6}%
+\contentsline {paragraph}{Objective 2: optimize \gls {llm} calls while maintaining delivery throughput.}{11}{section*.7}%
+\contentsline {paragraph}{Objective 3: battery-aware objective.}{11}{section*.8}%
+\contentsline {subsection}{\numberline {4.5}Planning Architectures}{11}{subsection.4.5}%
+\contentsline {paragraph}{Centralized planning.}{11}{section*.9}%
+\contentsline {paragraph}{Shared-context per-agent planning.}{12}{section*.10}%
+\contentsline {subsection}{\numberline {4.6}Prompt Structures}{12}{subsection.4.6}%
+\contentsline {subsection}{\numberline {4.7}Comparison Axes}{13}{subsection.4.7}%
+\contentsline {subsection}{\numberline {4.8}Evaluation Metrics}{13}{subsection.4.8}%
+\contentsline {subsection}{\numberline {4.9}Scenario and Model Matrix}{14}{subsection.4.9}%
+\contentsline {subsection}{\numberline {4.10}Experimental Protocol (Current Stage)}{14}{subsection.4.10}%
+\contentsline {section}{\numberline {5}Preliminary Results and Discussion}{15}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Result Scope and Objective Progression}{15}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Objective 1: Shelf-Delivery Experiments}{16}{subsection.5.2}%
+\contentsline {subsubsection}{\numberline {5.2.1}Planning architecture}{16}{subsubsection.5.2.1}%
+\contentsline {subsubsection}{\numberline {5.2.2}Prompt representation}{17}{subsubsection.5.2.2}%
+\contentsline {subsection}{\numberline {5.3}Objective 2: Call-Aware Shelf-Delivery Experiments}{17}{subsection.5.3}%
+\contentsline {subsubsection}{\numberline {5.3.1}Prompt representation}{18}{subsubsection.5.3.1}%
+\contentsline {subsubsection}{\numberline {5.3.2}Adaptation to the changed objective}{18}{subsubsection.5.3.2}%
+\contentsline {subsubsection}{\numberline {5.3.3}Model size}{19}{subsubsection.5.3.3}%
+\contentsline {subsubsection}{\numberline {5.3.4}Call-efficiency outcome}{20}{subsubsection.5.3.4}%
+\contentsline {subsection}{\numberline {5.4}Objective 3: Battery-Aware Objective}{20}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}System-Level Lessons from the Experiments}{20}{subsection.5.5}%
+\contentsline {subsection}{\numberline {5.6}Limitations of Interpretation}{21}{subsection.5.6}%
+\contentsline {section}{\numberline {6}Conclusions and Future Work}{22}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Future Work}{23}{subsection.6.1}%
+\contentsline {section}{\numberline {A}Appendix}{26}{appendix.A}%
+\contentsline {subsection}{\numberline {A.1}Reproducibility: Running the Controllers}{26}{subsection.A.1}%
+\contentsline {subsection}{\numberline {A.2}Prompt Excerpt (Illustrative)}{27}{subsection.A.2}%
+\contentsline {subsection}{\numberline {A.3}Metric Definitions}{27}{subsection.A.3}%

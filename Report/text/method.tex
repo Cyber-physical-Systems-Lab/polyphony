@@ -3,7 +3,7 @@ The thesis uses an empirical, experimental methodology:
 \begin{enumerate}
     \item Implement an \gls{llm}-driven control loop for a simulated heterogeneous warehouse environment.
     \item Define a set of baselines and evaluation metrics.
-    \item Run controlled experiments (fixed environment ids and seeds) across multiple \gls{llm} models and prompt variants.
+    \item Run controlled experiments (fixed environment ids and seeds) across multiple \gls{llm} models, planning architectures, and prompt variants.
     \item Analyze throughput, safety, and coordination outcomes as well as qualitative failure modes.
 \end{enumerate}
 
@@ -47,9 +47,65 @@ Two design choices are central for feasibility:
     \item \textbf{Hard validation:} action masks enforce constraints such as invalid goals for picker agents and busy-state restrictions. Invalid \gls{llm} outputs are never executed.
 \end{itemize}
 
-\subsection{Baselines}
-The primary baseline is the environment-provided heuristic policy, which assigns agents to requested shelves and deliveries using domain logic and shortest-path distances.
-Where available, learned \gls{rl} baselines (e.g., \gls{ppo} trained via RLlib) are considered as an additional comparison point, but the current report focuses on heuristic versus \gls{llm} as a first-draft milestone.
+\subsection{Experiment Families and Objectives}
+The implemented experiments are grouped into three objective families.
+
+\paragraph{Objective 1: maximize total shelf deliveries.}
+The first family focuses on raw throughput. These experiments are stored under \nolinkurl{results/shelf} and were designed to answer two questions: whether a centralized or shared-context planning architecture is more effective, and whether natural-language or \gls{json}-style prompting is the more suitable representation for that objective. The family was implemented in two architectures:
+\begin{itemize}
+    \item \textbf{Centralized planner:} \nolinkurl{scripts/run_centralized_llm_experiments.py}. One \gls{llm} prompt receives the global state and returns a joint plan for all non-busy agents.
+    \item \textbf{Shared-context decentralized planner:} \nolinkurl{scripts/run_shared_context_llm_expt.py}. Each agent is planned separately, but each prompt still contains a shared global summary of requests, charging occupancy, and waiting support relations.
+\end{itemize}
+For both architectures, two prompt styles were evaluated:
+\begin{itemize}
+    \item \textbf{Natural-language form:} the prompt and response use a compact textual format.
+    \item \textbf{\gls{json} form:} the prompt and response use a more structured object-and-array representation.
+\end{itemize}
+
+\paragraph{Objective 2: optimize \gls{llm} calls while maintaining delivery throughput.}
+The second family is implemented in \nolinkurl{scripts/run_obj2_shared_context_llm.py} and stored under \nolinkurl{results/calls}. This family keeps the shared-context, per-agent architecture, but changes the objective from delivery-only to a joint objective: increase shelf deliveries while reducing unnecessary \gls{llm} queries. In practice, the runner supports action holding and busy-state reuse so that the model is not queried at every environment step. This family was used primarily to study the practical trade-off between throughput, model size, and call efficiency, and more broadly to test whether the \gls{llm}-based control framework remained useful when the objective changed.
+
+\paragraph{Objective 3: battery-aware objective.}
+A third family was planned for explicitly battery-oriented evaluation and corresponding result storage under \nolinkurl{results/battery}. At the time of writing, this experimental branch had not yet produced completed result files, so it is described as planned work rather than evaluated work.
+
+\subsection{Planning Architectures}
+The experiments compare two distinct ways of integrating the \gls{llm} into the decision loop.
+
+\paragraph{Centralized planning.}
+In the centralized architecture, one \gls{llm} call plans all agents that currently need a decision. This design exposes the full global state and all relevant candidate actions in one prompt. Its intended advantage is explicit joint coordination. Its main risk is prompt overload: as the number of agents and candidate actions increases, the prompt becomes large and more difficult to parse reliably.
+
+\paragraph{Shared-context per-agent planning.}
+In the shared-context architecture, the \gls{llm} plans one agent at a time. Each prompt still includes global information, but the final decision concerns only the current agent. This reduces the output burden and simplifies parsing, at the cost of requiring coordination to emerge from repeated local decisions rather than from one explicit joint plan. In the thesis evaluation, this architecture is the main vehicle for comparing prompt forms and model sizes under a common decision structure.
+
+The \nolinkurl{run_obj2_shared_context_llm.py} variant extends the shared-context architecture with explicit action-hold durations and logging for call-efficiency analysis. It therefore remains decentralized in prompt structure while adding stronger runner-side control over when replanning is allowed.
+
+\subsection{Prompt Structures}
+The prompt comparison in this thesis is not limited to natural language versus \gls{json}. The prompt design varies along two axes:
+\begin{itemize}
+    \item \textbf{Planning scope:} centralized joint planning versus per-agent planning with shared context.
+    \item \textbf{Output structure:} natural-language responses versus \gls{json} responses.
+\end{itemize}
+
+Across the different scripts, the prompts evolved to include:
+\begin{itemize}
+    \item explicit requested-shelf to action-id mappings,
+    \item role-specific rules for \glspl{agv} and pickers,
+    \item support relations such as waiting-for-picker context,
+    \item battery-state abstractions,
+    \item candidate action filtering or prioritization,
+    \item and, in Objective~2, an explicit \nolinkurl{Steps} field intended to reduce unnecessary \gls{llm} calls.
+\end{itemize}
+
+The purpose of this progression was experimental rather than aesthetic: to determine which combination of planning scope and prompt structure yields valid, productive macro actions under the constraints of the warehouse task. In particular, the prompt comparison was intended to separate two questions: whether planning should be centralized or per-agent, and whether the same decision content is handled better in natural-language form or in a more structured \gls{json} form.
+
+\subsection{Comparison Axes}
+The current report focuses on internal comparisons within the \gls{llm}-based control framework rather than on comparison against an external baseline. The main comparison axes are:
+\begin{itemize}
+    \item model size,
+    \item planning architecture (centralized versus shared-context per-agent),
+    \item prompt form (natural language versus \gls{json}),
+    \item and objective formulation (shelf-delivery only, call-aware shelf delivery, and planned battery-aware control).
+\end{itemize}
 
 \subsection{Evaluation Metrics}
 The main metric is delivery throughput, expressed as a pick rate (deliveries per hour) derived from the number of delivered shelves and the simulated episode duration.
@@ -62,7 +118,37 @@ Additional metrics are collected to capture coordination and safety:
     \item episode length and inference speed/latency (when measured).
 \end{itemize}
 
+\subsection{Scenario and Model Matrix}
+The same scenario catalogue is reused across the experiment families:
+\begin{itemize}
+    \item \nolinkurl{tiny_balanced_1v1},
+    \item \nolinkurl{small_balanced_2v2},
+    \item \nolinkurl{medium_balanced_4v4},
+    \item \nolinkurl{small_agv_heavy_4v2},
+    \item \nolinkurl{medium_agv_heavy_6v2},
+    \item \nolinkurl{small_picker_heavy_2v4}.
+\end{itemize}
+These scenarios were selected to probe different coordination pressures: simple balanced collaboration, increased concurrency, larger warehouses, \gls{agv}-heavy support bottlenecks, and picker-heavy underutilization.
+
+The model set spans smaller and larger local models:
+\begin{itemize}
+    \item \nolinkurl{llama3.2:1b},
+    \item \nolinkurl{llama3.2:3b},
+    \item \nolinkurl{mistral:7b},
+    \item \nolinkurl{gemma3:12b},
+    \item \nolinkurl{phi4},
+    \item \nolinkurl{qwen2.5:14b}.
+\end{itemize}
+
 \subsection{Experimental Protocol (Current Stage)}
-To support reproducibility during prompt iteration, experiments are run with fixed environment ids and fixed seeds.
-The preliminary results in Section~\ref{sec:result_discussion} are obtained on a small environment configuration (``tiny'') with one \gls{agv} and one picker agent and a single seed.
-Subsequent experiments will extend to multiple seeds, additional environment sizes, and larger heterogeneous teams.
+To support reproducibility during prompt iteration, the reported experiment sessions were run with fixed environment ids and a fixed seed.
+This choice makes behavioural debugging easier, but it also limits statistical confidence. The current thesis therefore treats the results as experimental evidence about architecture and prompt behaviour, not as final performance claims.
+
+The progression of the experimental campaign was:
+\begin{enumerate}
+    \item Objective~1 shelf-delivery experiments, comparing centralized and shared-context planning and comparing natural-language and \gls{json} prompt forms,
+    \item Objective~2 call-aware shelf-delivery experiments, using a later shared-context controller with stronger prompt structure and safeguards,
+    \item Objective~3 battery-aware experiments, planned but not yet completed.
+\end{enumerate}
+
+One broader aim of this progression was to test whether the same general \gls{llm}-based control framework could adapt as the stated objective changed. Section~\ref{sec:result_discussion} therefore first analyzes Objective~1 as the shelf-delivery baseline, then Objective~2 as a changed objective using a later and more structured shared-context controller, and finally notes Objective~3 as planned future evaluation. In the current simulation setup, a run can achieve at most 20 deliveries, and the results chapter uses that ceiling to contextualize reported scores.

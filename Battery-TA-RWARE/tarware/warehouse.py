@@ -13,6 +13,7 @@ from tarware.utils import find_sections, get_next_micro_action
 
 _FIXING_CLASH_TIME = 4
 _STUCK_THRESHOLD = 5
+_UNREACHABLE_TARGET_COOLDOWN_STEPS = 3
 _BATTERY_FULL = 100
 _BATTERY_CONSUMPTION_MOVE = 1
 _BATTERY_CONSUMPTION_LOAD = 2
@@ -48,6 +49,14 @@ class Agent(Entity):
         self.target = 0
         self.battery = random.randint(20, _BATTERY_FULL)  # New: Battery level
         self.charging = False
+        self.resolving_conflict = False
+        self.conflict_resolution_steps = 0
+        self.resolution_target = 0
+        self.resolution_origin: Optional[str] = None
+        self.resolution_failed_recently = False
+        self.unreachable_target_action_id = 0
+        self.unreachable_target_reason: Optional[str] = None
+        self.unreachable_target_cooldown_steps = 0
 
     def req_location(self, grid_size) -> Tuple[int, int]:
         if self.req_action != Action.FORWARD:
@@ -123,6 +132,8 @@ class Warehouse(gym.Env):
         normalised_coordinates: bool=False,
         observation_type: str = "global",
         verbose_events: bool = False,
+        allow_busy_replan: bool = False,
+        find_path_agent_aware_always: bool = False,
     ):
         """The robotic warehouse environment
 
@@ -219,6 +230,9 @@ class Warehouse(gym.Env):
         self.stuck_counters = []
         self.renderer = None
         self.verbose_events = verbose_events
+        self.allow_busy_replan = allow_busy_replan
+        self.find_path_agent_aware_always = find_path_agent_aware_always
+        self._agents_in_conflict: set[int] = set()
 
     def _event_log(self, text: str) -> None:
         if self.verbose_events:
@@ -303,48 +317,57 @@ class Warehouse(gym.Env):
         Returns:
         - List of tuples representing the path from start to goal, or an empty list if no path is found.
         """
-        grid = np.zeros(self.grid_size)
-        grid += self.grid[CollisionLayers.SHELVES]
-        if care_for_agents:
-            grid += self.grid[CollisionLayers.AGVS]
-            grid += self.grid[CollisionLayers.PICKERS]
-        # Agents should start a path regardless if some others are waiting around the target location
-        grid[goal[0], goal[1]] = 0
+        def _compute_path(use_agent_obstacles: bool) -> List[Tuple[int, int]]:
+            grid = np.zeros(self.grid_size)
+            grid += self.grid[CollisionLayers.SHELVES]
+            if use_agent_obstacles:
+                grid += self.grid[CollisionLayers.AGVS]
+                grid += self.grid[CollisionLayers.PICKERS]
+            # Agents should start a path regardless if some others are waiting around the target location
+            grid[goal[0], goal[1]] = 0
 
-        if agent.type == AgentType.PICKER:
-            # Pickers can only travel through the highway, but can access goal locations
-            grid += (1-self.highways)
-            grid[goal[0], goal[1]] -= not self._is_highway(goal[1], goal[0])
-            for i in range(self.grid_size[1]):
-                grid[self.grid_size[0] - 1, i] = 1
+            if agent.type == AgentType.PICKER:
+                # Pickers can only travel through the highway, but can access goal locations
+                grid += (1-self.highways)
+                grid[goal[0], goal[1]] -= not self._is_highway(goal[1], goal[0])
+                for i in range(self.grid_size[1]):
+                    grid[self.grid_size[0] - 1, i] = 1
 
-        # Ban Pickers crossing through racks if adjacent target location is chosen and force them thake the long way around.
-        start_fix = (0, 0)
-        if agent.type == AgentType.PICKER and  ((not self._is_highway(start[1], start[0])) and goal[0] == start[0] and abs(goal[1] - start[1]) == 1):
-            if self._is_highway(start[1] - 1, start[0]):
-                start_fix = (0, - 1)
-            if self._is_highway(start[1] + 1, start[0]):
-                start_fix = (0, 1)
-            grid[start[0], start[1]] = 1
+            # Ban Pickers crossing through racks if adjacent target location is chosen and force them thake the long way around.
+            start_fix = (0, 0)
+            if agent.type == AgentType.PICKER and  ((not self._is_highway(start[1], start[0])) and goal[0] == start[0] and abs(goal[1] - start[1]) == 1):
+                if self._is_highway(start[1] - 1, start[0]):
+                    start_fix = (0, - 1)
+                if self._is_highway(start[1] + 1, start[0]):
+                    start_fix = (0, 1)
+                grid[start[0], start[1]] = 1
 
-        grid[start[0]+start_fix[0], start[1]+start_fix[1]] = 0
-        grid = [list(map(int, l)) for l in (grid!=0)]
-        grid = np.array(grid, dtype=np.float32)
-        grid[np.where(grid == 1)] = np.inf
-        grid[np.where(grid == 0)] = 1
-        adjusted_start = (start[0] + start_fix[0], start[1] + start_fix[1])
-        result = astar_path(grid, adjusted_start, goal, allow_diagonal=False) # returns None if cant find path
-        # result = result[int(np.where(result == adjusted_start)[0][0]):]
-        if result is not None:
-            path_result = [tuple(x) for x in list(result)] # convert back to other format
-            path_result = path_result[1 - int(grid[start[0], start[1]] > 1):]
-        else:
-            path_result = []
+            grid[start[0]+start_fix[0], start[1]+start_fix[1]] = 0
+            grid = [list(map(int, l)) for l in (grid!=0)]
+            grid = np.array(grid, dtype=np.float32)
+            grid[np.where(grid == 1)] = np.inf
+            grid[np.where(grid == 0)] = 1
+            adjusted_start = (start[0] + start_fix[0], start[1] + start_fix[1])
+            result = astar_path(grid, adjusted_start, goal, allow_diagonal=False) # returns None if cant find path
+            # result = result[int(np.where(result == adjusted_start)[0][0]):]
+            if result is not None:
+                path_result = [tuple(x) for x in list(result)] # convert back to other format
+                path_result = path_result[1 - int(grid[start[0], start[1]] > 1):]
+            else:
+                path_result = []
 
-        if path_result:
-            return [(x, y) for y, x in path_result]
-        else:
+            if path_result:
+                return [(x, y) for y, x in path_result]
             return []
+
+        effective_care_for_agents = bool(care_for_agents or self.find_path_agent_aware_always)
+        path_result = _compute_path(effective_care_for_agents)
+        forced_by_global_override = bool(self.find_path_agent_aware_always and not care_for_agents)
+        if path_result:
+            return path_result
+        if forced_by_global_override and effective_care_for_agents:
+            return _compute_path(False)
+        return []
 
     def _recalc_grid(self) -> None:
         self.grid.fill(0)
@@ -385,6 +408,181 @@ class Warehouse(gym.Env):
                 empty_item_map[id_ - len(self.goals) - 1] = 1
         return empty_item_map
 
+    def _clear_agent_assignment(self, agent: Agent) -> None:
+        agent.busy = False
+        agent.target = 0
+        agent.path = []
+        agent.charging = False
+        agent.resolving_conflict = False
+        agent.conflict_resolution_steps = 0
+        agent.resolution_target = 0
+        agent.resolution_origin = None
+
+    def _start_conflict_resolution(self, agent: Agent, origin: str = "clash") -> None:
+        if not agent.resolving_conflict:
+            agent.conflict_resolution_steps = 0
+        agent.resolving_conflict = True
+        agent.resolution_target = int(agent.target)
+        agent.resolution_origin = str(origin)
+
+    def _clear_conflict_resolution(self, agent: Agent) -> None:
+        agent.resolving_conflict = False
+        agent.conflict_resolution_steps = 0
+        agent.resolution_target = 0
+        agent.resolution_origin = None
+
+    def _mark_unreachable_target(
+        self,
+        agent: Agent,
+        action_id: int,
+        reason: str = "conflict_timeout_target_not_reachable",
+    ) -> None:
+        if int(action_id) <= 0:
+            return
+        agent.resolution_failed_recently = True
+        agent.unreachable_target_action_id = int(action_id)
+        agent.unreachable_target_reason = str(reason)
+        agent.unreachable_target_cooldown_steps = int(_UNREACHABLE_TARGET_COOLDOWN_STEPS)
+
+    def _tick_unreachable_target_cooldown(self, agent: Agent) -> None:
+        if int(agent.unreachable_target_cooldown_steps) <= 0:
+            agent.resolution_failed_recently = False
+            agent.unreachable_target_action_id = 0
+            agent.unreachable_target_reason = None
+            agent.unreachable_target_cooldown_steps = 0
+            return
+        agent.unreachable_target_cooldown_steps = max(0, int(agent.unreachable_target_cooldown_steps) - 1)
+        if int(agent.unreachable_target_cooldown_steps) <= 0:
+            agent.resolution_failed_recently = False
+            agent.unreachable_target_action_id = 0
+            agent.unreachable_target_reason = None
+
+    def _assign_macro_target(self, agent: Agent, macro_action: int, charging_cells: set[tuple[int, int]]) -> None:
+        active_assignment_context = (
+            bool(agent.busy)
+            or bool(agent.charging)
+            or agent.req_action == Action.TOGGLE_LOAD
+            or bool(agent.resolving_conflict)
+        )
+        if agent.resolving_conflict and active_assignment_context:
+            return
+        if int(macro_action) != 0 and int(agent.target) == int(macro_action) and active_assignment_context:
+            return
+        self._clear_agent_assignment(agent)
+        if macro_action == 0:
+            return
+
+        target_yx = self.action_id_to_coords_map[macro_action]
+        target_xy = (target_yx[1], target_yx[0])
+        target_is_charging = target_xy in charging_cells
+        agent.target = macro_action
+        agent.charging = target_is_charging
+
+        if target_is_charging and (agent.x, agent.y) == target_xy and agent.battery < _BATTERY_FULL:
+            agent.path = []
+            agent.busy = True
+            return
+
+        agent.path = self.find_path((agent.y, agent.x), target_yx, agent, care_for_agents=False)
+        if agent.path or (agent.y, agent.x) == target_yx:
+            agent.busy = True
+            self.stuck_counters[agent.id - 1].reset((agent.x, agent.y))
+        else:
+            self._clear_agent_assignment(agent)
+
+    def _derive_req_action_from_assignment(self, agent: Agent, charging_cells: set[tuple[int, int]]) -> Tuple[int, int]:
+        agvs_distance_travelled = 0
+        pickers_distance_travelled = 0
+
+        if agent.charging and (agent.x, agent.y) in charging_cells:
+            if agent.battery < _BATTERY_FULL:
+                agent.req_action = Action.CHARGE
+                agent.busy = False
+                return agvs_distance_travelled, pickers_distance_travelled
+            self._clear_agent_assignment(agent)
+            return agvs_distance_travelled, pickers_distance_travelled
+
+        if not agent.busy:
+            return agvs_distance_travelled, pickers_distance_travelled
+
+        if agent.path is None or agent.path == []:
+            if agent.charging and agent.battery < _BATTERY_FULL:
+                agent.req_action = Action.CHARGE
+                agent.busy = False
+            elif agent.charging and agent.battery >= _BATTERY_FULL:
+                self._clear_agent_assignment(agent)
+            elif agent.type in [AgentType.AGV, AgentType.AGENT]:
+                agent.req_action = Action.TOGGLE_LOAD
+            elif agent.type == AgentType.PICKER:
+                agent.busy = False
+        else:
+            agent.req_action = get_next_micro_action(agent.x, agent.y, agent.dir, agent.path[0])
+            agvs_distance_travelled += int(agent.type == AgentType.AGV)
+            pickers_distance_travelled += int(agent.type == AgentType.PICKER)
+
+        if agent.path is not None and len(agent.path) == 1:
+            if agent.carrying_shelf and self.grid[CollisionLayers.SHELVES, agent.path[-1][1], agent.path[-1][0]]:
+                agent.req_action = Action.NOOP
+                agent.busy = False
+        picker_target_is_shelf_interaction = (
+            agent.type == AgentType.PICKER
+            and not agent.charging
+            and int(agent.target) in self.shelf_action_ids
+        )
+        if agent.path is not None and 1 <= len(agent.path) <= 2 and picker_target_is_shelf_interaction:
+            target_x, target_y = agent.path[-1]
+            target_agv_id = int(self.grid[CollisionLayers.AGVS, target_y, target_x])
+            agv_waiting_here = (
+                target_agv_id != 0
+                and self.agents[target_agv_id - 1].req_action == Action.TOGGLE_LOAD
+            )
+            if not agv_waiting_here:
+                agent.req_action = Action.NOOP
+            else:
+                self.stuck_counters[agent.id - 1].reset((agent.x, agent.y))
+
+        if (agent.path is None or agent.path == []) and agent.charging and agent.battery < _BATTERY_FULL:
+            agent.req_action = Action.CHARGE
+            agent.busy = False
+
+        return agvs_distance_travelled, pickers_distance_travelled
+
+    def _apply_macro_action_legacy(self, agent: Agent, macro_action: int, charging_cells: set[tuple[int, int]]) -> Tuple[int, int]:
+        agvs_distance_travelled = 0
+        pickers_distance_travelled = 0
+        if agent.charging and (agent.x, agent.y) in charging_cells:
+            if agent.battery < _BATTERY_FULL:
+                agent.req_action = Action.CHARGE
+                agent.busy = False
+                return agvs_distance_travelled, pickers_distance_travelled
+            agent.charging = False
+        if not agent.busy:
+            agent.target = 0
+            if macro_action != 0:
+                target_yx = self.action_id_to_coords_map[macro_action]
+                target_xy = (target_yx[1], target_yx[0])
+                target_is_charging = target_xy in charging_cells
+                agent.charging = target_is_charging
+
+                if target_is_charging and (agent.x, agent.y) == target_xy and agent.battery < _BATTERY_FULL:
+                    agent.target = macro_action
+                    agent.path = []
+                    agent.req_action = Action.CHARGE
+                    return agvs_distance_travelled, pickers_distance_travelled
+
+                agent.path = self.find_path((agent.y, agent.x), target_yx, agent, care_for_agents=False)
+                if agent.path:
+                    agent.busy = True
+                    agent.target = macro_action
+                    agent.req_action = get_next_micro_action(agent.x, agent.y, agent.dir, agent.path[0])
+                    self.stuck_counters[agent.id - 1].reset((agent.x, agent.y))
+        else:
+            agvs_distance_travelled, pickers_distance_travelled = self._derive_req_action_from_assignment(agent, charging_cells)
+        if (agent.path is None or agent.path == []) and agent.charging and agent.battery < _BATTERY_FULL:
+            agent.req_action = Action.CHARGE
+            agent.busy = False
+        return agvs_distance_travelled, pickers_distance_travelled
+
     def attribute_macro_actions(self, macro_actions: List[int]) -> Tuple[int, int]:
         agvs_distance_travelled = 0
         pickers_distance_travelled = 0
@@ -393,81 +591,29 @@ class Warehouse(gym.Env):
         for agent, macro_action in zip(self.agents, macro_actions):
             # Initialize action for step
             agent.req_action = Action.NOOP
+            self._tick_unreachable_target_cooldown(agent)
             # Collision avoidance logic
             if agent.fixing_clash > 0:
                 agent.fixing_clash -= 1
-            # If the agent is in charging mode and is on any charging cell, charge immediately.
-            # This avoids waiting for path exhaustion when the selected charging target differs
-            # from the station currently occupied.
-            if agent.charging and (agent.x, agent.y) in charging_cells:
-                if agent.battery < _BATTERY_FULL:
-                    agent.req_action = Action.CHARGE
-                    agent.busy = False
+            if agent.resolving_conflict:
+                agent.conflict_resolution_steps += 1
+                conflict_timeout = _FIXING_CLASH_TIME + self.column_height + 2
+                if agent.conflict_resolution_steps > conflict_timeout:
+                    failed_target = int(agent.resolution_target or agent.target or macro_action or 0)
+                    self._mark_unreachable_target(agent, failed_target)
+                    self._clear_agent_assignment(agent)
                     continue
-                agent.charging = False
-            if not agent.busy:
-                agent.target = 0
-                if macro_action != 0:
-                    target_yx = self.action_id_to_coords_map[macro_action]
-                    target_xy = (target_yx[1], target_yx[0])
-                    target_is_charging = target_xy in charging_cells
-                    agent.charging = target_is_charging
-
-                    # If already on a charging cell, charge immediately.
-                    if target_is_charging and (agent.x, agent.y) == target_xy and agent.battery < _BATTERY_FULL:
-                        agent.target = macro_action
-                        agent.path = []
-                        agent.req_action = Action.CHARGE
-                        continue
-
-                    agent.path = self.find_path((agent.y, agent.x), target_yx, agent, care_for_agents=False)
-                    if agent.path:
-                        agent.busy = True
-                        agent.target = macro_action
-                        agent.req_action = get_next_micro_action(agent.x, agent.y, agent.dir, agent.path[0])
-                        self.stuck_counters[agent.id - 1].reset((agent.x, agent.y))
+            if self.allow_busy_replan:
+                self._assign_macro_target(agent, int(macro_action), charging_cells)
+                agv_delta, picker_delta = self._derive_req_action_from_assignment(agent, charging_cells)
             else:
-                # Check if agent finished the given path, if not continue the path
-                if agent.path is None or agent.path == []:
-                    if agent.charging and agent.battery < _BATTERY_FULL:
-                        agent.req_action = Action.CHARGE
-                        agent.busy = False
-                    elif agent.charging and agent.battery >= _BATTERY_FULL:
-                        agent.charging = False
-                        agent.busy = False
-                    elif agent.type in [AgentType.AGV, AgentType.AGENT]:
-                        agent.req_action = Action.TOGGLE_LOAD
-                    elif agent.type == AgentType.PICKER:
-                        agent.busy = False
-                else:
-                    agent.req_action = get_next_micro_action(agent.x, agent.y, agent.dir, agent.path[0])
-                    agvs_distance_travelled += int(agent.type == AgentType.AGV)
-                    pickers_distance_travelled += int(agent.type == AgentType.PICKER)
-                if agent.path is not None and len(agent.path) == 1:
-                    # If agent is at the end of a path and carrying a shelf and the target location is already occupied, restart agent
-                    if agent.carrying_shelf and self.grid[CollisionLayers.SHELVES, agent.path[-1][1], agent.path[-1][0]]:
-                        agent.req_action = Action.NOOP
-                        agent.busy = False
-                    # Logic for Pickers to load shelves if AGV is present at location or wait otherwise
-                    if agent.type == AgentType.PICKER:
-                        if (
-                            self.grid[CollisionLayers.AGVS, agent.path[-1][1], agent.path[-1][0]] == 0
-                            or self.agents[self.grid[CollisionLayers.AGVS, agent.path[-1][1], agent.path[-1][0]]- 1].req_action != Action.TOGGLE_LOAD
-                        ):
-                            agent.req_action = Action.NOOP
-                        elif (
-                            self.grid[CollisionLayers.AGVS, agent.path[-1][1], agent.path[-1][0]] != 0
-                            and self.agents[self.grid[CollisionLayers.AGVS, agent.path[-1][1], agent.path[-1][0]] - 1].req_action == Action.TOGGLE_LOAD
-                            ):
-                            self.stuck_counters[agent.id - 1].reset((agent.x, agent.y))
-                            
-            # Check if agent has finished its path and should charge
-            if (agent.path is None or agent.path == []) and agent.charging and agent.battery < _BATTERY_FULL:
-                agent.req_action = Action.CHARGE
-                agent.busy = False
+                agv_delta, picker_delta = self._apply_macro_action_legacy(agent, int(macro_action), charging_cells)
+            agvs_distance_travelled += agv_delta
+            pickers_distance_travelled += picker_delta
         return agvs_distance_travelled, pickers_distance_travelled
 
     def resolve_move_conflict(self, agent_list):
+        self._agents_in_conflict = set()
         commited_agents = set()
         G = nx.DiGraph()
         for agent in agent_list:
@@ -525,6 +671,8 @@ class Warehouse(gym.Env):
                         # If the agent's next action bumps it into another agent
                         if (agent_new_x, agent_new_y) == (other.x, other.y):
                             agent.req_action = Action.NOOP # Stop the action
+                            self._agents_in_conflict.add(agent.id)
+                            self._start_conflict_resolution(agent, "clash")
                             # Check if the clash is not solved naturaly by the other agent moving away
                             if (other_new_x, other_new_y) in [(agent.x, agent.y), (agent_new_x, agent_new_y)] and not other.req_action in (Action.LEFT, Action.RIGHT):
                                 if other.fixing_clash == 0:# If the others are not already fixing the clash
@@ -539,12 +687,18 @@ class Warehouse(gym.Env):
                             # If the agent's next action bumps it into another agent position after they take actions simultaneously
                             if agent.fixing_clash == 0 and other.fixing_clash == 0:
                                 agent.req_action = Action.NOOP # If the agent's actions leads them in the position of another STOP
+                                self._agents_in_conflict.add(agent.id)
+                                self._start_conflict_resolution(agent, "clash")
                                 agent.fixing_clash = _FIXING_CLASH_TIME  # Agent wait one step while the other moves into place
 
         commited_agents = set([self.agents[id_ - 1] for id_ in commited_agents])
         failed_agents = set(agent_list) - commited_agents
         for agent in failed_agents:
             agent.req_action = Action.NOOP
+            self._agents_in_conflict.add(agent.id)
+        for agent in agent_list:
+            if agent.resolving_conflict and agent.req_action != Action.NOOP:
+                self._clear_conflict_resolution(agent)
         return clashes
 
     def resolve_stuck_agents(self) -> int:
@@ -604,7 +758,6 @@ class Warehouse(gym.Env):
                 agent.carrying_shelf = self.shelfs[shelf_id - 1]
                 self.grid[CollisionLayers.SHELVES, agent.y, agent.x] = 0
                 self.grid[CollisionLayers.CARRIED_SHELVES, agent.y, agent.x] = shelf_id
-                agent.busy = False
                 if agent.type == AgentType.AGV and picker_id:
                     self._event_log(
                         f"[COLLAB] step={self._cur_steps} event=LOAD agv_id={agent.id} picker_id={picker_id} "
@@ -620,13 +773,14 @@ class Warehouse(gym.Env):
                         rewards[agent.id - 1] += 0.1
                     else:
                         rewards[picker_id - 1] += 0.1
+                self._clear_agent_assignment(agent)
         else:
-            agent.busy = False
+            self._clear_agent_assignment(agent)
         return rewards
 
     def _execute_unload(self, agent: Agent, rewards: np.ndarray[Any, np.dtype[np.float64]]) -> np.ndarray[Any, np.dtype[np.float64]]:
         if (agent.x, agent.y) in self.goals or (agent.x, agent.y) in [(s.x, s.y) for s in self.charging_stations] or self.grid[CollisionLayers.SHELVES, agent.y, agent.x] != 0:
-            agent.busy = False
+            self._clear_agent_assignment(agent)
             return rewards
         picker_id = self.grid[CollisionLayers.PICKERS, agent.y, agent.x]
         if not self._is_highway(agent.x, agent.y):
@@ -638,7 +792,6 @@ class Warehouse(gym.Env):
                 self.grid[CollisionLayers.SHELVES, agent.y, agent.x] = agent.carrying_shelf.id
                 self.grid[CollisionLayers.CARRIED_SHELVES, agent.y, agent.x] = 0
                 agent.carrying_shelf = None
-                agent.busy = False
                 agent.has_delivered = False
                 if agent.type == AgentType.AGV and picker_id:
                     self._event_log(
@@ -655,6 +808,7 @@ class Warehouse(gym.Env):
                         rewards[agent.id - 1] += 0.1
                     else:
                         rewards[picker_id - 1] += 0.1
+                self._clear_agent_assignment(agent)
         return rewards
 
     def _execute_charge(self, agent: Agent) -> None:
@@ -666,18 +820,23 @@ class Warehouse(gym.Env):
                 break
 
     def execute_micro_actions(self, rewards: np.ndarray[Any, np.dtype[np.float64]]) -> np.ndarray[Any, np.dtype[np.float64]]:
+        # Execute movement/rotation/charging first so same-step collaboration can
+        # see the final occupied cells before load/unload resolution runs.
         for agent in self.agents:
             if agent.req_action == Action.FORWARD:
                 self._execute_forward(agent)
             elif agent.req_action in [Action.LEFT, Action.RIGHT]:
                 self._execute_rotation(agent)
-            elif agent.req_action == Action.TOGGLE_LOAD:
-                if not agent.carrying_shelf:
-                    rewards = self._execute_load(agent, rewards)
-                else:
-                    rewards = self._execute_unload(agent, rewards)
             elif agent.req_action == Action.CHARGE:
                 self._execute_charge(agent)
+        self._recalc_grid()
+        for agent in self.agents:
+            if agent.req_action != Action.TOGGLE_LOAD:
+                continue
+            if not agent.carrying_shelf:
+                rewards = self._execute_load(agent, rewards)
+            else:
+                rewards = self._execute_unload(agent, rewards)
         return rewards
 
     def process_shelf_deliveries(self, rewards: np.ndarray[Any, np.dtype[np.float64]]) -> Tuple[np.ndarray[Any, np.dtype[np.float64]], int]:
@@ -755,11 +914,59 @@ class Warehouse(gym.Env):
         self.observation_space_mapper.extract_environment_info(self)
         return tuple([self.observation_space_mapper.observation(agent) for agent in self.agents])
 
+    def _is_requested_shelf_action(self, action_id: int) -> bool:
+        coords = self.action_id_to_coords_map.get(int(action_id))
+        if coords is None:
+            return False
+        target_x, target_y = int(coords[1]), int(coords[0])
+        return any(int(shelf.x) == target_x and int(shelf.y) == target_y for shelf in self.request_queue)
+
+    def _agv_claim_sort_key(self, agent: Agent, target_action: int) -> Tuple[int, int, int, int]:
+        target_coords = self.action_id_to_coords_map[int(target_action)]
+        distance_steps = 0
+        if (int(agent.x), int(agent.y)) != (int(target_coords[1]), int(target_coords[0])):
+            if agent.path:
+                distance_steps = int(len(agent.path))
+            else:
+                distance_steps = int(abs(int(agent.x) - int(target_coords[1])) + abs(int(agent.y) - int(target_coords[0])))
+        at_target_priority = 0 if distance_steps == 0 else 1
+        return (at_target_priority, distance_steps, int(agent.id), int(agent.id))
+
+    def _resolve_agv_shelf_claims(self) -> Dict[int, int]:
+        requested_target_to_agvs: Dict[int, List[Agent]] = {}
+        for agent in self.agents[: self.num_agvs]:
+            target_action = int(agent.target or 0)
+            if target_action <= 0:
+                continue
+            if agent.carrying_shelf is not None:
+                continue
+            if target_action not in self.shelf_action_ids:
+                continue
+            if not self._is_requested_shelf_action(target_action):
+                continue
+            requested_target_to_agvs.setdefault(target_action, []).append(agent)
+
+        owners: Dict[int, int] = {}
+        for target_action, contenders in requested_target_to_agvs.items():
+            if len(contenders) <= 1:
+                owners[int(target_action)] = int(contenders[0].id) if contenders else 0
+                continue
+            owner = min(contenders, key=lambda agent: self._agv_claim_sort_key(agent, target_action))
+            owners[int(target_action)] = int(owner.id)
+            for contender in contenders:
+                if contender.id == owner.id:
+                    continue
+                self._mark_unreachable_target(contender, int(target_action), "claimed_by_other_agv")
+                self._clear_agent_assignment(contender)
+                contender.req_action = Action.NOOP
+        return owners
+
     def step(
         self, action
     ) -> Tuple[Any, Any, Any, Any, Dict[str, Any]]:
         # Attribute macro actions to agents and resolve conflicts
         agvs_distance_travelled, pickers_distance_travelled = self.attribute_macro_actions(action)
+        agv_shelf_owners = self._resolve_agv_shelf_claims()
         clashes_count = self.resolve_move_conflict(self.agents)
         # Restart agents if they are stuck at the same position
         stucks_count = self.resolve_stuck_agents()
@@ -795,6 +1002,7 @@ class Warehouse(gym.Env):
             stucks_count,
             shelf_deliveries,
             action,
+            agv_shelf_owners,
         )
         return list(new_obs), list(rewards), terminateds, truncateds, info
 
@@ -806,8 +1014,10 @@ class Warehouse(gym.Env):
         stucks_count:  int,
         shelf_deliveries: int,
         macro_actions: List[int],
+        agv_shelf_owners: Optional[Dict[int, int]] = None,
     ) -> Dict[str, np.ndarray]:
         info = {}
+        blocking_agent_ids, blocking_reasons = self._blocking_agent_info()
         agvs_idle_time = sum([int(agent.req_action in (Action.NOOP, Action.TOGGLE_LOAD)) for agent in self.agents[:self.num_agvs]])
         pickers_idle_time = sum([int(agent.req_action in (Action.NOOP, Action.TOGGLE_LOAD)) for agent in self.agents[self.num_agvs:]])
         info["vehicles_busy"] = [agent.busy for agent in self.agents]
@@ -820,7 +1030,56 @@ class Warehouse(gym.Env):
         info["pickers_idle_time"] = pickers_idle_time
         info["battery_levels"] = [agent.battery for agent in self.agents]
         info["actions"] = macro_actions
+        info["agent_stuck_counts"] = [int(counter.count) for counter in self.stuck_counters]
+        info["stuck_agents"] = [bool(counter.count > _STUCK_THRESHOLD) for counter in self.stuck_counters]
+        info["agents_in_conflict"] = [bool(agent.id in self._agents_in_conflict) for agent in self.agents]
+        info["agent_resolving_conflict"] = [bool(agent.resolving_conflict) for agent in self.agents]
+        info["agent_conflict_resolution_steps"] = [int(agent.conflict_resolution_steps) for agent in self.agents]
+        info["agent_resolution_failed_recently"] = [bool(agent.resolution_failed_recently) for agent in self.agents]
+        info["agent_unreachable_target_action_id"] = [int(agent.unreachable_target_action_id) for agent in self.agents]
+        info["agent_unreachable_target_reason"] = [agent.unreachable_target_reason for agent in self.agents]
+        info["agent_unreachable_target_cooldown_steps"] = [int(agent.unreachable_target_cooldown_steps) for agent in self.agents]
+        info["agent_req_actions"] = [str(agent.req_action.name if agent.req_action is not None else "NONE") for agent in self.agents]
+        info["agent_targets"] = [int(agent.target) if agent.target is not None else 0 for agent in self.agents]
+        info["blocking_agent_id_by_agent"] = blocking_agent_ids
+        info["blocking_reason_by_agent"] = blocking_reasons
+        info["agv_shelf_owner_by_action"] = {str(action_id): int(agent_id) for action_id, agent_id in (agv_shelf_owners or {}).items()}
+        info["agv_claim_conflict_action_id_by_agent"] = [
+            int(agent.unreachable_target_action_id) if agent.unreachable_target_reason == "claimed_by_other_agv" else 0
+            for agent in self.agents
+        ]
         return info
+
+    def _blocking_reason_for_pair(self, blocked: Agent, blocker: Agent) -> str:
+        if blocked.type == AgentType.AGV and blocker.type == AgentType.PICKER:
+            return "picker_blocking_agv_path"
+        if blocked.type == AgentType.PICKER and blocker.type == AgentType.AGV:
+            return "agv_waiting_for_picker_at_shelf"
+        return "adjacent_agent_blocking_path"
+
+    def _blocking_agent_info(self) -> Tuple[List[int], List[Optional[str]]]:
+        blocking_agent_ids: List[int] = [0] * self.num_agents
+        blocking_reasons: List[Optional[str]] = [None] * self.num_agents
+        for idx, agent in enumerate(self.agents):
+            target_id = int(agent.target or 0)
+            stuck_now = bool(self.stuck_counters[idx].count > _STUCK_THRESHOLD)
+            conflict_now = bool(agent.id in self._agents_in_conflict)
+            waiting_now = bool(agent.busy) and agent.req_action == Action.NOOP and target_id > 0
+            if not (stuck_now or conflict_now or waiting_now):
+                continue
+            if target_id <= 0:
+                continue
+            adjacent_blockers = [
+                other
+                for other in self.agents
+                if other.id != agent.id and abs(int(other.x) - int(agent.x)) + abs(int(other.y) - int(agent.y)) == 1
+            ]
+            if len(adjacent_blockers) != 1:
+                continue
+            blocker = adjacent_blockers[0]
+            blocking_agent_ids[idx] = int(blocker.id - 1)
+            blocking_reasons[idx] = self._blocking_reason_for_pair(agent, blocker)
+        return blocking_agent_ids, blocking_reasons
 
     def compute_valid_action_masks(self, pickers_to_agvs=True, block_conflicting_actions=True):
         requested_items = self.get_shelf_request_information()

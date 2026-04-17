@@ -215,3 +215,7 @@ __pycache__/
 /=*
 # Explicit example (harmless to keep):
 /=4.3.0/
+
+# Large experiment outputs are kept as archives instead of tracking the live tree.
+/results/
+/results_archive_*.tar.gz

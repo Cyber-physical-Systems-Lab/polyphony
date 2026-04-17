@@ -55,7 +55,7 @@ December\fi, \number \year}
 %%%%%%%% 
 
 % Set title
-\title{Heterogeneous Multi-Robot Collaboration Using Large Language Models}
+\title{Heterogeneous Multi-Robot Collaboration Using Language Models}
 
 % Use this if you have a subtitle
 \subtitle{Exploring different sizes and architectures}
@@ -91,11 +91,13 @@ December\fi, \number \year}
 \frontmatter
 
 \blankpage
+\glsresetall
 \begin{abstract}
 \input{text/abstract}
 \end{abstract}
 \blankpage
 
+\glsresetall
 \begin{sammanfattning}
 \input{text/summary}
 \end{sammanfattning}
@@ -116,6 +118,7 @@ December\fi, \number \year}
 \cleardoublepage
 
 % Change to main matter style (arabic page numbers, reset page numbers)
+\glsresetall
 \mainmatter
 
 % Here comes the text of the report. You can add your own chapters
@@ -124,10 +127,6 @@ December\fi, \number \year}
 \section{Introduction}
 \label{sec:introduction}
 \input{text/introduction}
-
-\section{Problem Formulation and Objectives}
-\label{sec:purpose}
-\input{text/purpose}
 
 \section{Background and Related Work}
 \label{sec:background}

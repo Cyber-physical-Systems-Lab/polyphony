@@ -559,9 +559,9 @@ def candidate_ids_for_prompt(env, idx: int, valid_masks: np.ndarray, max_candida
 
 
 def battery_need_label(battery: float) -> str:
-    if battery < 25.0:
+    if battery < 30.0:
         return "critical"
-    if battery < 50.0:
+    if battery < 65.0:
         return "need_charging_soon"
     return "not_needed"
 
@@ -1172,7 +1172,7 @@ def build_agent_prompt(
         role_policy_block = (
             "- PICKER policy:\n"
             "- If any AGV is waiting for support OR en route to unload/load support shelf, prioritize moving to that AGV target shelf action id.\n"
-            "- If your battery is not_needed (>=50) or need_charging_soon (25..49), and any AGV support_need is needs_picker_now_at_target or may_need_picker_soon_for_load/unload, always choose the AGV support shelf action_id.\n"
+            "- If your battery is not_needed (>=65) or need_charging_soon (30..64), and any AGV support_need is needs_picker_now_at_target or may_need_picker_soon_for_load/unload, always choose the AGV support shelf action_id.\n"
             "- In that case, do not choose CHARGING and do not choose unrelated shelves.\n"
             "- Keep support aligned with AGV target to reduce AGV waiting.\n"
         )
@@ -1197,7 +1197,7 @@ def build_agent_prompt(
         "Battery model:\n"
         "- Move step consumption = 1.\n"
         "- Load/Unload consumption = 2.\n"
-        "- Charging need level: critical if <25, need_charging_soon if <50, not_needed if >=50.\n"
+        "- Charging need level: critical if <30, need_charging_soon if >=30 and <65, not_needed if >=65.\n"
         "\n"
         "Charging situation (global):\n"
         "- Agents currently on charging cells: " + (", ".join(charge_now) if charge_now else "none") + "\n"

@@ -209,3 +209,27 @@ python3 scripts/run_centralized_llm_experiments.py \
   --session_dir results/shelf/central_llm_experiments/JSON/session_20260319_XXXXXX \
   --max_steps 1000 \
   --seed 0
+
+
+  python3 scripts/run_obj2_shared_context_llm.py   --prompt_format language   --max_steps 0   --max_busy_steps_for_replan 10   --max_inactivity_steps 500   --disable_support_needed_soon   --find_path_agent_aware_always   --seed 0   --results_dir results/calls/shared_context/natural   --session_dir results/calls/shared_context/natural/session_20260329_094333   --resume_from_model "gemma3:12b"   --resume_from_scenario "medium_agv_heavy_6v2"
+
+
+python3 scripts/run_obj2_shared_context_llm.py \
+  --prompt_format json \
+  --max_steps 0 \
+  --max_busy_steps_for_replan 10 \
+  --max_inactivity_steps 500 \
+  --disable_support_needed_soon \
+  --find_path_agent_aware_always \
+  --seed 0 \
+  --results_dir results/calls/shared_context/json
+
+  python3 scripts/run_obj2_shared_context_llm.py \
+  --prompt_format json \
+  --max_steps 0 \
+  --max_busy_steps_for_replan 10 \
+  --max_inactivity_steps 500 \
+  --disable_support_needed_soon \
+  --find_path_agent_aware_always \
+  --seed 0 \
+  --results_dir results/calls/shared_context/json

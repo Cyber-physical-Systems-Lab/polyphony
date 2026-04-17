@@ -1,0 +1,308 @@
+[
+  {
+    "page": 3,
+    "type": "Highlight",
+    "review_comment": "Designing unified decision making planner?",
+    "context_text": "ous warehouse fleets typically inc\nagents) that must coordinate th\nput. Designing controllers for s\non spaces, partial observability, \nn."
+  },
+  {
+    "page": 3,
+    "type": "Highlight",
+    "review_comment": "these applies for MARL, not really for designing controllers",
+    "context_text": "d loading agents) that must coordinate their movement, timing, and energy usage to\nh throughput. Designing controllers for such multi-robot systems is challenging due \ncrete action spaces, partial observability, sparse rewards, and safety constraints such\ny depletion."
+  },
+  {
+    "page": 3,
+    "type": "Highlight",
+    "review_comment": "what to be evaluated?",
+    "context_text": "ent.\n(i) an end-to-end evaluation pipeline for L\npatterns tailored to discrete warehouse a\n that prompt structure, planning archite"
+  },
+  {
+    "page": 3,
+    "type": "Highlight",
+    "review_comment": "decision making for heterogeneous  multi-agent collaboration?",
+    "context_text": "Battery-TA-RWARE environment.\nThe current work contributes (i) an end-to-end evaluation pipeline for LLM-driven multi-agent con-\ntrol, (ii) prompt and validation patterns tailored to discrete warehouse actions, and (iii) preliminary\nexperimental results showing that prompt structure, planning architecture, and safeguard logic\nstrongly influence whether LLM-based control remains productive under changing objectives."
+  },
+  {
+    "page": 3,
+    "type": "Highlight",
+    "review_comment": "ok but need updated with results later",
+    "context_text": "The current work contributes (i) an end-to-end evaluation pipeline for LLM-driven multi-agent con-\ntrol, (ii) prompt and validation patterns tailored to discrete warehouse actions, and (iii) preliminary\nexperimental results showing that prompt structure, planning architecture, and safeguard logic\nstrongly influence whether LLM-based control remains productive under changing objectives."
+  },
+  {
+    "page": 11,
+    "type": "Highlight",
+    "review_comment": "Merge this into previous paragraph?",
+    "context_text": "ary accou\nMotivate\ncapable m\nin multi-"
+  },
+  {
+    "page": 11,
+    "type": "Highlight",
+    "review_comment": "The passage would benefit from clearer contextualization when first introduced in the introduction, as the notion of a “shared environment” is currently too abstract without a brief description of how the fleet operates within it (e.g., spatial layout, shared resources, interaction constraints). The claim that high throughput requires more than path planning is reasonable but under-justified; it would strengthen the argument to explicitly explain why path planning alone is insufficient, particularly in the presence of task allocation, role dependencies, and resource constraints. In addition, the transition to the simplified multi-agent testbed feels abrupt and would be clearer if you briefly state how the testbed captures the essential characteristics of the real system while simplifying others. Finally, the listed decision factors (task selection, coordination, recharging) could be made more precise by linking each to a concrete system-level challenge, reinforcing their necessity rather than presenting them as general considerations.",
+    "context_text": "To evaluate this hypothesis in a concrete and measurable way, the thesis uses a sim-\nplified but structured multi-agent testbed. When autonomous agent fleets operate in a\nshared environment, high throughput typically requires more than path planning: agents\nmust decide which tasks to execute, when to coordinate with other roles, and when to\nallocate time to maintenance actions such as recharging. These decisions are particu-"
+  },
+  {
+    "page": 11,
+    "type": "Highlight",
+    "review_comment": "First acronym name need a full name",
+    "context_text": "nts.\nh on MRSs spans\nrveys emphasized\nd learning [4]. La"
+  },
+  {
+    "page": 11,
+    "type": "Highlight",
+    "review_comment": "The choice of focusing on architecture, communication, and coordination appears somewhat arbitrary in its current form and reads more as a reflection of your own research perspective than a comprehensive synthesis of the field. It would strengthen the paragraph to either justify why these dimensions are particularly relevant to your problem setting or broaden the discussion to present a more complete view of multi-robot systems research. In addition, the connection to your specific work is not yet explicit; you should clarify how these dimensions map onto the challenges you address in the warehouse scenario (e.g., how heterogeneity, task dependencies, or decision-making constraints relate to these categories). As it stands, the paragraph works as a general opening for the introduction, but it would benefit from a clearer linkage that positions your contribution within this landscape rather than simply summarizing it.",
+    "context_text": "constraints.\nResearch on MRSs spans architectures, communication, and coordination strategies.\nEarly surveys emphasized fundamental axes such as group architecture, resource con-\nflicts, and learning [4]. Later overviews categorized multi-robot research topics includ-\ning communication, task allocation/control, and motion coordination [2]. In practical\nlogistics domains, these themes manifest as repeated, interdependent choices: allocate\nrequests to carriers, ensure loaders and carriers meet at shelves, resolve conflicts in\nshared corridors, and maintain energy safety.\nMany approaches address such problems using optimization, hand-engineered heuris-"
+  },
+  {
+    "page": 11,
+    "type": "Highlight",
+    "review_comment": "what problems? need to be specific if it  work as problem statements",
+    "context_text": "tain energy safety.\nsuch problems using\nement learning (MA\ney often require care"
+  },
+  {
+    "page": 11,
+    "type": "Highlight",
+    "review_comment": "not really sensitive to this, suffer from scalability issue if fully observed, then people have a high interest for MARL to have partial observability to reduce complexity",
+    "context_text": "strong and efficient, but they \nlearn sophisticated joint behav\nand partial observability, and \nchange. Benchmarking studi\nand metric-dependent, motiva"
+  },
+  {
+    "page": 11,
+    "type": "Highlight",
+    "review_comment": "also for this paragraph, between each sentence is bit disconnected and better relate back to your research",
+    "context_text": "osis fram-\nnd decen-\n1, 12].\nm scratch"
+  },
+  {
+    "page": 11,
+    "type": "Highlight",
+    "review_comment": "The introduction of a master’s thesis defines the problem, motivates its importance, and positions the work within existing research while guiding the reader toward the specific contribution. It should move from a broad context to a clearly defined and technically meaningful problem, identify concrete gaps or limitations in prior work, and explain why these gaps matter. From this, the research questions or objectives should follow logically and be specific enough to evaluate. A brief indication of the proposed approach and main contributions helps set expectations for the rest of the thesis. A strong introduction is clear, focused, and coherent, with each part contributing to a narrowing scope and consistent alignment with later sections such as methodology and evaluation. A strong background typically (1) establishes how the problem is commonly formulated, (2) highlights the limitations of these approaches in your specific setting, and (3) positions existing alternatives while showing what remains unresolved. Each part of the background should contribute to this progression, so that the research gap becomes clear and the transition to the problem statement is natural rather than abrupt.",
+    "context_text": "1\nIntroduction"
+  },
+  {
+    "page": 11,
+    "type": "Highlight",
+    "review_comment": "full name",
+    "context_text": "alized execution, t\necent LLMs offer"
+  },
+  {
+    "page": 12,
+    "type": "Highlight",
+    "review_comment": "what is high-level decision, might be ok in opening paragraphs, but at least from here, you need a explanation",
+    "context_text": "M can be prompted with a str\nput a high-level decision. In r\nand planning by combining la\n checks; for example, by sele"
+  },
+  {
+    "page": 12,
+    "type": "Highlight",
+    "review_comment": "event-triggered or by schedule?",
+    "context_text": "Task-Assignment Robotic Wareho\nier AGVs and picker agents that m\nons. At each decision point, the c\nxtual prompt, the LLM proposes a\naction feasibility via action masks."
+  },
+  {
+    "page": 12,
+    "type": "Highlight",
+    "review_comment": "The current research questions are still too vague for a 50% report, as they do not clearly indicate what will be tested or how outcomes will be evaluated. It would strengthen the work to refine them into more concrete and measurable sub-questions. For example, in RQ1, “quality and effectiveness of collaboration” should be operationalized through specific metrics such as task completion time, throughput, coordination failures, or resource utilization, so it is clear how differences in model size will be assessed. Similarly, RQ2 should clarify what “effective use” means in practice by defining evaluation criteria for centralized versus decentralized architectures, such as scalability, robustness to failures, communication overhead, or decision latency. As written, the questions capture relevant dimensions, but they need to be grounded in explicit experimental variables and measurable outcomes to support a rigorous evaluation.",
+    "context_text": "To support a systematic \ntwo sub-questions:"
+  },
+  {
+    "page": 12,
+    "type": "Highlight",
+    "review_comment": "just defined as constrained action list? or have a validation of chosen actions?\r\rsee also: Ravichandran, Z., Murali, V., Tzes, M., Pappas, G. J., & Kumar, V. (2025, May). Spine: Online semantic planning for missions with incomplete natural language specifications in unstructured environments. In 2025 IEEE International Conference on Robotics and Automation (ICRA) (pp. 13714-13721). IEEE.\r\rDriess, D., Xia, F., Sajjadi, M. S., Lynch, C., Chowdhery, A., Ichter, B., ... & Florence, P. (2023, July). PaLM-E: an embodied multimodal language model. In Proceedings of the 40th International Conference on Machine Learning (pp. 8469-8488).",
+    "context_text": "sis, architectural choices include how environment state is translated \nhow proposed decisions are mapped back to executable actions, whe\naking is performed per-agent or jointly, and how feasibility constraint\ne.g., by restricting/validating candidate actions and using environment f"
+  },
+  {
+    "page": 12,
+    "type": "Highlight",
+    "review_comment": "means after a step of simulation? to feedback the consequence?",
+    "context_text": "language, how proposed decisions are mapped back to executable actions, whether\ndecision-making is performed per-agent or jointly, and how feasibility constraints are\nimposed (e.g., by restricting/validating candidate actions and using environment feed-\nback for replanning).\n2"
+  },
+  {
+    "page": 13,
+    "type": "Highlight",
+    "review_comment": "This should be part of Introduction I think",
+    "context_text": "2\nProblem Formulation and Objectives"
+  },
+  {
+    "page": 13,
+    "type": "Highlight",
+    "review_comment": "If the background has not fully established the gap, the problem statement is necessary so that it compensate the thesis by being explicit and precise. A strong problem statement should clearly state (1) what is missing or insufficient in existing approaches, (2) why this limitation matters in your specific setting, and (3) what exact question the thesis will address. It should not rely on the reader to infer the gap from earlier sections. Instead, it should make the contribution unambiguous by directly linking the identified limitation to a concrete, testable research objective.",
+    "context_text": ".1\nProblem Formulation\nWarehouse logistics in heterogeneous flee"
+  },
+  {
+    "page": 13,
+    "type": "Highlight",
+    "review_comment": "The stated contributions are currently framed at the level of system components and experimental setup, but they do not yet clearly articulate what research gap is being addressed or what new knowledge is produced through the experiments. It would strengthen this section to explicitly connect each contribution to a validated claim under specific conditions. For example, instead of only presenting an end-to-end pipeline, clarify what limitation in existing LLM-based or MARL-based coordination this pipeline overcomes (e.g., lack of grounded, constraint-aware decision-making) and how its validity is demonstrated. Similarly, the experimental setup should not just enable comparison, but be positioned as a means to answer specific gaps, such as how model size affects decision feasibility under resource constraints or how centralized versus decentralized architectures impact coordination robustness and scalability. The mention of preliminary results and error analysis is useful, but it should be framed in terms of the insights it provides, for instance identifying systematic failure modes of LLM planning or conditions under which certain architectures break down. Overall, the contributions are not necessary to point out in master thesis, and they should shift from “what is built” to “what is learned and validated,” with a clear linkage to the research questions and the conditions under which the conclusions hold.",
+    "context_text": ".2\nContributions\nhe current thesis work contribu"
+  },
+  {
+    "page": 13,
+    "type": "Highlight",
+    "review_comment": "continuous in what form?",
+    "context_text": "as a continuous deci\ndiscrete target (shelf, \nets, role restrictions, a"
+  },
+  {
+    "page": 13,
+    "type": "Highlight",
+    "review_comment": "so many things been committed to? maybe just focus on what are the benefits you would like to observe and to be tackled in research questions",
+    "context_text": "busy states) and safety constraints (battery depletion). The objective is to maximize de-\nlivery throughput while maintaining robust coordination between roles (carrier–picker\ninteractions) and avoiding failure modes such as deadlocks, clashes, and out-of-charge\nimmobilization.\nThis thesis investigates LLM-based control as a language-driven alternative for high-"
+  },
+  {
+    "page": 13,
+    "type": "Highlight",
+    "review_comment": "The current scope appears too broad, with multiple aspects being addressed simultaneously without a clear prioritization of what benefits are expected to be demonstrated. It would strengthen the work to focus on a smaller set of observable advantages and tie them directly to the problem formulation. For instance, given the warehouse setting you describe, the contribution could be framed around whether LLM-based decision-making improves specific outcomes such as throughput under constraints, reduction of coordination failures (e.g., deadlocks or clashes), or better handling of resource limitations like battery management. This also requires clarifying which of these are primary objectives versus secondary observations. As written, the problem statement is well-defined in terms of constraints and goals, but the link to what improvement your approach is expected to deliver is not explicit. Narrowing the focus to a few measurable benefits and evaluating them under clearly defined conditions would make the study more coherent and the contributions more convincing.",
+    "context_text": "2.1\nProble\nWarehouse logis\nmaking problem\nor charging statio"
+  },
+  {
+    "page": 14,
+    "type": "Highlight",
+    "review_comment": "remove? if you are settled with clear defined research questions",
+    "context_text": ".2\nPurpose\nhe purpose of this thesi"
+  },
+  {
+    "page": 14,
+    "type": "Highlight",
+    "review_comment": "steps? methods?",
+    "context_text": "Objectives\ncrete objectives are:\nmplement an end-to-e"
+  },
+  {
+    "page": 14,
+    "type": "Highlight",
+    "review_comment": "are you going to study on  these conditions? if yes, explicitly put in research questions",
+    "context_text": "local inference server.\nover several warehouse sizes and role ratios, but \ns and a limited number of experimental sessions."
+  },
+  {
+    "page": 14,
+    "type": "Highlight",
+    "review_comment": "what family?",
+    "context_text": "eds and a limited \nctive family had \nng."
+  },
+  {
+    "page": 15,
+    "type": "Highlight",
+    "review_comment": "did not show in previous sections",
+    "context_text": "ttery safety) can lead to immobi-\n The proposed validation layer is\noutput and executable actions."
+  },
+  {
+    "page": 15,
+    "type": "Highlight",
+    "review_comment": "If you want to provide ethical and sustainability considerations, focus on aspects that are directly tied to your system and can be assessed in a concrete way rather than relying on generic statements. In this work, ethical concerns primarily relate to safety, reliability, and accountability, since LLM-driven decisions may produce infeasible or unsafe actions; you should therefore explain how mechanisms such as constraint validation, fallback strategies, or human oversight mitigate risks like collisions, deadlocks, or battery depletion. It is also relevant to briefly address transparency, particularly whether decisions can be traced or analyzed when failures occur. From a sustainability perspective, the key issue is the trade-off between model capability and computational cost, especially when comparing different LLM sizes, as well as the overall system efficiency in terms of energy usage, unnecessary movements, and coordination overhead. These considerations should be explicitly linked to your experimental design, for example by showing how safety is enforced through validation layers and how efficiency or resource use is reflected in your evaluation metrics, while also acknowledging any remaining limitations or trade-offs.",
+    "context_text": ".5\nEthical and Sustainability Considerations\nlthough this work is simulation-based, it touches on two practical cons"
+  },
+  {
+    "page": 15,
+    "type": "Highlight",
+    "review_comment": "If the background does not fully cover related work, then you need the related work section to complement it by organizing prior research more systematically rather than repeating descriptions. A strong related work section should group existing approaches by how they address the key aspects of your problem (e.g., coordination structure, information sharing, decision timing), and compare them along these dimensions. The goal is not completeness, but clarity: to show how different lines of work relate to your approach and where they fall short. Each group of works should be explicitly connected to your design choices, so that the section reinforces, rather than duplicates, the motivation for your research.",
+    "context_text": "nd Related Work"
+  },
+  {
+    "page": 15,
+    "type": "Highlight",
+    "review_comment": "full name",
+    "context_text": "3.1\nMu\nMRSs study\nand avoid c\n(MAS) is b"
+  },
+  {
+    "page": 15,
+    "type": "Highlight",
+    "review_comment": "Zhang et. al.?",
+    "context_text": "differences in how MAS and MRS are framed, a\ndination taxonomies are defined) [16, 2]. For broade\nives, conference proceedings such as AAMAS prov\nes, including coordinated MARL methods that expli\nagainst communication bandwidth [18]. In heteroge"
+  },
+  {
+    "page": 15,
+    "type": "Highlight",
+    "review_comment": "good that you have clear explanations on the definitions",
+    "context_text": "ynchronization (e.g., me\nesis, collaboration refer\nes, where agents must co\nn). Coordination refers"
+  },
+  {
+    "page": 15,
+    "type": "Highlight",
+    "review_comment": "need reference?",
+    "context_text": "tion handling), and cooperation r\nnts may act more independently. T\nities; some MAS discussions histo\nreas modern multi-agent learning\n ambiguity, the thesis primarily us"
+  },
+  {
+    "page": 16,
+    "type": "Highlight",
+    "review_comment": "fit better in Introduction/Problem Formulation",
+    "context_text": ".2\nWarehouse Task Assignment Environments\nWarehouse domains provide a structured but challenging testbed for multi-a"
+  },
+  {
+    "page": 17,
+    "type": "Highlight",
+    "review_comment": "The motivation for studying model size and prompt design is currently implicit and would benefit from clearer justification in relation to your problem setting. In particular, you should explain why these two factors are expected to influence performance in constrained multi-agent decision-making rather than treating them as generic LLM properties. For model size, the key issue is whether larger models provide more reliable reasoning, better constraint handling, or improved coordination decisions, and under what conditions these benefits justify increased computational cost. For prompt design, the question is how different formulations (e.g., structured vs. free-form, explicit constraints vs. implicit reasoning) affect the feasibility, consistency, and interpretability of generated actions. As it stands, the two research questions are relevant but insufficiently grounded; strengthening this section requires explicitly linking both factors to expected impacts on throughput, coordination quality, and failure modes in your warehouse system, so that they are motivated as necessary variables to study rather than arbitrary experimental choices.",
+    "context_text": "sign?\nency budgets"
+  },
+  {
+    "page": 18,
+    "type": "Highlight",
+    "review_comment": "The methodology chapter should not only describe what was implemented, but justify how and why the research is conducted in a particular way. In a master’s thesis, it is typically included as a separate chapter when the work involves empirical evaluation, system design, or experimental comparison, where the validity of results depends on clearly defined procedures, assumptions, and controls.\r\rA well-written methodology section should (1) explain the overall research design (e.g., controlled experiment, comparative study), (2) justify why this design is appropriate for the research questions, and (3) describe how variables are controlled, what is being measured, and how conclusions will be drawn. It should also make explicit what is fixed and what is varied in the experiments, so that the reader can assess the validity and reproducibility of the study.\r\rIf the thesis only presents theory or conceptual discussion, a separate methodology chapter may be less critical. However, for work like yours, where a framework is proposed and evaluated under different configurations, a dedicated methodology chapter is important to demonstrate rigor, transparency, and experimental control, rather than embedding these details implicitly in other sections.",
+    "context_text": "4\nSystem and Method"
+  },
+  {
+    "page": 19,
+    "type": "Highlight",
+    "review_comment": "might be better to show in Introduction with the battery level rendered ;)",
+    "context_text": "ure 1 Illustration of th\nrogeneous roles must\nnts support loading an"
+  },
+  {
+    "page": 19,
+    "type": "Highlight",
+    "review_comment": "better have a visual illustration?",
+    "context_text": "LLM Control Loop\nM policy is implemented as a t"
+  },
+  {
+    "page": 19,
+    "type": "Highlight",
+    "review_comment": "the surrounding control logic introduces ambiguity in interpreting results, since invalid outputs are filtered and trigger replanning, making it difficult to separate the contribution of the LLM from the behavior of the validation layer. In addition, the design varies multiple factors simultaneously, including model size, prompt structure, planning architecture, and objective formulation, which limits the ability to attribute observed effects to specific causes. The comparison between centralized and shared-context planning is well motivated, but differences in prompt complexity and output structure introduce confounding factors that may influence performance independently of the architectural choice.",
+    "context_text": "LLM Contr\nLLM policy is im"
+  },
+  {
+    "page": 20,
+    "type": "Highlight",
+    "review_comment": "did not reflect on your research questions, i.e. RQ1 implies a different size of models, the rest are the same for experiments",
+    "context_text": "eriment Families\nented experiments are g"
+  },
+  {
+    "page": 20,
+    "type": "Highlight",
+    "review_comment": "not objective, The exploration of prompt design is extensive but appears more iterative than controlled, which makes it harder to isolate the impact of specific design decisions such as structured versus natural-language formats.",
+    "context_text": "Objective 1: m\nthroughput. The\nswer two questio"
+  },
+  {
+    "page": 23,
+    "type": "Highlight",
+    "review_comment": "The evaluation metrics are appropriate and relevant to the problem, but their connection to the research questions could be made more explicit to clarify what each experiment is intended to demonstrate. In particular, several experimental dimensions, such as prompt evolution, validation effects, and objective changes, are not clearly reflected in the stated research questions, which creates a mismatch between what is being tested and what is claimed as the main inquiry. Furthermore, the use of fixed seeds and scenarios limits statistical validity, meaning the results should be interpreted as exploratory rather than conclusive.",
+    "context_text": ".8\nEvaluation Metrics\nhe main metric is delivery throughpu"
+  },
+  {
+    "page": 24,
+    "type": "Highlight",
+    "review_comment": "the use of fixed seeds and scenarios limits statistical validity, so results should be interpreted as exploratory. The absence of an external baseline also reduces the ability to contextualize findings. \r\rThe scenario design introduces useful variation, but the rationale for these specific configurations is not sufficiently explained. While the categories (balanced, AGV-heavy, picker-heavy, varying scales) are listed, it remains unclear why these particular settings are necessary to answer the research questions. You should make the connection more explicit by explaining what aspect of coordination or collaboration each scenario is intended to stress and how this relates to evaluating model size or integration architecture. For example, larger or more imbalanced setups could be linked to scalability or coordination bottlenecks, while balanced small scenarios could serve as controlled baselines. As it stands, the scenarios appear as reasonable test cases, but without clear interpretation they risk being seen as arbitrary variations rather than systematically chosen conditions for analysis.",
+    "context_text": ".9\nScenario and\nhe same scenario catalo"
+  },
+  {
+    "page": 24,
+    "type": "Highlight",
+    "review_comment": "The progression of the experimental campaign is described clearly, but the underlying rationale for this sequence is not sufficiently justified. While the shift from a throughput-focused objective to call-aware and then battery-aware settings is logical from an engineering perspective, it is not clearly connected to the research questions, which focus on model size and integration architecture. You should clarify why this progression is necessary for answering those questions, or explicitly frame it as an additional dimension of analysis beyond the core research scope. In particular, it would help to explain what each stage is intended to reveal, for example whether Objective 1 establishes a baseline for coordination performance, Objective 2 evaluates efficiency trade-offs in LLM usage, and Objective 3 targets constraint-aware behavior under energy limitations.\r\rAs it stands, the progression risks appearing as iterative system development rather than a structured experimental design. The introduction of controller changes alongside objective changes further complicates interpretation, since improvements cannot be attributed solely to the new objective. To strengthen this section, you should make explicit what is being held constant and what is being varied at each stage, and how conclusions drawn from each phase contribute to answering the research questions. This would help position the progression as a systematic exploration rather than a sequence of incremental adjustments.",
+    "context_text": "as final performance c\nThe progression of th"
+  },
+  {
+    "page": 26,
+    "type": "Highlight",
+    "review_comment": "The question of whether centralized or shared-context planning performs better should be answered explicitly in the results section rather than primarily discussed later. To support this, you should present direct, side-by-side comparisons under controlled conditions where only the planning architecture differs, while other factors such as model, prompt format, scenario, and objective are kept consistent. Key metrics such as delivery throughput, total deliveries, and coordination failures (e.g., deadlocks or clashes) should be reported in a way that makes the comparison immediately visible, for example through tables or aligned plots across the same scenarios.\r\rIn addition, it would strengthen the analysis to clarify what is being compared and why, particularly in relation to the research questions. If multiple models or prompt variants are involved, consider fixing these when comparing architectures or clearly structuring the results so that comparisons remain interpretable. Even if statistical repetition is limited, including indicators of stability or noting variability would improve the credibility of the findings. Overall, the results section should first provide clear evidence answering the architectural comparison, while the discussion can then interpret the observed differences.",
+    "context_text": "2.1\nDid centralized or shared-context planning perform better?\ne architecture comparison in Objective 1 is summarized in Table 1."
+  },
+  {
+    "page": 27,
+    "type": "Highlight",
+    "review_comment": "The comparison between JSON and natural-language prompting should be presented clearly in the results section with direct evidence, aligned with the broader goal of evaluating how LLM design choices affect collaboration effectiveness. You should report side-by-side results where prompt format is the only variable changed, while keeping model size and planning architecture consistent, so that the impact of prompt structure can be isolated. Relevant metrics such as delivery throughput, total deliveries, and coordination failures should be included, and it is acceptable to add small supporting indicators such as invalid action rates to reflect output reliability. The results should make it immediately clear under which conditions one format performs better, while the discussion can later interpret these differences in terms of reasoning quality, structure, and robustness.",
+    "context_text": "2.2\nDid JSON or natural-language prompting perform better?\nbjective 1 is also the main basis for comparing prompt representation under the"
+  },
+  {
+    "page": 28,
+    "type": "Highlight",
+    "review_comment": "not really your research question?",
+    "context_text": "3.1\nDid the framework adapt to the changed objective?\ne Objective 2 results provide partial evidence that the framework rem"
+  },
+  {
+    "page": 29,
+    "type": "Highlight",
+    "review_comment": "have a new chapter for discussion then\r\rA good discussion section should interpret the results in a way that directly answers the research questions, rather than restating findings or introducing new experiments. The structure should follow the research questions explicitly: for each question, summarize the relevant results, explain what they indicate, and assess whether they provide a clear answer or only partial evidence. The emphasis should be on reasoning, for example explaining why a certain model size led to better coordination, or why one architecture performed more reliably under specific constraints. This requires linking observed metrics, such as throughput or failure rates, to underlying mechanisms like prompt complexity, decision consistency, or coordination overhead.\r\rIn addition, the discussion should critically assess the strength and limitations of the evidence. This includes acknowledging experimental constraints such as fixed seeds, limited scenarios, or confounding variables, and explaining how these affect the confidence of the conclusions. Where results are inconsistent or inconclusive, this should be stated clearly rather than forced into a definitive claim. It is also useful to reflect on broader implications, for example what the findings suggest about the practicality of LLM-based control in constrained multi-agent systems, and under what conditions the approach is likely to be beneficial. A strong discussion therefore connects results to research questions, explains observed behaviors, and evaluates how robust and generalizable the conclusions are.",
+    "context_text": ".5\nSystem-Level Lessons from the Experiments\nhe strongest overall lesson from Objectives 1 and 2 is that LLMs were m"
+  }
+]

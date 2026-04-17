@@ -1,5 +1,0 @@
-[2026-03-18 00:46:49 UTC] Starting scenario=small_balanced_2v2 env_id=tarware-small-2agvs-2pickers-globalobs-chg-v1
-[2026-03-18 00:46:49 UTC] Scenario focus: Balanced coordination at slightly higher concurrency.
-[2026-03-18 00:56:47 UTC] Delivery milestone step=76 cumulative_deliveries=1
-[2026-03-18 01:11:13 UTC] Delivery milestone step=137 cumulative_deliveries=2
-[2026-03-18 01:55:57 UTC] Completed scenario=small_balanced_2v2 model=phi4 deliveries=2 steps=337 failures=1

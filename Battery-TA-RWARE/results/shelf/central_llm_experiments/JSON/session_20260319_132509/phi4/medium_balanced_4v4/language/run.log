@@ -1,3 +1,0 @@
-[2026-03-19 17:51:08 UTC] Starting scenario=medium_balanced_4v4 env_id=tarware-medium-4agvs-4pickers-globalobs-chg-v1
-[2026-03-19 17:51:08 UTC] Scenario focus: Balanced scaling: larger warehouse and longer-horizon coordination.
-[2026-03-19 18:02:04 UTC] Completed scenario=medium_balanced_4v4 model=phi4 deliveries=0 steps=200 failures=0

@@ -1,7 +1,0 @@
-[2026-03-19 18:02:04 UTC] Starting scenario=small_agv_heavy_4v2 env_id=tarware-small-4agvs-2pickers-globalobs-chg-v1
-[2026-03-19 18:02:04 UTC] Scenario focus: AGV-heavy: reveal picker-support scheduling weakness and AGV waiting behavior.
-[2026-03-19 18:09:54 UTC] Delivery milestone step=76 cumulative_deliveries=1
-[2026-03-19 18:10:06 UTC] Delivery milestone step=92 cumulative_deliveries=2
-[2026-03-19 18:14:00 UTC] Delivery milestone step=130 cumulative_deliveries=3
-[2026-03-19 18:39:40 UTC] Delivery milestone step=291 cumulative_deliveries=4
-[2026-03-19 19:12:30 UTC] Completed scenario=small_agv_heavy_4v2 model=phi4 deliveries=4 steps=491 failures=0

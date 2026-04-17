@@ -2,7 +2,7 @@
 The thesis uses an empirical, experimental methodology:
 \begin{enumerate}
     \item Implement an \gls{llm}-driven control loop for a simulated heterogeneous warehouse environment.
-    \item Define a set of baselines and evaluation metrics.
+    \item Define the main comparison axes and evaluation metrics.
     \item Run controlled experiments (fixed environment ids and seeds) across multiple \gls{llm} models, planning architectures, and prompt variants.
     \item Analyze throughput, safety, and coordination outcomes as well as qualitative failure modes.
 \end{enumerate}
@@ -28,7 +28,7 @@ The environment exposes a discrete action space where each action corresponds to
 \end{itemize}
 Low-level motion toward the selected target is handled internally by the environment (A* path planning and collision resolution), while the controller is evaluated on the quality of these high-level decisions.
 
-\subsection{LLM Control Loop}
+\subsection{Language-Model Control Loop}
 \label{sec:llm_loop}
 The \gls{llm} policy is implemented as a text-in / discrete-action-out controller:
 \begin{enumerate}
@@ -40,6 +40,21 @@ The \gls{llm} policy is implemented as a text-in / discrete-action-out controlle
     \item \textbf{Validation:} validate the parsed action id against the current valid-action mask; invalid outputs are discarded and trigger replanning.
     \item \textbf{Execution:} apply the validated joint action in the environment for one step (or hold the action for multiple steps, depending on configuration).
 \end{enumerate}
+
+The controller is best described as a discrete-time, step-synchronous supervisory loop with conditional replanning.
+The environment advances one simulation step at a time, and at each step the controller reevaluates agent state and action validity.
+However, this does not imply that every agent is queried at every step.
+Instead, the experiments use two related control schemes.
+
+\begin{itemize}
+    \item \textbf{Step-synchronous replanning with environment-owned continuation:} agents that are currently available for planning may receive a new high-level action, while busy agents are not replanned and continue their current task until the environment releases them.
+    \item \textbf{Step-synchronous replanning with action persistence and conditional override:} accepted actions may remain active for multiple future steps, so agents are not re-queried while the persisted action remains valid. Replanning is triggered when a persisted action expires, becomes invalid, or when the controller decides intervention is needed, including selected busy-agent cases.
+\end{itemize}
+
+This design sits between two extremes.
+A fully scheduled scheme that queries every agent at every step would generate many unnecessary \gls{llm} calls, while a purely event-triggered scheme is less natural in this setting because useful triggers such as blocked progress, invalid persisted actions, expiring commitments, or changing support needs are only known after the system state is checked.
+The adopted design therefore combines regular per-step observability with selective replanning.
+This is also consistent with practical supervisory control in warehouse systems, where the fleet is typically checked at regular intervals, ongoing tasks continue by default, and new task-level decisions are issued only when the current situation justifies intervention.
 
 Two design choices are central for feasibility:
 \begin{itemize}
@@ -63,7 +78,7 @@ For both architectures, two prompt styles were evaluated:
 \end{itemize}
 
 \paragraph{Objective 2: optimize \gls{llm} calls while maintaining delivery throughput.}
-The second family is implemented in \nolinkurl{scripts/run_obj2_shared_context_llm.py} and stored under \nolinkurl{results/calls}. This family keeps the shared-context, per-agent architecture, but changes the objective from delivery-only to a joint objective: increase shelf deliveries while reducing unnecessary \gls{llm} queries. In practice, the runner supports action holding and busy-state reuse so that the model is not queried at every environment step. This family was used primarily to study the practical trade-off between throughput, model size, and call efficiency, and more broadly to test whether the \gls{llm}-based control framework remained useful when the objective changed.
+The second family is implemented in \nolinkurl{scripts/run_obj2_shared_context_llm.py} and stored under \nolinkurl{results/calls}. This family keeps the shared-context, per-agent architecture, but changes the objective from delivery-only to a joint objective: increase shelf deliveries while reducing unnecessary \gls{llm} queries. In practice, the runner uses action holding and conditional replanning so that the model is not queried for every agent at every environment step. This family was used primarily to study the practical trade-off between throughput, model size, and call efficiency, and more broadly to test whether the \gls{llm}-based control framework remained useful when the objective changed.
 
 \paragraph{Objective 3: battery-aware objective.}
 A third family was planned for explicitly battery-oriented evaluation and corresponding result storage under \nolinkurl{results/battery}. At the time of writing, this experimental branch had not yet produced completed result files, so it is described as planned work rather than evaluated work.
@@ -152,3 +167,24 @@ The progression of the experimental campaign was:
 \end{enumerate}
 
 One broader aim of this progression was to test whether the same general \gls{llm}-based control framework could adapt as the stated objective changed. Section~\ref{sec:result_discussion} therefore first analyzes Objective~1 as the shelf-delivery baseline, then Objective~2 as a changed objective using a later and more structured shared-context controller, and finally notes Objective~3 as planned future evaluation. In the current simulation setup, a run can achieve at most 20 deliveries, and the results chapter uses that ceiling to contextualize reported scores.
+
+\subsection{Delimitations}
+To keep the study focused and interpretable at the current stage, the following delimitations apply:
+\begin{itemize}
+    \item The work is evaluated in a simulated warehouse environment rather than on physical robots.
+    \item The controller is responsible only for high-level target selection; low-level navigation and collision handling are performed by the environment.
+    \item The evaluated language models are prompted general-purpose models accessed through a local inference server and are not fine-tuned for this task.
+    \item The reported experiments use fixed seeds and a limited number of completed sessions, so the results should be interpreted as exploratory rather than statistically conclusive.
+    \item The battery-aware objective family had not yet produced completed aggregate results at the time of writing.
+\end{itemize}
+
+\subsection{Ethical and Sustainability Considerations}
+Although the present work is simulation-based, it raises practical issues that remain relevant for real multi-robot deployments.
+The primary ethical concern is safety and reliability: generated decisions may be infeasible, unstable, or unproductive if they are not constrained by system-side checks.
+For that reason, the studied control loop does not execute free-form outputs directly. It uses grounded action identifiers, candidate shaping, explicit feasibility validation, and fallback behavior so that unsafe or clearly invalid actions are filtered before execution.
+The logging of prompts, parsed outputs, executed actions, and observed step consequences also improves traceability, which is important when analyzing failures such as long no-delivery tails, stale waiting loops, or battery-related breakdowns.
+
+From a sustainability perspective, the main trade-off is between model capability and computational cost.
+Larger language models generally require more inference time and compute, while smaller models may require stronger prompt structure and validation to remain effective.
+This thesis therefore treats call efficiency, unnecessary replanning, and coordination overhead as practically relevant concerns rather than only implementation details.
+Even with safeguards, the current study does not eliminate all risks: fixed-seed evaluation, limited scenario coverage, and the absence of physical deployment mean that conclusions about safety, efficiency, and generalization remain provisional.

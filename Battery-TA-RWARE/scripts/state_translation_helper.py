@@ -116,11 +116,20 @@ def nearest_charging_station_from_coords(env, start_coords: Tuple[int, int], age
 
 def battery_need_label(battery: float) -> str:
     """Bucket a battery value into a prompt-friendly qualitative label."""
-    if battery < 25.0:
+    if battery < 30.0:
         return "critical"
-    if battery < 50.0:
+    if battery < 65.0:
         return "need_charging_soon"
     return "not_needed"
+
+
+def battery_need_display_label(battery_need: str) -> str:
+    """Render a more explicit battery status phrase for prompt text."""
+    if battery_need == "critical":
+        return "BATTERY LOW, URGENT CHARGING NEEDED"
+    if battery_need == "need_charging_soon":
+        return "BATTERY MODERATE"
+    return "CHARGING NOT NEEDED"
 
 
 def candidate_ids_for_agent(env, idx: int, valid_masks: np.ndarray, max_candidate_ids: int) -> List[int]:
@@ -339,7 +348,7 @@ def render_self_state(env, agent) -> str:
         f"pos=({state['x']},{state['y']}), "
         f"target={state['target']}, "
         f"busy={state['busy']}, "
-        f"battery={state['battery']:.1f} ({state['battery_need']}), "
+        f"battery={state['battery']:.1f} - {battery_need_display_label(str(state['battery_need']))}, "
         f"carrying={state['carrying']}"
     )
 

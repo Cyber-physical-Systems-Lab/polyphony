@@ -1,58 +1,80 @@
-In studies of human communication, language use has been framed as a form of joint action in which participants coordinate their individual contributions toward shared outcomes~\cite{clark1996usinglanguage}.
-Accounts of language origins likewise emphasize the role of cooperative motives and shared intentionality in enabling coordination and collaboration~\cite{tomasello2008origins}.
-Language has also been linked to social bonding and group-level coordination in evolutionary accounts of human sociality~\cite{dunbar1996grooming}.
+Accounts of language use and language evolution have often linked language to coordination, cooperation, and shared intentionality in social groups~\cite{clark1996usinglanguage,tomasello2008origins,dunbar1996grooming}.
+In these accounts, language is not only a means of describing the world, but also a means of aligning intentions, communicating plans, and organizing joint activity.
+This perspective motivates the present thesis: if language is closely associated with coordination in human settings, then language-capable models may also be worth studying as decision components in multi-agent systems, provided that the setting is concrete enough to test that idea under operational constraints.
 
-Motivated by these perspectives, this thesis adopts the working hypothesis that language-capable models with general reasoning ability can serve as high-level decision-makers in multi-agent settings, thereby supporting collaboration and coordination without task-specific training for every new configuration.
+Warehouse automation provides such a setting.
+In the warehouse domain studied here, heterogeneous robot fleets must coordinate under shared spatial and task constraints: carrier \glspl{agv} transport shelves, picker agents support load and unload operations, and both roles compete for shelves, corridors, and charging stations while still trying to achieve a shared operational objective.
+The coordination problem is therefore not only where agents should move, but also which shelf should be served next, when agents should wait for support, when a carried shelf should be delivered or returned, and when battery recovery should take priority over immediate task progress.
 
-To evaluate this hypothesis in a concrete and measurable way, the thesis uses a simplified but structured multi-agent testbed.
-When autonomous agent fleets operate in a shared environment, high throughput typically requires more than path planning: agents must decide \emph{which} tasks to execute, \emph{when} to coordinate with other roles, and \emph{when} to allocate time to maintenance actions such as recharging.
-These decisions are particularly challenging in heterogeneous teams where agents have different capabilities and constraints.
+Path planning alone is not sufficient in this setting.
+Productive coordination also requires agents to synchronize role-dependent actions, react when progress stalls, and adapt when the global objective changes.
+For example, an \gls{agv} may reach a shelf and still fail to make progress if a picker is not synchronized in time; repeated lack of position change can indicate interaction conflicts in the environment and motivate trying a different action; and a controller may need to shift behavior when the objective changes from maximizing deliveries alone to also reducing unnecessary \gls{llm} calls or respecting battery-related constraints.
+The thesis therefore studies the higher-level decision layer above low-level motion: selecting grounded macro actions that determine what each agent should do next under the current task, coordination, and battery conditions.
 
-Research on \glspl{mrs} spans architectures, communication, and coordination strategies.
-Early surveys emphasized fundamental axes such as group architecture, resource conflicts, and learning~\cite{cao1997cooperative}.
-Later overviews categorized multi-robot research topics including communication, task allocation/control, and motion coordination~\cite{arai2002advances}.
-In practical logistics domains, these themes manifest as repeated, interdependent choices: allocate requests to carriers, ensure loaders and carriers meet at shelves, resolve conflicts in shared corridors, and maintain energy safety.
+To evaluate this decision layer in a controlled way, the thesis uses Battery-TA-RWARE, an adaptation of the Task-Assignment Robotic Warehouse environment~\cite{krnjaic2022scalable}.
+Battery-TA-RWARE is a simplified but structured testbed that retains the key coordination features of the warehouse problem: heterogeneous agent roles, requested shelves, shared corridors, charging stations, and explicit load/unload dependencies between \glspl{agv} and pickers.
+At the same time, it abstracts away continuous low-level control by handling motion internally, making it suitable for studying whether better high-level decisions improve coordination under grounded discrete actions.
 
-Many approaches address such problems using optimization, hand-engineered heuristics, or \gls{marl}.
-Optimization and heuristics can be strong and efficient, but they often require careful domain-specific design.
-\gls{marl} can learn sophisticated joint behaviour, but training is expensive, sensitive to reward shaping and partial observability, and may generalize poorly when the environment parameters change.
-Benchmarking studies highlight that algorithm comparisons are highly task- and metric-dependent, motivating careful protocol design and reporting~\cite{papoudakis2020benchmarking}.
-Recent work in heterogeneous multi-robot settings also introduces bio-inspired \emph{symbiosis} framings and reward shaping strategies, often combined with centralized training and decentralized execution, to stabilize learning and improve cooperative outcomes~\cite{niu2025icpssymbiosis,niu2025icrassymbiosisrewards}.
+\Glspl{mrs} provide useful background for this problem.
+Early surveys emphasized group architecture, resource conflicts, and learning~\cite{cao1997cooperative}, while later overviews highlighted communication, task allocation/control, and motion coordination as recurring themes~\cite{arai2002advances}.
+In the warehouse setting of this thesis, these themes translate into concrete questions about assigning requested shelves, synchronizing heterogeneous roles at shelf locations, handling conflicts in shared corridors, and respecting energy-related constraints without stalling delivery progress.
 
-Recent \glspl{llm} offer a complementary direction: instead of learning a policy from scratch for each environment, an \gls{llm} can be prompted with a structured description of the current state and asked to output a high-level decision.
-In robotics, \glspl{llm} have been used for instruction following and planning by combining language reasoning with explicit grounding and feasibility checks; for example, by selecting from validated affordances rather than unconstrained free-form actions~\cite{ahn2022do}.
-However, applying \glspl{llm} to multi-agent control introduces additional challenges: actions must remain valid under environment constraints, decisions must be coordinated across agents, and long-horizon objectives must be approximated under limited context and latency budgets.
+Many approaches address such coordination problems using optimization, hand-engineered heuristics, or \gls{marl}.
+Optimization and heuristic methods can be effective, but they often require substantial domain-specific design and retuning when the operating conditions or objective formulation change.
+\gls{marl} can learn coordinated policies, but training remains expensive, strongly dependent on reward design and experimental protocol, and often difficult to adapt when the environment, agent mix, or optimization target changes.
+Benchmarking studies further show that conclusions in multi-agent learning are highly task- and metric-dependent, which makes careful experimental framing important~\cite{papoudakis2020benchmarking}.
+Recent work in heterogeneous multi-robot settings has also explored bio-inspired \emph{symbiosis} framings and reward shaping strategies to stabilize cooperation under centralized training and decentralized execution~\cite{niu2025icpssymbiosis,niu2025icrassymbiosisrewards}.
 
-This thesis studies \gls{llm}-driven decision-making in a heterogeneous multi-robot warehouse domain with explicit battery dynamics.
-The experimental platform is Battery-TA-RWARE, an adaptation of the Task-Assignment Robotic Warehouse environment~\cite{krnjaic2022scalable}, featuring two agent types: carrier \glspl{agv} and picker agents that must meet at shelf locations for load/unload operations.
-At each decision point, the current global state is summarized into a compact textual prompt, the \gls{llm} proposes an action id per agent, and a validation layer enforces action feasibility via action masks.
+\Glspl{llm} offer a complementary alternative in this space.
+In this thesis, \glspl{llm} refer to prompted pre-trained text-generation models that are used as high-level decision components, rather than as low-level controllers or task-specific policies trained directly inside the warehouse environment.
+Instead of learning a task-specific policy from scratch, an \gls{llm} can be prompted with a structured summary of the current environment state and asked to choose a grounded macro action, meaning a validated high-level target choice such as a shelf, goal station, or charging station.
+In this thesis, a high-level decision means selecting a discrete environment action identifier, such as moving toward a shelf, a goal station, or a charging station, rather than generating free-form robot commands.
+Recent robotics work has used \glspl{llm} together with explicit grounding and feasibility checks so that language reasoning remains tied to validated actions instead of unconstrained text outputs~\cite{ahn2022do}.
+This makes \glspl{llm} a plausible object of study for warehouse coordination, but it also raises a concrete question: can they support productive heterogeneous coordination under discrete action constraints, limited context, and changing objectives?
+
+The thesis studies this question along three main design axes.
+The first is planning architecture: whether one prompt should produce decisions for all agents that currently need planning, or whether agents should be planned one at a time while still receiving shared global context.
+The second is prompt representation: whether the same decision-relevant state should be expressed as compact natural language or as a more explicitly structured \gls{json} prompt.
+The third is model size, since the experiments compare smaller and larger prompted language models under the same warehouse setting.
+
+This thesis studies \gls{llm}-driven decision-making in that grounded warehouse setting.
+The evaluated control loop summarizes the current state into a compact prompt, queries an \gls{llm} either jointly or per agent depending on architecture, parses the returned action identifier, and validates it against the environment's current feasible-action mask, that is, the set of actions currently allowed for that agent, before execution.
+Depending on the runner, the controller may both restrict the candidate actions shown in the prompt and validate the selected action after generation, so feasibility is enforced by both candidate shaping and post-selection checking rather than by a free-form output alone.
+The controller operates in discrete simulation time: the system state is evaluated at every environment step, but \gls{llm} queries are issued only when an agent requires a new high-level decision.
+The controller can also use the observed consequence of executed actions after a simulation step, for example whether progress occurred, whether an agent remained blocked or busy, or whether replanning is needed.
+This makes the approach neither unconstrained continuous control nor pure event triggering, but a step-synchronous control scheme with conditional replanning.
+Because the controller depends on repeated model inference, the study evaluates not only delivery throughput but also call efficiency, since unnecessary model queries increase latency and computational cost without improving coordination.
+The experimental program also asks whether the same control framework remains useful when the objective changes, first from pure shelf-delivery throughput to call-aware delivery, and later toward battery-aware behaviour.
+In this thesis, observed failure behaviour refers to outcomes such as zero-delivery episodes, long no-delivery tails, invalid decisions, or repeated coordination breakdowns such as waiting loops and unresolved support dependencies.
+The introduction that follows therefore focuses on which \gls{llm}-based configurations are most effective for productive coordination in this constrained warehouse setting.
 
 \subsection{Research Questions}
 \label{sec:rq}
 The thesis is guided by the following main research question:
 \begin{quote}
-    \textbf{Main research question:} How can \glspl{llm} be used in heterogeneous multi-robot systems to improve collaboration?
+    \textbf{Main research question:} To what extent can prompted \glspl{llm} support grounded high-level decision-making for heterogeneous multi-robot coordination in a constrained warehouse environment?
 \end{quote}
-To support a systematic investigation of the main research question, the study considers two sub-questions:
+To support a systematic investigation of the main research question, the study considers the following sub-questions:
+In this thesis, \emph{centralized planning} means that one prompt receives the shared state and returns decisions for all agents that currently need planning, whereas \emph{shared-context per-agent planning} means that agents are planned one at a time, but each prompt still contains a shared summary of the global warehouse state.
 \begin{enumerate}
-    \item \textbf{RQ1 (Model size):} How do \glspl{llm} of different sizes influence the quality and effectiveness of collaboration in heterogeneous multi-robot systems?
-    \item \textbf{RQ2 (Integration architecture):} Which integration architecture, centralized or decentralized, enables the most effective use of \glspl{llm} for coordinating heterogeneous multi-robot teams?
+    \item \textbf{RQ1 (Model size):} How does language-model size affect coordination performance in the warehouse setting, measured by delivery throughput, language-model calls per delivery, and observed failure behaviour across scenarios?
+    \item \textbf{RQ2 (Planning architecture):} How do centralized and shared-context per-agent planning architectures differ in coordination performance, measured by delivery throughput, robustness across scenarios with different coordination pressure, and the frequency of non-productive runs or coordination failures?
+    \item \textbf{RQ3 (Prompt representation):} How do natural-language and \gls{json} prompt representations differ in coordination performance, measured by delivery throughput, call efficiency, and the consistency of valid, productive decisions?
 \end{enumerate}
 
-In this thesis, architectural choices include how environment state is translated into language, how proposed decisions are mapped back to executable actions, whether decision-making is performed per-agent or jointly, and how feasibility constraints are imposed (e.g., by restricting/validating candidate actions and using environment feedback for replanning).
+In this thesis, these questions are evaluated primarily through delivery throughput, language-model call efficiency, and observed failure behaviour. Depending on the experiment family, the analysis also considers robustness across scenarios, the prevalence of zero-delivery or long no-delivery runs, and whether productive coordination is maintained when the objective changes.
 
 \subsection{Contributions}
 \label{sec:contrib}
 The current thesis work contributes:
 \begin{itemize}
-    \item An end-to-end pipeline for running and evaluating \gls{llm}-driven heterogeneous multi-robot control in Battery-TA-RWARE, including state-to-language encoding, action-id grounding, output parsing, and feasibility validation.
-    \item An experimental setup for comparing models of different sizes and for evaluating centralized versus decentralized \gls{llm} integration patterns.
-    \item Preliminary results and an error analysis comparing different \gls{llm} planning architectures, prompt forms, and objective formulations.
+    \item A grounded evaluation setting for studying language-model-based high-level control in heterogeneous warehouse coordination, where proposed decisions are translated into discrete environment actions and checked against explicit feasibility constraints rather than executed as free-form outputs.
+    \item Comparative evidence on three design variables relevant to the research questions: model size, planning architecture, and prompt representation. In particular, the experiments provide a basis for assessing how these choices affect delivery throughput, call efficiency, robustness across scenarios, and the prevalence of non-productive behaviour.
+    \item Empirical insights into the conditions under which the approach remains productive. The current results indicate that shared-context per-agent planning is more promising than centralized planning in the evaluated shelf-delivery setting, that natural-language prompting is more effective than \gls{json} prompting in the completed comparisons, and that language-model-based control depends strongly on grounding and rule-based safeguards to avoid systematic failure modes such as no-delivery tails, stale waiting loops, and other coordination breakdowns.
 \end{itemize}
 
 \subsection{Report Outline}
-Section~\ref{sec:purpose} states the problem formulation, objectives, and delimitations.
 Section~\ref{sec:background} provides background on multi-robot coordination, warehouse task assignment, and \gls{llm}-based planning.
-Section~\ref{sec:method} describes the environment and the proposed \gls{llm} control loop.
-Section~\ref{sec:result_discussion} presents preliminary experiments and discusses observed failure modes.
+Section~\ref{sec:method} describes the environment, the proposed \gls{llm} control loop, the experimental design, and the main delimitations of the study.
+Section~\ref{sec:result_discussion} presents the current experimental results together with their interpretation.
 Finally, Section~\ref{sec:conclusions} concludes and outlines future work.

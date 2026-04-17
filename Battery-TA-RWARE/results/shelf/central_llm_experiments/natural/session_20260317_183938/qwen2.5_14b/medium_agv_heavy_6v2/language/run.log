@@ -1,3 +1,0 @@
-[2026-03-18 19:59:37 UTC] Starting scenario=medium_agv_heavy_6v2 env_id=tarware-medium-6agvs-2pickers-globalobs-chg-v1
-[2026-03-18 19:59:37 UTC] Scenario focus: Strongly AGV-heavy: stress-test support prioritization, waiting, and charging decisions.
-[2026-03-18 20:49:17 UTC] Completed scenario=medium_agv_heavy_6v2 model=qwen2.5:14b deliveries=0 steps=200 failures=1

@@ -326,6 +326,33 @@ def parse_language_actions(text: str, num_agents: int) -> Dict[int, Dict[str, An
 
 def parse_json_actions(text: str, num_agents: int) -> Dict[int, Dict[str, Any]]:
     parsed: Dict[int, Dict[str, Any]] = {}
+    text = text.strip()
+    if not (text.startswith("{") and text.endswith("}")):
+        start = text.find("{")
+        if start >= 0:
+            depth = 0
+            in_string = False
+            escape = False
+            for idx in range(start, len(text)):
+                char = text[idx]
+                if in_string:
+                    if escape:
+                        escape = False
+                        continue
+                    if char == "\\":
+                        escape = True
+                    elif char == '"':
+                        in_string = False
+                    continue
+                if char == '"':
+                    in_string = True
+                elif char == "{":
+                    depth += 1
+                elif char == "}":
+                    depth -= 1
+                    if depth == 0:
+                        text = text[start : idx + 1]
+                        break
     payload = json.loads(text)
     for item in payload.get("actions", []):
         if not isinstance(item, dict):
@@ -342,6 +369,36 @@ def parse_actions(text: str, prompt_format: str, num_agents: int) -> Dict[int, D
     if prompt_format == "json":
         return parse_json_actions(text, num_agents)
     return parse_language_actions(text, num_agents)
+
+
+def parse_actions_with_metadata(
+    text: str,
+    prompt_format: str,
+    num_agents: int,
+) -> Tuple[Dict[int, Dict[str, Any]], Dict[str, Any]]:
+    metadata: Dict[str, Any] = {
+        "parsed_llm_output": None,
+        "json_generation_failed": False,
+        "json_parse_error": None,
+    }
+    if prompt_format == "json":
+        try:
+            parsed_actions = parse_json_actions(text, num_agents)
+            metadata["parsed_llm_output"] = {"actions": parsed_actions}
+            return parsed_actions, metadata
+        except Exception as exc:
+            metadata["json_generation_failed"] = True
+            metadata["json_parse_error"] = f"{type(exc).__name__}: {exc}"
+            parsed_actions = parse_language_actions(text, num_agents)
+            metadata["parsed_llm_output"] = {
+                "actions": parsed_actions,
+                "fallback_parser": "language_action_lines",
+            }
+            return parsed_actions, metadata
+
+    parsed_actions = parse_language_actions(text, num_agents)
+    metadata["parsed_llm_output"] = {"actions": parsed_actions}
+    return parsed_actions, metadata
 
 
 def first_valid_action(valid_masks: np.ndarray, agent_idx: int) -> int:
@@ -432,6 +489,7 @@ def run_single_episode(
     total_llm_calls = 0
     llm_failures = 0
     total_llm_missing_or_invalid_actions = 0
+    total_json_generation_failures = 0
     start_time = time.time()
 
     for step_idx in range(1, max(1, int(args.max_steps)) + 1):
@@ -441,8 +499,14 @@ def run_single_episode(
 
         if planned_agent_indices:
             total_llm_calls += 1
+            llm_raw_text = ""
+            parse_metadata: Dict[str, Any] = {
+                "parsed_llm_output": None,
+                "json_generation_failed": False,
+                "json_parse_error": None,
+            }
             try:
-                llm_text = query_ollama_text(
+                llm_raw_text = query_ollama_text(
                     model=model,
                     ollama_url=args.ollama_url,
                     prompt=prompt,
@@ -450,14 +514,30 @@ def run_single_episode(
                     temperature=args.temperature,
                     num_predict=args.num_predict,
                 )
-                parsed_actions = parse_actions(llm_text, args.prompt_format, base_env.num_agents)
+                llm_text = llm_raw_text
+                parsed_actions, parse_metadata = parse_actions_with_metadata(
+                    llm_text,
+                    args.prompt_format,
+                    base_env.num_agents,
+                )
             except Exception as exc:
                 llm_failures += 1
                 llm_text = f"LLM_ERROR: {type(exc).__name__}: {exc}"
                 parsed_actions = {}
+            else:
+                llm_raw_text = llm_text
         else:
             llm_text = "No idle agents required replanning at this step."
+            llm_raw_text = llm_text
             parsed_actions = {}
+            parse_metadata = {
+                "parsed_llm_output": None,
+                "json_generation_failed": False,
+                "json_parse_error": None,
+            }
+
+        if parse_metadata.get("json_generation_failed"):
+            total_json_generation_failures += 1
 
         macro_actions, planner_metrics, resolution_rows = materialize_macro_actions(
             base_env,
@@ -491,7 +571,11 @@ def run_single_episode(
                 "step": step_idx,
                 "prompt": prompt,
                 "llm_output": llm_text,
+                "raw_llm_output": llm_raw_text,
+                "parsed_llm_output": parse_metadata.get("parsed_llm_output"),
                 "parsed_actions": parsed_actions,
+                "json_generation_failed": bool(parse_metadata.get("json_generation_failed")),
+                "json_parse_error": parse_metadata.get("json_parse_error"),
                 "actions": macro_actions,
                 "planner_metrics": planner_metrics,
                 "action_resolution": resolution_rows,
@@ -521,6 +605,7 @@ def run_single_episode(
         "llm_calls": total_llm_calls,
         "llm_failures": llm_failures,
         "llm_missing_or_invalid_actions": total_llm_missing_or_invalid_actions,
+        "json_generation_failures": total_json_generation_failures,
         "elapsed_seconds": elapsed_s,
         "step_records_path": str(run_dir / "step_records.json"),
     }
@@ -536,7 +621,10 @@ def run_single_episode(
         f"Prompt format: {summary['prompt_format']}",
         f"Total Shelf Delivery: {summary['total_shelf_deliveries']}",
         f"Steps executed: {summary['steps_executed']}",
+        f"LLM calls: {summary['llm_calls']}",
+        f"LLM failures: {summary['llm_failures']}",
         f"LLM missing/invalid planned actions: {summary['llm_missing_or_invalid_actions']}",
+        f"JSON generation failures: {summary['json_generation_failures']}",
         "Shelf delivery timeline:",
     ]
     if delivery_timeline:

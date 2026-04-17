@@ -3,7 +3,7 @@
 The term \gls{mas} is broader and can include purely software agents, whereas \gls{mrs} typically emphasizes physical robots operating under motion, sensing, and actuation constraints.
 Classical overviews of cooperative robotics highlight recurring concerns such as group architectures, resource conflicts, and learning~\cite{cao1997cooperative}.
 Survey treatments vary in terminology and scope (e.g., differences in how \gls{mas} and \gls{mrs} are framed, and how communication and coordination taxonomies are defined)~\cite{yan2013mrscoordination,arai2002advances}.
-For broader multi-agent coordination perspectives, conference proceedings such as AAMAS provide additional representative examples, including coordinated MARL methods that explicitly trade off coordination benefits against communication bandwidth~\cite{zhang2013coordinatingmarl}.
+For broader multi-agent coordination perspectives, conference proceedings such as \gls{aamas} provide additional representative examples, including coordinated \gls{marl} methods that explicitly trade off coordination benefits against communication bandwidth~\cite{zhang2013coordinatingmarl}.
 In heterogeneous teams, these concerns intensify because roles and capabilities differ, and success often requires explicit synchronization (e.g., meeting at the same physical location at the same time).
 
 In this thesis, \emph{collaboration} refers to interdependent task execution among heterogeneous roles, where agents must coordinate to complete an operation (e.g., a load/unload interaction).
@@ -32,7 +32,7 @@ The environment models two heterogeneous agent types:
 Battery-TA-RWARE extends the task-assignment setting with battery depletion and charging stations, forcing agents to balance throughput with energy safety.
 Low-level movement is handled by environment dynamics (including A* path planning), while the controller selects discrete targets representing shelves, goals, or charging stations.
 
-\subsection{LLM-Based Planning and Grounding}
+\subsection{Language-Model-Based Planning and Grounding}
 \glspl{llm} can produce coherent natural-language plans, but robot control requires converting language into \emph{grounded}, \emph{feasible} actions.
 One influential pattern is to constrain the \gls{llm} to select among validated, environment-defined options.
 For example, SayCan combines language-level reasoning with an affordance model to filter actions that are executable in the current state~\cite{ahn2022do}.

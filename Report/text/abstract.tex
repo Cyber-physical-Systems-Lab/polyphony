@@ -1,8 +1,10 @@
-Heterogeneous warehouse fleets typically include robots with different roles (e.g., carrier vehicles and loading agents) that must coordinate their movement, timing, and energy usage to sustain high throughput.
-Designing controllers for such multi-robot systems is challenging due to large discrete action spaces, partial observability, sparse rewards, and safety constraints such as battery depletion.
+Heterogeneous warehouse fleets typically include robots with different roles, such as carrier vehicles and picker agents, that must coordinate task choice, role synchronization, and recharging while sharing shelves, corridors, and charging stations.
+This creates a discrete multi-agent decision problem in which throughput depends not only on motion planning, but also on when agents should commit to tasks, wait for support, or allocate time to battery recovery.
 
-This thesis investigates whether off-the-shelf \glspl{llm} can be used as high-level decision-makers for heterogeneous robot collaboration in a task-assignment warehouse environment with battery dynamics.
-The approach converts the current multi-agent state into a compact natural-language description, queries an \gls{llm} to choose an action for each agent, and enforces feasibility by validating proposed actions against environment-defined valid action masks.
-Different model sizes, planning architectures, and prompt designs are compared in the Battery-TA-RWARE environment.
+This thesis evaluates whether off-the-shelf \glspl{llm} can support high-level decision-making for heterogeneous multi-robot collaboration in the Battery-TA-RWARE task-assignment warehouse environment.
+The control loop summarizes the current environment state, queries an \gls{llm} for a grounded macro-action, and validates the proposed action against environment-defined feasibility constraints before execution.
+The experiments compare model size, planning architecture, and prompt representation, using delivery throughput, \gls{llm} call efficiency, and observed failure behaviour as the main evaluation criteria.
 
-The current work contributes (i) an end-to-end evaluation pipeline for \gls{llm}-driven multi-agent control, (ii) prompt and validation patterns tailored to discrete warehouse actions, and (iii) preliminary experimental results showing that prompt structure, planning architecture, and safeguard logic strongly influence whether \gls{llm}-based control remains productive under changing objectives.
+The completed experiments show that, in the earlier shelf-delivery controller, shared-context planning performed better than centralized planning and natural-language prompting performed better than \gls{json} prompting.
+In the later call-aware shared-context controller, a mid-sized local model (\nolinkurl{llama3.2:3b}) gave the strongest practical trade-off among the completed natural-language runs, while the completed \gls{json} runs remained substantially weaker than their natural-language counterparts.
+Across the evaluated settings, productive behaviour depended on rule-based safeguards such as action validation and candidate shaping, indicating that \glspl{llm} were most useful as constrained high-level decision components rather than as unconstrained controllers.

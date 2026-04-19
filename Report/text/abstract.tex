@@ -5,6 +5,6 @@ This thesis evaluates whether off-the-shelf \glspl{llm} can support high-level d
 The control loop summarizes the current environment state, queries an \gls{llm} for a grounded macro-action, and validates the proposed action against environment-defined feasibility constraints before execution.
 The experiments compare model size, planning architecture, and prompt representation, using delivery throughput, \gls{llm} call efficiency, and observed failure behaviour as the main evaluation criteria.
 
-The completed experiments show that, in the earlier shelf-delivery controller, shared-context planning performed better than centralized planning and natural-language prompting performed better than \gls{json} prompting.
-In the later call-aware shared-context controller, a mid-sized local model (\nolinkurl{llama3.2:3b}) gave the strongest practical trade-off among the completed natural-language runs, while the completed \gls{json} runs remained substantially weaker than their natural-language counterparts.
-Across the evaluated settings, productive behaviour depended on rule-based safeguards such as action validation and candidate shaping, indicating that \glspl{llm} were most useful as constrained high-level decision components rather than as unconstrained controllers.
+The available data show that, in the shelf-delivery experiments, shared-context planning produced more deliveries than centralized planning and natural-language prompting produced more deliveries than \gls{json} prompting.
+In the call-aware experiments, a mid-sized local model (\nolinkurl{llama3.2:3b}) produced the highest delivery total among the completed natural-language runs, while the completed \gls{json} runs produced lower throughput and higher call cost than their natural-language counterparts.
+Across the evaluated settings, the control loop operated through grounded action identifiers, candidate shaping, and explicit validation before execution.

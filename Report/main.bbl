@@ -52,6 +52,11 @@ Y.~U. Cao, A.~S. Fukunaga, and A.~B. Kahng, ``Cooperative mobile robotics:
 H.~H. Clark, \emph{Using Language}.\hskip 1em plus 0.5em minus 0.4em\relax
   Cambridge, UK: Cambridge University Press, 1996.
 
+\bibitem{dawane2026onddeviceslm}
+A.~Dawane, ``On-device small language model inference acceleration for
+  real-time robotics: A survey,'' in \emph{2026 IEEE 16th Annual Computing and
+  Communication Workshop and Conference (CCWC)}, 2026.
+
 \bibitem{dunbar1996grooming}
 R.~Dunbar, \emph{Grooming, Gossip, and the Evolution of Language}.\hskip 1em
   plus 0.5em minus 0.4em\relax Cambridge, MA, USA: Harvard University Press,
@@ -69,6 +74,11 @@ Y.~Huang, ``Collaborative multi-robot task planning using large language
   [Online]. Available:
   \url{https://uu.diva-portal.org/smash/get/diva2:2023514/FULLTEXT01.pdf}
 \BIBentrySTDinterwordspacing
+
+\bibitem{karam2026collaborationmrs}
+R.~Karam, A.~A. Nguyen, R.~Lin, D.~R. Martin, D.~Morales, B.~A. Butler, and
+  M.~Egerstedt, ``Collaboration in multi-robot systems: Taxonomy and survey
+  over frameworks for collaboration,'' 2026.
 
 \bibitem{krnjaic2022scalable}
 A.~Krnjaic, R.~D. Steleac, J.~D. Thomas, G.~Papoudakis, L.~Sch{\"a}fer, A.~Wing
@@ -102,6 +112,14 @@ G.~Papoudakis, F.~Christianos, L.~Sch{\"a}fer, and S.~V. Albrecht,
   ``Benchmarking multi-agent deep reinforcement learning algorithms in
   cooperative tasks,'' 2020, {accessed} 2026-02-26. [Online]. Available:
   \url{https://arxiv.org/abs/2006.07869}
+\BIBentrySTDinterwordspacing
+
+\bibitem{sebok2024cooperativehetero}
+\BIBentryALTinterwordspacing
+M.~A. Sebok and H.~G. Tanner, ``Cooperative planning for physically interacting
+  heterogeneous robots,'' \emph{Frontiers in Robotics and AI}, vol.~11, p.
+  1172105, 2024. [Online]. Available:
+  \url{https://www.frontiersin.org/articles/10.3389/frobt.2024.1172105/full}
 \BIBentrySTDinterwordspacing
 
 \bibitem{tomasello2008origins}

@@ -4,47 +4,52 @@
 \contentsline {paragraph}{Acknowledgement}{iii}{section*.2}%
 \contentsline {section}{Acronyms}{vi}{section*.4}%
 \contentsline {section}{\numberline {1}Introduction}{1}{section.1}%
-\contentsline {subsection}{\numberline {1.1}Research Questions}{3}{subsection.1.1}%
-\contentsline {subsection}{\numberline {1.2}Contributions}{4}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.1}Research Questions}{4}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Contributions}{5}{subsection.1.2}%
 \contentsline {subsection}{\numberline {1.3}Report Outline}{5}{subsection.1.3}%
-\contentsline {section}{\numberline {2}Background and Related Work}{5}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Multi-Robot Systems and Coordination}{5}{subsection.2.1}%
-\contentsline {subsection}{\numberline {2.2}Warehouse Task Assignment Environments}{6}{subsection.2.2}%
-\contentsline {subsection}{\numberline {2.3}Language-Model-Based Planning and Grounding}{7}{subsection.2.3}%
-\contentsline {subsection}{\numberline {2.4}Why Study Model Size and Prompt Design?}{7}{subsection.2.4}%
-\contentsline {section}{\numberline {3}System and Method}{8}{section.3}%
-\contentsline {subsection}{\numberline {3.1}Overview}{8}{subsection.3.1}%
-\contentsline {subsection}{\numberline {3.2}Environment: Battery-TA-RWARE}{8}{subsection.3.2}%
-\contentsline {subsection}{\numberline {3.3}Language-Model Control Loop}{9}{subsection.3.3}%
-\contentsline {subsection}{\numberline {3.4}Experiment Families and Objectives}{11}{subsection.3.4}%
-\contentsline {paragraph}{Objective 1: maximize total shelf deliveries.}{11}{section*.6}%
-\contentsline {paragraph}{Objective 2: optimize \gls {llm} calls while maintaining delivery throughput.}{12}{section*.7}%
-\contentsline {paragraph}{Objective 3: battery-aware objective.}{12}{section*.8}%
-\contentsline {subsection}{\numberline {3.5}Planning Architectures}{12}{subsection.3.5}%
-\contentsline {paragraph}{Centralized planning.}{12}{section*.9}%
-\contentsline {paragraph}{Shared-context per-agent planning.}{12}{section*.10}%
-\contentsline {subsection}{\numberline {3.6}Prompt Structures}{13}{subsection.3.6}%
-\contentsline {subsection}{\numberline {3.7}Comparison Axes}{13}{subsection.3.7}%
-\contentsline {subsection}{\numberline {3.8}Evaluation Metrics}{14}{subsection.3.8}%
-\contentsline {subsection}{\numberline {3.9}Scenario and Model Matrix}{14}{subsection.3.9}%
-\contentsline {subsection}{\numberline {3.10}Experimental Protocol (Current Stage)}{15}{subsection.3.10}%
-\contentsline {subsection}{\numberline {3.11}Delimitations}{16}{subsection.3.11}%
-\contentsline {subsection}{\numberline {3.12}Ethical and Sustainability Considerations}{16}{subsection.3.12}%
-\contentsline {section}{\numberline {4}Preliminary Results and Discussion}{17}{section.4}%
-\contentsline {subsection}{\numberline {4.1}Result Scope and Objective Progression}{17}{subsection.4.1}%
-\contentsline {subsection}{\numberline {4.2}Objective 1: Shelf-Delivery Experiments}{17}{subsection.4.2}%
-\contentsline {subsubsection}{\numberline {4.2.1}Planning architecture}{18}{subsubsection.4.2.1}%
-\contentsline {subsubsection}{\numberline {4.2.2}Prompt representation}{18}{subsubsection.4.2.2}%
-\contentsline {subsection}{\numberline {4.3}Objective 2: Call-Aware Shelf-Delivery Experiments}{19}{subsection.4.3}%
-\contentsline {subsubsection}{\numberline {4.3.1}Prompt representation}{19}{subsubsection.4.3.1}%
-\contentsline {subsubsection}{\numberline {4.3.2}Adaptation to the changed objective}{20}{subsubsection.4.3.2}%
-\contentsline {subsubsection}{\numberline {4.3.3}Model size}{20}{subsubsection.4.3.3}%
-\contentsline {subsubsection}{\numberline {4.3.4}Call-efficiency outcome}{21}{subsubsection.4.3.4}%
+\contentsline {section}{\numberline {2}Background and Related Work}{6}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Multi-Robot Systems and Coordination}{6}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Warehouse Task Assignment Environments}{7}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Language-Model-Based Planning and Grounding}{8}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Why Study Model Size and Prompt Design?}{8}{subsection.2.4}%
+\contentsline {section}{\numberline {3}System and Method}{9}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Overview}{9}{subsection.3.1}%
+\contentsline {paragraph}{What is fixed and what is varied.}{10}{section*.6}%
+\contentsline {paragraph}{Interpretation and controls.}{10}{section*.7}%
+\contentsline {subsection}{\numberline {3.2}Environment: Battery-TA-RWARE}{10}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Language-Model Control Loop}{10}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Experiment Families and Objectives}{13}{subsection.3.4}%
+\contentsline {paragraph}{Objective 1: maximize total shelf deliveries.}{13}{section*.8}%
+\contentsline {paragraph}{Objective 2: optimize \gls {llm} calls while maintaining delivery throughput.}{13}{section*.9}%
+\contentsline {paragraph}{Objective 3: battery-aware objective.}{14}{section*.10}%
+\contentsline {subsection}{\numberline {3.5}Planning Architectures}{14}{subsection.3.5}%
+\contentsline {paragraph}{Centralized planning.}{14}{section*.11}%
+\contentsline {paragraph}{Shared-context per-agent planning.}{14}{section*.12}%
+\contentsline {subsection}{\numberline {3.6}Prompt Structures}{14}{subsection.3.6}%
+\contentsline {subsection}{\numberline {3.7}Comparison Axes}{15}{subsection.3.7}%
+\contentsline {subsection}{\numberline {3.8}Evaluation Metrics}{15}{subsection.3.8}%
+\contentsline {subsection}{\numberline {3.9}Scenario and Model Matrix}{16}{subsection.3.9}%
+\contentsline {subsection}{\numberline {3.10}Experimental Protocol}{17}{subsection.3.10}%
+\contentsline {subsection}{\numberline {3.11}Delimitations}{17}{subsection.3.11}%
+\contentsline {subsection}{\numberline {3.12}Ethical and Sustainability Considerations}{18}{subsection.3.12}%
+\contentsline {section}{\numberline {4}Preliminary Results and Discussion}{18}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Result Scope and Objective Progression}{18}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Objective 1: Shelf-Delivery Experiments}{19}{subsection.4.2}%
+\contentsline {subsubsection}{\numberline {4.2.1}Planning architecture}{19}{subsubsection.4.2.1}%
+\contentsline {subsubsection}{\numberline {4.2.2}Prompt representation}{20}{subsubsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.3}Objective 2: Call-Aware Shelf-Delivery Experiments}{20}{subsection.4.3}%
+\contentsline {subsubsection}{\numberline {4.3.1}Prompt representation}{20}{subsubsection.4.3.1}%
+\contentsline {subsubsection}{\numberline {4.3.2}Adaptation to the changed objective}{21}{subsubsection.4.3.2}%
+\contentsline {subsubsection}{\numberline {4.3.3}Model size}{21}{subsubsection.4.3.3}%
+\contentsline {subsubsection}{\numberline {4.3.4}Call-efficiency outcome}{22}{subsubsection.4.3.4}%
 \contentsline {subsection}{\numberline {4.4}Objective 3: Battery-Aware Objective}{22}{subsection.4.4}%
-\contentsline {subsection}{\numberline {4.5}System-Level Lessons from the Experiments}{22}{subsection.4.5}%
-\contentsline {subsection}{\numberline {4.6}Limitations of Interpretation}{23}{subsection.4.6}%
+\contentsline {subsection}{\numberline {4.5}Discussion}{22}{subsection.4.5}%
+\contentsline {subsubsection}{\numberline {4.5.1}RQ1: Model size}{22}{subsubsection.4.5.1}%
+\contentsline {subsubsection}{\numberline {4.5.2}RQ2: Planning architecture}{22}{subsubsection.4.5.2}%
+\contentsline {subsubsection}{\numberline {4.5.3}RQ3: Prompt representation}{22}{subsubsection.4.5.3}%
+\contentsline {paragraph}{}{22}{section*.13}%
 \contentsline {section}{\numberline {5}Conclusions and Future Work}{23}{section.5}%
-\contentsline {subsection}{\numberline {5.1}Future Work}{24}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.1}Future Work}{23}{subsection.5.1}%
 \contentsline {section}{\numberline {A}Appendix}{28}{appendix.A}%
 \contentsline {subsection}{\numberline {A.1}Reproducibility: Running the Controllers}{28}{subsection.A.1}%
 \contentsline {subsection}{\numberline {A.2}Prompt Excerpt (Illustrative)}{29}{subsection.A.2}%

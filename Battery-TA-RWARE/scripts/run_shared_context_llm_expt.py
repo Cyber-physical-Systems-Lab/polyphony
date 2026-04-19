@@ -635,7 +635,9 @@ def parse_single_action_with_metadata(text: str, prompt_format: str) -> Tuple[in
     return int(action), metadata
 
 
-def first_valid_action(valid_masks: np.ndarray, agent_idx: int) -> int:
+def discard_invalid_action(valid_masks: np.ndarray, agent_idx: int) -> int:
+    if 0 <= agent_idx < valid_masks.shape[0] and valid_masks[agent_idx, 0] > 0:
+        return 0
     valid = np.where(valid_masks[agent_idx] > 0)[0].tolist()
     return int(valid[0]) if valid else 0
 
@@ -744,9 +746,9 @@ def plan_step_sequential(
             or parsed_action >= env.action_size
             or valid_masks[agent_idx, parsed_action] <= 0
         ):
-            executed_action = first_valid_action(valid_masks, agent_idx)
+            executed_action = discard_invalid_action(valid_masks, agent_idx)
             metrics["llm_missing_or_invalid_actions_this_step"] += 1
-            resolution = "fallback_after_missing_or_invalid_action"
+            resolution = "discarded_invalid_action_to_noop"
         else:
             executed_action = int(parsed_action)
             resolution = "accepted_llm_action"

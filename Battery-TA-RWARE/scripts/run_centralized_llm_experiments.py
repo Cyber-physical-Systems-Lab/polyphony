@@ -401,7 +401,9 @@ def parse_actions_with_metadata(
     return parsed_actions, metadata
 
 
-def first_valid_action(valid_masks: np.ndarray, agent_idx: int) -> int:
+def discard_invalid_action(valid_masks: np.ndarray, agent_idx: int) -> int:
+    if 0 <= agent_idx < valid_masks.shape[0] and valid_masks[agent_idx, 0] > 0:
+        return 0
     valid = np.where(valid_masks[agent_idx] > 0)[0].tolist()
     return int(valid[0]) if valid else 0
 
@@ -436,13 +438,13 @@ def materialize_macro_actions(
         parsed = parsed_actions.get(idx)
         proposed = int(parsed["action"]) if parsed is not None else 0
         if proposed < 0 or proposed >= env.action_size or valid_masks[idx, proposed] <= 0:
-            fallback = first_valid_action(valid_masks, idx)
+            fallback = discard_invalid_action(valid_masks, idx)
             macro_actions[idx] = fallback
             metrics["llm_missing_or_invalid_actions"] += 1
             resolution_rows.append(
                 {
                     "agent_id": idx,
-                    "status": "fallback_after_missing_or_invalid_action",
+                    "status": "discarded_invalid_action_to_noop",
                     "parsed_action": proposed if parsed is not None else None,
                     "executed_action": fallback,
                 }

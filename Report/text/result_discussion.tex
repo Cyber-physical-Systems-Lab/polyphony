@@ -1,14 +1,10 @@
 \subsection{Result Scope and Objective Progression}
-This chapter analyzes the completed experiment families stored under \nolinkurl{results/shelf} and \nolinkurl{results/calls}. The experimental program was organized around three objectives. Objective~1 focused on maximizing total shelf deliveries. Objective~2 retained shelf delivery as the task outcome, but changed the optimization target to improving delivery while reducing unnecessary \gls{llm} calls. Objective~3 was planned as an explicitly battery-aware objective, but that branch had not yet produced completed aggregate results at the time of writing.
-
-One broader goal of the thesis was to test whether an \gls{llm}-based control framework could remain useful when the objective changed. In other words, the question was not only which configuration performed best, but also whether the same overall control paradigm could move from pure throughput optimization to a joint throughput-and-call-efficiency objective, and later toward a battery-oriented objective.
+This chapter reports the available results for the three objective families. Objective~1 focuses on maximizing total shelf deliveries. Objective~2 retains shelf delivery as the task outcome, but changes the optimization target to improving delivery while reducing unnecessary \gls{llm} calls. Objective~3 is defined as a battery-aware objective, but completed aggregate results are not yet available for that family.
 
 For interpreting the reported numbers, one additional fact is important: in the current simulation setup, 20 deliveries is the maximum achievable total for a run. Reported delivery counts should therefore be read relative to this ceiling. A run with only a few deliveries is not merely weak in absolute terms; it is far below what the environment allows when coordination succeeds.
 
-Objective~2 should also not be read as a direct continuation of Objective~1 under an unchanged controller. It used a later shared-context runner with stronger prompt design, action holding, and additional safeguard logic. The Objective~2 results therefore reflect both a changed objective and a more mature controller.
-
 \subsection{Objective 1: Shelf-Delivery Experiments}
-Objective~1 provides the main basis for comparing planning architecture and prompt form under the simplest thesis objective: maximize total shelf deliveries. These experiments are stored under \nolinkurl{results/shelf} and reflect an earlier stage of the system, before the later call-aware shared-context runner was introduced.
+Objective~1 evaluates planning architecture and prompt form under the shelf-delivery objective.
 
 \subsubsection{Planning architecture}
 The architecture comparison in Objective~1 is summarized in Table~\ref{tab:shelf_architecture_summary_reworked}.
@@ -27,34 +23,56 @@ Shared-context + JSON & 36 & 0 & 0.00 \\ \hline
 \label{tab:shelf_architecture_summary_reworked}
 \end{table}
 
-The overall pattern suggests that shared-context planning was more promising than centralized planning, particularly when paired with natural-language prompting. Shared-context plus natural language produced the highest aggregate delivery count in this family. The likely reason is that per-agent planning reduced the burden of each query while still exposing the global state needed for coordination. In the centralized architecture, one prompt had to describe the full state and return multiple coordinated actions at once, which created a heavier joint decision problem for the tested models.
+Table~\ref{tab:shelf_architecture_natural_only} reports the matched natural-language Objective~1 runs, where the prompt form and objective are the same and the planning architecture differs.
 
-At the same time, the Objective~1 results should not be overstated. Even the best configuration in this family remained far below the 20-delivery per-run ceiling. This means Objective~1 is more useful as an architecture comparison than as evidence of strong final performance. It suggests that shared-context planning was the more promising direction, but it does not demonstrate that the Objective~1 controller had already become effective in absolute terms.
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Architecture} & \textbf{Runs} & \textbf{Total deliveries} & \textbf{Average deliveries/run} \\ \hline
+Centralized + natural & 36 & 15 & 0.42 \\ \hline
+Shared-context + natural & 36 & 25 & 0.69 \\ \hline
+\end{tabular}
+\caption{Direct Objective~1 architecture comparison under the matched natural-language setting.}
+\label{tab:shelf_architecture_natural_only}
+\end{table}
+
+Under this matched setting, shared-context planning produced 25 deliveries in aggregate and 0.69 deliveries per run on average, whereas centralized planning produced 15 deliveries in aggregate and 0.42 deliveries per run on average.
 
 \subsubsection{Prompt representation}
-Objective~1 is also the main basis for comparing prompt representation under the shelf-only objective. In this family, natural-language prompting performed better than \gls{json} prompting in the shared-context architecture. The recorded shared-context natural-language runs produced 25 deliveries across 36 runs, whereas the recorded shared-context \gls{json} runs produced zero. The centralized comparison was less one-sided, but all centralized variants remained weak overall and still far below the per-run delivery ceiling.
+Objective~1 and Objective~2 each contain matched shared-context runs with natural-language and \gls{json} prompts. Table~\ref{tab:prompt_format_direct_comparison} reports those side-by-side comparisons.
 
-The correct interpretation is cautious. The early \gls{json} prompts were not fully comparable to the natural-language prompts. They used deeper nesting and exposed some decision-critical state less directly. Later prompt revisions made the \gls{json} form much closer to the natural prompt in information content and ordering. For that reason, the early Objective~1 \gls{json} results should not be taken as proof that structured prompting is inherently unsuitable. They do, however, show that in the earlier shelf-delivery setup, natural language was clearly the more effective prompt form.
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Objective family} & \textbf{Architecture} & \textbf{Prompt form} & \textbf{Runs} & \textbf{Total deliveries} \\ \hline
+Objective~1 & Shared-context & Natural language & 36 & 25 \\ \hline
+Objective~1 & Shared-context & \gls{json} & 36 & 0 \\ \hline
+Objective~2 & Shared-context & Natural language & 36 & 303 \\ \hline
+Objective~2 & Shared-context & \gls{json} & 36 & 53 \\ \hline
+\end{tabular}
+\caption{Direct prompt-format comparisons within matched shared-context experiment families.}
+\label{tab:prompt_format_direct_comparison}
+\end{table}
 
-Taken together, Objective~1 answers two thesis questions in a preliminary but useful way: shared-context planning looked more promising than centralized planning, and natural-language prompting looked more effective than \gls{json} prompting in the earlier shelf-delivery controller. Both findings should be read as informative rather than definitive because Objective~1 belonged to an earlier stage of the system.
+In Objective~1, the matched shared-context natural-language runs produced 25 deliveries, whereas the matched shared-context \gls{json} runs produced zero. In Objective~2, the matched natural-language shared-context session produced 303 deliveries, whereas the matched \gls{json} session produced 53.
 
 \subsection{Objective 2: Call-Aware Shelf-Delivery Experiments}
-Objective~2 changed the goal from pure delivery throughput to a joint objective: preserve delivery performance while reducing unnecessary \gls{llm} calls. These experiments are stored under \nolinkurl{results/calls} and use a later shared-context runner with stronger prompt structure, action holding, and additional safeguard logic. For that reason, Objective~2 is the main basis for evaluating model size and for asking whether the \gls{llm}-based framework remained useful under a changed objective.
+Objective~2 changes the goal from pure delivery throughput to a joint objective: preserve delivery performance while reducing unnecessary \gls{llm} calls. The output interface for this objective includes both an action identifier and a \nolinkurl{Steps} value, where \nolinkurl{Steps} specifies how long the chosen action should remain active before the next query.
 
-Across 36 runs, the completed Objective~2 natural-language shared-context session produced 303 deliveries, corresponding to an average of 8.42 deliveries per run. This was a substantial improvement over the Objective~1 aggregate results, although that improvement cannot be attributed to the objective change alone because the controller itself also became more mature.
+Across 36 runs, the completed Objective~2 natural-language shared-context session produced 303 deliveries, corresponding to an average of 8.42 deliveries per run.
 
 \subsubsection{Prompt representation}
-The completed Objective~2 sessions provide a direct prompt-format comparison within the later shared-context runner family. The natural-language session produced 303 deliveries across 36 runs, corresponding to 8.42 deliveries per run. The completed \gls{json} session produced 53 deliveries across the same number of runs, corresponding to 1.47 deliveries per run. Efficiency measures show the same pattern: the natural-language session required approximately 204.7 \gls{llm} calls per delivery and 469.5 seconds per delivery, while the \gls{json} session required approximately 1078.4 calls per delivery and 3057.4 seconds per delivery.
+The completed Objective~2 sessions provide a direct prompt-format comparison within the shared-context experiment family. The natural-language session produced 303 deliveries across 36 runs, corresponding to 8.42 deliveries per run. The completed \gls{json} session produced 53 deliveries across the same number of runs, corresponding to 1.47 deliveries per run. Efficiency measures show the same pattern: the natural-language session required approximately 204.7 \gls{llm} calls per delivery and 469.5 seconds per delivery, while the \gls{json} session required approximately 1078.4 calls per delivery and 3057.4 seconds per delivery.
 
-The later Objective~2 \gls{json} session was not a complete failure, since it produced non-zero throughput, mainly through \nolinkurl{gemma3:12b} and \nolinkurl{phi4}. However, it remained substantially weaker than the natural-language version of the same runner family. The natural-language session had 2 zero-delivery runs out of 36, whereas the \gls{json} session had 26 zero-delivery runs out of 36. The completed Objective~2 results therefore support the same overall conclusion as Objective~1: natural-language prompting remained more effective than \gls{json} prompting in the evaluated setup, even after the later prompt and runner refinements.
+The Objective~2 \gls{json} session produced non-zero throughput, with deliveries reported for \nolinkurl{gemma3:12b} and \nolinkurl{phi4}. The natural-language session had 2 zero-delivery runs out of 36, whereas the \gls{json} session had 26 zero-delivery runs out of 36.
 
 \subsubsection{Adaptation to the changed objective}
-Objective~2 provides partial evidence that the framework remained useful when the optimization target changed from throughput only to throughput plus call efficiency. The later shared-context controller still produced substantial delivery throughput while explicitly trying to reduce unnecessary calls. In several scenarios, the best-performing model reached or approached the 20-delivery ceiling, which indicates that productive control remained possible under the revised objective.
-
-This result is not a clean transfer study, because Objective~2 was not evaluated under a frozen Objective~1 controller. Runner logic, prompt design, and safeguards changed together with the stated objective. The completed experiments therefore support a narrower conclusion: the evolving \gls{llm}-based framework remained viable under the changed objective, but the available evidence does not isolate objective adaptation from the effect of the later controller improvements.
+Objective~2 reports the available data for the call-aware objective. The completed runs report delivery totals together with call-related metrics through the \nolinkurl{Steps} output and the logged query counts.
 
 \subsubsection{Model size}
-The clearest model-size comparison in the thesis comes from Objective~2 and is summarized in Table~\ref{tab:obj2_model_summary_reworked}.
+Table~\ref{tab:obj2_model_summary_reworked} reports the completed model-size comparison from Objective~2.
 
 \begin{table}[H]
 \centering
@@ -72,39 +90,22 @@ The clearest model-size comparison in the thesis comes from Objective~2 and is s
 \label{tab:obj2_model_summary_reworked}
 \end{table}
 
-Table~\ref{tab:obj2_model_summary_reworked} suggests that model size mattered, but not in a monotonic way. Larger models did not consistently achieve better throughput, nor did they consistently justify their additional latency. The strongest practical operating point in this session was \nolinkurl{llama3.2:3b}, which combined the highest total deliveries with the lowest seconds-per-delivery among the tested models. This is notable because it is neither the smallest nor the largest model in the set.
-
-The model-size effect was also scenario-dependent. Some scenarios appear to have rewarded richer context interpretation, while others rewarded faster and more consistent local decisions. This means the thesis does not support a universal best-size claim. It does support the narrower conclusion that larger models were not uniformly better, and that a mid-sized local model offered the strongest practical trade-off in the most complete Objective~2 session.
-
-The completed Objective~2 \gls{json} session also adds an important nuance to the model-size picture. In that session, only \nolinkurl{gemma3:12b} and \nolinkurl{phi4} produced substantial throughput, with 26 and 25 deliveries respectively, while both \nolinkurl{llama3.2} variants produced zero deliveries across all six scenarios. This suggests that structured prompting in the later call-aware setup placed a heavier burden on the smaller models than the corresponding natural-language prompts did. Even so, the overall prompt-format effect remained larger than the model-size effect: the best \gls{json} models still remained well below the best natural-language results.
+Within the completed natural-language session, \nolinkurl{llama3.2:3b} produced the highest total delivery count and the lowest seconds-per-delivery value among the listed models. In the completed \gls{json} session, \nolinkurl{gemma3:12b} and \nolinkurl{phi4} produced 26 and 25 deliveries respectively, while both \nolinkurl{llama3.2} variants produced zero deliveries across all six scenarios.
 
 \subsubsection{Call-efficiency outcome}
-Objective~2 should be judged on both throughput and \gls{llm} usage. Raw calls-per-delivery were approximately 146.2 for \nolinkurl{phi4}, 158.3 for \nolinkurl{gemma3:12b}, 167.0 for \nolinkurl{qwen2.5:14b}, 167.7 for \nolinkurl{llama3.2:3b}, 287.0 for \nolinkurl{mistral:7b}, and 316.3 for \nolinkurl{llama3.2:1b}. This metric should still be interpreted with care, since a model can appear efficient simply by doing too little. For that reason, the most convincing result is not the lowest raw call ratio, but the balance between delivery throughput and call usage. By that criterion, \nolinkurl{llama3.2:3b} again appears to be the most practical choice in the completed Objective~2 session.
-
-Objective~2 therefore appears to have made meaningful progress toward the call-aware goal, but only partially. Action holding and reuse reduced some unnecessary queries, yet many query resolutions still arose from runner-side intervention rather than from stable long-horizon plans. The result is best described as a workable but still imperfect call-aware controller rather than a fully solved low-query policy.
+Objective~2 reports both throughput and \gls{llm} usage. Raw calls-per-delivery were approximately 146.2 for \nolinkurl{phi4}, 158.3 for \nolinkurl{gemma3:12b}, 167.0 for \nolinkurl{qwen2.5:14b}, 167.7 for \nolinkurl{llama3.2:3b}, 287.0 for \nolinkurl{mistral:7b}, and 316.3 for \nolinkurl{llama3.2:1b}.
 
 \subsection{Objective 3: Battery-Aware Objective}
-Objective~3 was planned to test whether the same general framework could adapt again to a further changed objective centered on battery behaviour. The intended result family is stored under \nolinkurl{results/battery}. At the time of writing, however, this branch had not yet produced completed aggregate results. For that reason, Objective~3 remains future work rather than an analyzable result set.
+Objective~3 defines a battery-aware objective. Completed aggregate results are not yet available for this objective family.
 
-This means the thesis can only partially answer the broader adaptation question. There is evidence that the framework remained useful when moving from Objective~1 to Objective~2, but there is not yet completed evidence for adaptation to an explicitly battery-oriented objective.
+\subsection{Discussion}
+\subsubsection{RQ1: Model size}
+The available data for RQ1 come mainly from Objective~2. Table~\ref{tab:obj2_model_summary_reworked} reports the completed model-size comparison for the shared-context natural-language session, and the accompanying text reports the corresponding \gls{json} outcomes where available.
 
-\subsection{System-Level Lessons from the Experiments}
-The strongest overall lesson from Objectives~1 and~2 is that \glspl{llm} were most useful when bounded by rule-based logic rather than treated as unconstrained controllers. The experiments do not provide positive evidence that giving full responsibility to the \gls{llm} improved outcomes. Instead, stronger behaviour appeared only when the model operated inside a grounded and safeguarded decision loop with candidate shaping, action validation, and conflict-handling logic.
+\subsubsection{RQ2: Planning architecture}
+The available data for RQ2 come from the matched Objective~1 natural-language comparison, where shared-context planning produced 25 deliveries and centralized planning produced 15.
 
-Several observations support this interpretation. First, Objective~1 remained weak across all architecture and prompt combinations, with most configurations finishing far below the 20-delivery ceiling. Second, the stronger Objective~2 results appeared only in a later shared-context controller that relied on additional structure such as action holding and stronger control logic around when and how decisions were reused. Third, the \gls{json} experiments showed that valid syntax alone was not sufficient: parseable outputs still often led to poor decisions.
-
-The failure patterns point in the same direction. In the Objective~2 natural-language shared-context session, 32 of 36 runs ended with an exact 500-step no-delivery tail. These poor runs often stopped far below the 20-delivery ceiling and were usually not associated with strong explicit conflict or stuck signals. They were more consistent with macro-level coordination failures such as stale waiting loops, support-allocation problems, or charging oscillation. This indicates that higher-level coordination did not become reliable simply because an \gls{llm} was placed in the loop.
-
-The architectural lesson is therefore narrow but important. In the present system, the \gls{llm} contributed most when it selected among already grounded and validated macro actions. Correctness-critical functions such as action validity, exclusivity, and conflict handling remained better suited to explicit rule-based logic. The experiments therefore support a constrained view of \gls{llm} control rather than a fully free-form one.
-
-\subsection{Limitations of Interpretation}
-Several limitations should be kept in mind when interpreting these results.
-\begin{itemize}
-    \item The reported sessions use fixed seeds and should therefore be treated as behavioural evidence rather than as statistically robust rankings.
-    \item The experiment families were not clean ablations. Prompt design, runner logic, and some environment-side behaviour evolved across the objectives, which limits causal attribution.
-    \item Objective~2 should not be read as a pure apples-to-apples continuation of Objective~1, since both the objective and the controller changed.
-    \item Objective~3 had not yet produced completed results, so battery-aware adaptation remains open.
-    \item Some outcomes were scenario-specific and may not persist under broader reruns.
-\end{itemize}
-
-Taken together, the results support four cautious conclusions. Objective~1 established that shared-context planning was more promising than centralized planning and that natural-language prompting was more effective than \gls{json} prompting in the earlier shelf-delivery controller. Objective~2 showed that the framework could remain useful under a changed, call-aware objective, especially in a more structured shared-context setup. Within that stronger family, a mid-sized model offered the best practical trade-off. Most importantly, the experiments suggest that \gls{llm} control was most viable when bounded by rule-based safeguards rather than treated as a replacement for them.
+\subsubsection{RQ3: Prompt representation}
+The available data for RQ3 come from the matched shared-context prompt-format comparisons in Objective~1 and Objective~2. These comparisons report delivery totals, zero-delivery runs, calls per delivery, and seconds per delivery for natural-language and \gls{json} prompting.
+\paragraph{}
+The reported sessions use fixed seeds. Completed aggregate results are not yet available for Objective~3.

@@ -15,6 +15,13 @@ To evaluate this decision layer in a controlled way, the thesis uses Battery-TA-
 Battery-TA-RWARE is a simplified but structured testbed that retains the key coordination features of the warehouse problem: heterogeneous agent roles, requested shelves, shared corridors, charging stations, and explicit load/unload dependencies between \glspl{agv} and pickers.
 At the same time, it abstracts away continuous low-level control by handling motion internally, making it suitable for studying whether better high-level decisions improve coordination under grounded discrete actions.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{../Battery-TA-RWARE/docs/img/BatteryTA-RWARE.png}
+    \caption{Illustration of the task-assignment warehouse setting used in this thesis.}
+    \label{fig:tarware_overview}
+\end{figure}
+
 \Glspl{mrs} provide useful background for this problem.
 Early surveys emphasized group architecture, resource conflicts, and learning~\cite{cao1997cooperative}, while later overviews highlighted communication, task allocation/control, and motion coordination as recurring themes~\cite{arai2002advances}.
 In the warehouse setting of this thesis, these themes translate into concrete questions about assigning requested shelves, synchronizing heterogeneous roles at shelf locations, handling conflicts in shared corridors, and respecting energy-related constraints without stalling delivery progress.
@@ -45,6 +52,7 @@ The controller can also use the observed consequence of executed actions after a
 This makes the approach neither unconstrained continuous control nor pure event triggering, but a step-synchronous control scheme with conditional replanning.
 Because the controller depends on repeated model inference, the study evaluates not only delivery throughput but also call efficiency, since unnecessary model queries increase latency and computational cost without improving coordination.
 The experimental program also asks whether the same control framework remains useful when the objective changes, first from pure shelf-delivery throughput to call-aware delivery, and later toward battery-aware behaviour.
+The three objective families are framed as comparable evaluations of one grounded runner style, so that objective changes can be studied under a common decision loop rather than as unrelated controller variants.
 In this thesis, observed failure behaviour refers to outcomes such as zero-delivery episodes, long no-delivery tails, invalid decisions, or repeated coordination breakdowns such as waiting loops and unresolved support dependencies.
 The introduction that follows therefore focuses on which \gls{llm}-based configurations are most effective for productive coordination in this constrained warehouse setting.
 

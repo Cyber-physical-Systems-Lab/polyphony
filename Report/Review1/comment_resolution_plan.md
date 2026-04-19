@@ -41,6 +41,8 @@ The suggested order is to resolve foundational framing first, then structure and
 - What to do: Either merge the key parts of Problem Formulation into the introduction, or keep Section 2 but turn it into a short, explicit problem statement that clearly states what is missing in prior work, why it matters, and what exact question the thesis addresses.
 - Hint: Do not leave the problem definition split weakly across sections. The reader should not have to infer the gap.
 - Done when: The report has one clear location where the problem statement is explicit and testable.
+- Status: Completed on 2026-04-17.
+- Resolution note: The standalone `Problem Formulation and Objectives` chapter was removed from the rendered report. Its problem-framing role was absorbed into the Introduction, which now provides the explicit gap, motivation, and research-question linkage in one place.
 
 ### TODO R1-05: Narrow the thesis scope to a smaller set of primary benefits
 - Effort: High
@@ -49,6 +51,8 @@ The suggested order is to resolve foundational framing first, then structure and
 - What to do: Reduce the number of promised benefits and make a clear distinction between primary evaluated claims and secondary observations.
 - Hint: Throughput, call-efficiency, and constraint-aware coordination are stronger primary targets than an open-ended list of possible improvements.
 - Done when: The report no longer reads as if it is trying to prove too many things at once.
+- Status: Completed on 2026-04-17.
+- Resolution note: The framing in the Introduction and research questions was narrowed to a smaller set of evaluated outcomes, especially delivery throughput, language-model call efficiency, robustness across scenarios, and observed failure behaviour.
 
 ### TODO R1-06: Reframe or remove the Contributions/Purpose/Objectives trio
 - Effort: High
@@ -57,7 +61,8 @@ The suggested order is to resolve foundational framing first, then structure and
 - What to do: Rework these sections so they support the research questions rather than duplicating methods or listing built components. Remove sections that no longer add value after the RQs are clarified.
 - Hint: If contributions remain, they should state what is learned or validated, not just what was implemented.
 - Done when: These sections read as research framing, not project-task tracking.
-- Progress note: On 2026-04-17, the Contributions section in the introduction was rewritten from a component-oriented list into a findings-oriented summary. It now highlights the grounded evaluation setting, the comparative evidence on model size, planning architecture, and prompt representation, and the empirical insights about productive versus failure-prone conditions. Purpose/Objectives cleanup is still pending.
+- Status: Completed on 2026-04-17.
+- Resolution note: The Contributions section in the Introduction was rewritten into a findings-oriented summary, while the separate Purpose and Objectives subsections were removed from the rendered report because they duplicated the Introduction and Method rather than adding research value.
 
 ### TODO R1-07: Explain the objective progression as an experimental design choice
 - Effort: High
@@ -66,6 +71,8 @@ The suggested order is to resolve foundational framing first, then structure and
 - What to do: Clarify why Objective 1, Objective 2, and Objective 3 exist, what each stage is intended to reveal, and what is held fixed versus changed across the progression.
 - Hint: The supervisor sees a risk that this reads as iterative system development. The text should explicitly separate objective change from controller evolution and explain the limits of comparison.
 - Done when: The progression looks intentional and interpretable rather than ad hoc.
+- Status: Completed on 2026-04-17.
+- Resolution note: The Method chapter now contains an `Experiment Families and Objectives` subsection that defines Objective 1, Objective 2, and Objective 3 explicitly, links each stage to what it is intended to reveal, and states that Objective 2 also uses a more mature controller so the progression is not over-interpreted as a pure objective-only comparison.
 
 ### TODO R1-08: Create a separate discussion chapter or strongly separated discussion section
 - Effort: High
@@ -74,6 +81,8 @@ The suggested order is to resolve foundational framing first, then structure and
 - What to do: Ensure there is a distinct discussion section that interprets results against the research questions, explains mechanisms, and evaluates limitations instead of mixing raw findings and interpretation.
 - Hint: Results should present evidence; discussion should explain what it means and how strong the evidence is.
 - Done when: The report clearly distinguishes reporting from interpretation.
+- Status: Completed on 2026-04-17.
+- Resolution note: The results chapter now includes a dedicated Discussion subsection with separate subsubsections for RQ1, RQ2, and RQ3, followed by broader implications and limitations of evidence, so interpretation is no longer left diffuse across the results text.
 
 ## 2. Medium-Priority Content and Method Revisions
 
@@ -84,7 +93,8 @@ The suggested order is to resolve foundational framing first, then structure and
 - What to do: Reorganize the literature framing so it is not just a generic overview. Group prior work by the aspects relevant to this thesis, and explain how those dimensions connect to the warehouse problem studied here.
 - Hint: Use categories that support your design choices, such as coordination structure, information sharing, decision timing, and constraint handling.
 - Done when: The literature review helps motivate the thesis instead of feeling detached from it.
-- Progress note: On 2026-04-16, the introduction-side literature bridge was revised again so that MRS work serves as supporting context rather than the main framing, while still connecting prior multi-robot work to warehouse-specific coordination questions. The full background/related-work restructuring is still pending.
+- Status: Completed on 2026-04-17.
+- Resolution note: The background chapter was reorganized to group prior work by design-relevant dimensions, especially coordination structure, information sharing, decision timing, warehouse task-assignment environments, and grounded language-model planning. The revised text now ties each group more directly to the thesis design choices.
 
 ### TODO R1-10: Correct and sharpen the MARL comparison claims
 - Effort: Medium
@@ -93,7 +103,8 @@ The suggested order is to resolve foundational framing first, then structure and
 - What to do: Rewrite the MARL comparison so it is technically accurate and does not overgeneralize partial observability or controller-design difficulties.
 - Hint: Focus on the actual limitation you want to contrast against, such as adaptation cost, objective changes, engineering burden, or grounding in discrete warehouse actions.
 - Done when: The MARL comparison is precise, fair, and defensible.
-- Progress note: On 2026-04-15, the introduction comparison to MARL was rewritten to emphasize training cost, reward-design dependence, and adaptation difficulty rather than overly broad partial-observability claims.
+- Status: Completed on 2026-04-17.
+- Resolution note: The MARL-related framing in the introduction and abstract was rewritten to avoid overclaiming controller-design issues as MARL properties. The comparison now emphasizes training cost, reward-design dependence, adaptation difficulty, and experimental framing rather than inaccurate generalized claims.
 
 ### TODO R1-11: Define the decision interface clearly
 - Effort: Medium
@@ -111,6 +122,8 @@ The suggested order is to resolve foundational framing first, then structure and
 - What to do: Make the methodology section explain why the study is designed this way, what is fixed and varied, what confounds exist, and how conclusions should be interpreted under those constraints.
 - Hint: The supervisor wants justification, not just implementation description. Explicitly discuss fixed seeds, chosen scenarios, evolving prompt/controller logic, and what comparisons are exploratory versus closer to controlled.
 - Done when: The methodology reads as an empirical study design, not a build log.
+- Status: Completed on 2026-04-17.
+- Resolution note: The Method chapter now describes the work explicitly as a comparative empirical study, explains why this design fits the research questions, identifies the main fixed and varied factors, adds interpretation caveats about the validation layer and evolving runner logic, and distinguishes exploratory evidence from stronger within-family comparisons.
 
 ### TODO R1-13: Justify scenarios, model size, and prompt format as experimental variables
 - Effort: Medium
@@ -119,7 +132,8 @@ The suggested order is to resolve foundational framing first, then structure and
 - What to do: Explain why model size, prompt format, and scenario balance/scale are expected to affect constrained multi-agent decision-making and what each scenario family is meant to stress.
 - Hint: Tie large or imbalanced scenarios to coordination bottlenecks, and tie prompt/model choices to reliability, feasibility, and computational trade-offs.
 - Done when: These choices no longer appear arbitrary.
-- Progress note: On 2026-04-17, the introduction was updated to identify planning architecture, prompt representation, and model size as explicit design axes, and the research questions now tie them directly to throughput, call efficiency, robustness, and failure behaviour.
+- Status: Completed on 2026-04-17.
+- Resolution note: The introduction and method now both motivate planning architecture, prompt representation, model size, and scenario families as explicit experimental variables. The Scenario and Model Matrix subsection also states what each scenario configuration is intended to stress.
 
 ### TODO R1-14: Make the results section answer the controlled comparisons explicitly
 - Effort: Medium
@@ -128,6 +142,8 @@ The suggested order is to resolve foundational framing first, then structure and
 - What to do: Present architecture and prompt-format comparisons with direct side-by-side evidence under controlled conditions where other variables are held constant as much as possible.
 - Hint: Use aligned tables or tightly paired prose around the same model, scenario, objective, and prompt family so the comparison is immediately visible.
 - Done when: The reader can find the architecture and prompt conclusions directly in the results section without relying on later discussion.
+- Status: Completed on 2026-04-17.
+- Resolution note: The results chapter now includes direct side-by-side evidence tables for the architecture comparison and the prompt-format comparison, and states the main comparative answer explicitly in the results text before later discussion.
 
 ### TODO R1-15: Tie ethics and sustainability to concrete system behavior
 - Effort: Medium
@@ -136,6 +152,8 @@ The suggested order is to resolve foundational framing first, then structure and
 - What to do: Replace generic statements with concrete discussion of safety validation, fallback logic, traceability, model-size/compute trade-offs, and efficiency-related metrics.
 - Hint: Anchor the section in what the system actually does: invalid action handling, coordination failure risk, battery safety, and computational cost across models.
 - Done when: The section is specific to this thesis and linked to the experimental design.
+- Status: Completed on 2026-04-17.
+- Resolution note: The ethical and sustainability discussion was moved into Method and rewritten around concrete system properties: grounded action identifiers, candidate shaping, feasibility validation, fallback behavior, logging for traceability, and the trade-off between model capability, compute cost, and coordination efficiency.
 
 ## 3. Quick Editorial and Citation Fixes
 
@@ -146,7 +164,8 @@ The suggested order is to resolve foundational framing first, then structure and
 - What to do: Introduce full names before acronym-only references such as LLM, MRS, and MAS.
 - Hint: Keep first use explicit and consistent.
 - Done when: No acronym appears before its expanded form.
-- Progress note: On 2026-04-17, glossary handling was further updated so first use expands consistently in the abstract, Swedish summary, and main text. The report terminology was also normalized from `large language model` to `language model`, with first use now appearing as `language model (LM)` / `language models (LMs)`.
+- Status: Completed on 2026-04-17.
+- Resolution note: Glossary handling was updated so first use expands consistently in the abstract, Swedish summary, and main text. The report terminology was also normalized from `large language model` to `language model`, and acronyms such as MRS, MAS, and LM now appear with full form on first use.
 
 ### TODO R1-17: Clarify abstract wording and thesis summary claims
 - Effort: Easy
@@ -174,6 +193,8 @@ The suggested order is to resolve foundational framing first, then structure and
 - What to do: Resolve ambiguous references such as “Zhang et al.?”, add missing citations where definitions or claims need support, and preserve the terminology explanations that were already working well.
 - Hint: If a statement is definitional or comparative, make sure the source clearly supports that exact claim. Keep the existing clear distinctions between terms rather than rewriting them unnecessarily.
 - Done when: All flagged citation ambiguities are resolved and the good terminology explanations remain intact.
+- Status: Completed on 2026-04-17.
+- Resolution note: Ambiguous local references in the background chapter were clarified, including the Zhang et al. example, while the strong terminology-definition paragraph was preserved. Where support was weaker than needed, the wording was softened rather than left as an over-strong unsupported claim.
 
 ### TODO R1-20: Decide whether to add one explanatory visual earlier
 - Effort: Easy
@@ -182,6 +203,8 @@ The suggested order is to resolve foundational framing first, then structure and
 - What to do: Consider moving or adding a visual that helps the reader understand the warehouse/testbed and battery-aware setting earlier in the report.
 - Hint: One concise system illustration can reduce explanation load in the introduction.
 - Done when: Either a visual is added or moved with a clear purpose, or the report explicitly remains text-only by choice.
+- Status: Completed on 2026-04-17.
+- Resolution note: The warehouse-setting figure was moved earlier into the Introduction, and an additional control-loop schematic was added in Method to clarify the staged interaction between prompting, validation, execution, and replanning.
 
 ## 4. Execution Order
 

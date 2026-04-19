@@ -15,7 +15,7 @@ crete action spaces, partial observability, sparse rewards, and safety constrain
 y depletion.
 Review comment: these applies for MARL, not really for designing controllers
 Comment ID: 1001
-Fix Comment:
+Fix Comment: Resolved via R1-10 and R1-17. The abstract no longer frames the difficulty in terms of MARL-specific issues such as partial observability or sparse rewards. It now describes the warehouse coordination problem directly in terms of task choice, role synchronization, and recharging under shared spatial constraints.
 ------------------------------------------------------------
 [Page 3]
 Context: ent.
@@ -179,7 +179,7 @@ Context: 2
 Problem Formulation and Objectives
 Review comment: This should be part of Introduction I think
 Comment ID: 1019
-Fix Comment:
+Fix Comment: Resolved via R1-04. The standalone "Problem Formulation and Objectives" section was removed from the rendered report, and the core problem framing was integrated into the Introduction so the thesis scope is established there instead of in a separate chapter.
 ------------------------------------------------------------
 [Page 13]
 Context: .1
@@ -187,7 +187,7 @@ Problem Formulation
 Warehouse logistics in heterogeneous flee
 Review comment: If the background has not fully established the gap, the problem statement is necessary so that it compensate the thesis by being explicit and precise. A strong problem statement should clearly state (1) what is missing or insufficient in existing approaches, (2) why this limitation matters in your specific setting, and (3) what exact question the thesis will address. It should not rely on the reader to infer the gap from earlier sections. Instead, it should make the contribution unambiguous by directly linking the identified limitation to a concrete, testable research objective.
 Comment ID: 1020
-Fix Comment:
+Fix Comment: Resolved via R1-04. The Introduction now states the warehouse coordination problem, explains what is insufficient in existing approaches for this setting, clarifies why the limitation matters under shared-resource and role-dependency constraints, and links that gap directly to measurable research questions.
 ------------------------------------------------------------
 [Page 13]
 Context: .2
@@ -213,7 +213,7 @@ immobilization.
 This thesis investigates LLM-based control as a language-driven alternative for high-
 Review comment: so many things been committed to? maybe just focus on what are the benefits you would like to observe and to be tackled in research questions
 Comment ID: 1023
-Fix Comment:
+Fix Comment: Resolved via R1-05. The thesis framing was narrowed so it no longer commits broadly to many benefits at once. The Introduction and research questions now focus primarily on observable outcomes such as delivery throughput, call efficiency, robustness, and failure behaviour.
 ------------------------------------------------------------
 [Page 13]
 Context: 2.1
@@ -223,7 +223,7 @@ making problem
 or charging statio
 Review comment: The current scope appears too broad, with multiple aspects being addressed simultaneously without a clear prioritization of what benefits are expected to be demonstrated. It would strengthen the work to focus on a smaller set of observable advantages and tie them directly to the problem formulation. For instance, given the warehouse setting you describe, the contribution could be framed around whether LLM-based decision-making improves specific outcomes such as throughput under constraints, reduction of coordination failures (e.g., deadlocks or clashes), or better handling of resource limitations like battery management. This also requires clarifying which of these are primary objectives versus secondary observations. As written, the problem statement is well-defined in terms of constraints and goals, but the link to what improvement your approach is expected to deliver is not explicit. Narrowing the focus to a few measurable benefits and evaluating them under clearly defined conditions would make the study more coherent and the contributions more convincing.
 Comment ID: 1024
-Fix Comment:
+Fix Comment: Resolved via R1-05. The report now prioritizes a smaller set of measurable advantages and ties them directly to the problem framing and research questions, distinguishing primary evaluated outcomes from broader secondary observations.
 ------------------------------------------------------------
 [Page 14]
 Context: .2
@@ -231,7 +231,7 @@ Purpose
 he purpose of this thesi
 Review comment: remove? if you are settled with clear defined research questions
 Comment ID: 1025
-Fix Comment:
+Fix Comment: Resolved via R1-06. The separate Purpose subsection was removed from the rendered report because its role is now covered by the Introduction and the research questions.
 ------------------------------------------------------------
 [Page 14]
 Context: Objectives
@@ -239,7 +239,7 @@ crete objectives are:
 mplement an end-to-e
 Review comment: steps? methods?
 Comment ID: 1026
-Fix Comment:
+Fix Comment: Resolved via R1-06. The separate Objectives subsection was removed from the rendered report because it read as implementation or method steps rather than research objectives. The relevant experimental design material is now described in Method instead.
 ------------------------------------------------------------
 [Page 14]
 Context: local inference server.
@@ -255,7 +255,7 @@ ctive family had
 ng.
 Review comment: what family?
 Comment ID: 1028
-Fix Comment:
+Fix Comment: Resolved via R1-07. The report now defines the experimental program explicitly in the Method chapter under "Experiment Families and Objectives", where Objective 1, Objective 2, and Objective 3 are introduced as distinct objective families with their roles in the study explained.
 ------------------------------------------------------------
 [Page 15]
 Context: ttery safety) can lead to immobi-
@@ -271,13 +271,13 @@ Ethical and Sustainability Considerations
 lthough this work is simulation-based, it touches on two practical cons
 Review comment: If you want to provide ethical and sustainability considerations, focus on aspects that are directly tied to your system and can be assessed in a concrete way rather than relying on generic statements. In this work, ethical concerns primarily relate to safety, reliability, and accountability, since LLM-driven decisions may produce infeasible or unsafe actions; you should therefore explain how mechanisms such as constraint validation, fallback strategies, or human oversight mitigate risks like collisions, deadlocks, or battery depletion. It is also relevant to briefly address transparency, particularly whether decisions can be traced or analyzed when failures occur. From a sustainability perspective, the key issue is the trade-off between model capability and computational cost, especially when comparing different LLM sizes, as well as the overall system efficiency in terms of energy usage, unnecessary movements, and coordination overhead. These considerations should be explicitly linked to your experimental design, for example by showing how safety is enforced through validation layers and how efficiency or resource use is reflected in your evaluation metrics, while also acknowledging any remaining limitations or trade-offs.
 Comment ID: 1030
-Fix Comment:
+Fix Comment: Resolved via R1-15. The Ethical and Sustainability Considerations subsection was rewritten and moved into Method. It now addresses concrete issues tied to this system, including safety and reliability risks from generated decisions, mitigation through grounding and validation, traceability through logs, model-size versus compute trade-offs, and coordination efficiency as a sustainability concern.
 ------------------------------------------------------------
 [Page 15]
 Context: nd Related Work
 Review comment: If the background does not fully cover related work, then you need the related work section to complement it by organizing prior research more systematically rather than repeating descriptions. A strong related work section should group existing approaches by how they address the key aspects of your problem (e.g., coordination structure, information sharing, decision timing), and compare them along these dimensions. The goal is not completeness, but clarity: to show how different lines of work relate to your approach and where they fall short. Each group of works should be explicitly connected to your design choices, so that the section reinforces, rather than duplicates, the motivation for your research.
 Comment ID: 1031
-Fix Comment:
+Fix Comment: Resolved via R1-09. The Background and Related Work chapter was reorganized to group prior work more systematically around coordination structure, information sharing, decision timing, warehouse task-assignment environments, and grounded language-model planning. The revised text now connects each group of work directly to the thesis design choices instead of repeating generic descriptions.
 ------------------------------------------------------------
 [Page 15]
 Context: 3.1
@@ -287,7 +287,7 @@ and avoid c
 (MAS) is b
 Review comment: full name
 Comment ID: 1032
-Fix Comment:
+Fix Comment: Resolved via R1-16. The first use of MAS in the background is now handled through glossary expansion so that the full form, multi-agent systems (MAS), appears before the short form.
 ------------------------------------------------------------
 [Page 15]
 Context: differences in how MAS and MRS are framed, a
@@ -297,7 +297,7 @@ es, including coordinated MARL methods that expli
 against communication bandwidth [18]. In heteroge
 Review comment: Zhang et. al.?
 Comment ID: 1033
-Fix Comment:
+Fix Comment: Resolved via R1-19. The sentence was rewritten to cite Zhang et al. directly as an example of coordinated MARL under communication constraints, instead of leaving the reference attached ambiguously to the AAMAS venue mention.
 ------------------------------------------------------------
 [Page 15]
 Context: ynchronization (e.g., me
@@ -306,7 +306,7 @@ es, where agents must co
 n). Coordination refers
 Review comment: good that you have clear explanations on the definitions
 Comment ID: 1034
-Fix Comment:
+Fix Comment: Acknowledged. No change required. The reviewer explicitly notes that the terminology distinctions are clear and useful, so the definition paragraph was retained.
 ------------------------------------------------------------
 [Page 15]
 Context: tion handling), and cooperation r
@@ -316,7 +316,7 @@ reas modern multi-agent learning
  ambiguity, the thesis primarily us
 Review comment: need reference?
 Comment ID: 1035
-Fix Comment:
+Fix Comment: Resolved via R1-19. The wording was softened so it no longer makes a stronger historical literature claim than needed. The paragraph now states more simply that the scope of MAS often extends beyond embodied robotics, which avoids requiring an additional unsupported comparison claim.
 ------------------------------------------------------------
 [Page 16]
 Context: .2
@@ -324,7 +324,7 @@ Warehouse Task Assignment Environments
 Warehouse domains provide a structured but challenging testbed for multi-a
 Review comment: fit better in Introduction/Problem Formulation
 Comment ID: 1036
-Fix Comment:
+Fix Comment: Resolved via R1-02 and R1-09. The broader motivation for warehouse environments was already moved into the Introduction, and the Background subsection was tightened so it now serves as contextual setup for Battery-TA-RWARE rather than repeating the problem framing.
 ------------------------------------------------------------
 [Page 17]
 Context: sign?
@@ -338,7 +338,7 @@ Context: 4
 System and Method
 Review comment: The methodology chapter should not only describe what was implemented, but justify how and why the research is conducted in a particular way. In a master’s thesis, it is typically included as a separate chapter when the work involves empirical evaluation, system design, or experimental comparison, where the validity of results depends on clearly defined procedures, assumptions, and controls.A well-written methodology section should (1) explain the overall research design (e.g., controlled experiment, comparative study), (2) justify why this design is appropriate for the research questions, and (3) describe how variables are controlled, what is being measured, and how conclusions will be drawn. It should also make explicit what is fixed and what is varied in the experiments, so that the reader can assess the validity and reproducibility of the study.If the thesis only presents theory or conceptual discussion, a separate methodology chapter may be less critical. However, for work like yours, where a framework is proposed and evaluated under different configurations, a dedicated methodology chapter is important to demonstrate rigor, transparency, and experimental control, rather than embedding these details implicitly in other sections.
 Comment ID: 1038
-Fix Comment:
+Fix Comment: Resolved via R1-12. The Method chapter was rewritten to explain the work as a comparative empirical study rather than only as an implementation description. It now states why the design is appropriate for the research questions, what is fixed and what is varied, how conclusions are interpreted, and why the results should be treated as exploratory rather than statistically final.
 ------------------------------------------------------------
 [Page 19]
 Context: ure 1 Illustration of th
@@ -346,21 +346,21 @@ rogeneous roles must
 nts support loading an
 Review comment: might be better to show in Introduction with the battery level rendered ;)
 Comment ID: 1039
-Fix Comment:
+Fix Comment: Resolved via R1-20. The warehouse setting figure was moved earlier into the Introduction so that the reader sees the heterogeneous roles and battery-related setting before entering the Method chapter.
 ------------------------------------------------------------
 [Page 19]
 Context: LLM Control Loop
 M policy is implemented as a t
 Review comment: better have a visual illustration?
 Comment ID: 1040
-Fix Comment:
+Fix Comment: Resolved via R1-20. A new schematic figure was added to the Language-Model Control Loop subsection to illustrate state summarization, candidate shaping, prompting, querying, parsing, validation, execution, and observed step consequences for replanning.
 ------------------------------------------------------------
 [Page 19]
 Context: LLM Contr
 LLM policy is im
 Review comment: the surrounding control logic introduces ambiguity in interpreting results, since invalid outputs are filtered and trigger replanning, making it difficult to separate the contribution of the LLM from the behavior of the validation layer. In addition, the design varies multiple factors simultaneously, including model size, prompt structure, planning architecture, and objective formulation, which limits the ability to attribute observed effects to specific causes. The comparison between centralized and shared-context planning is well motivated, but differences in prompt complexity and output structure introduce confounding factors that may influence performance independently of the architectural choice.
 Comment ID: 1041
-Fix Comment:
+Fix Comment: Resolved via R1-12. The Method chapter now states explicitly that the reported behaviour is the behaviour of the combined safeguarded system, not the raw language model in isolation. It also explains that validation, candidate shaping, prompt evolution, and controller changes introduce confounds that limit pure causal attribution.
 ------------------------------------------------------------
 [Page 20]
 Context: eriment Families
@@ -375,7 +375,7 @@ throughput. The
 swer two questio
 Review comment: not objective, The exploration of prompt design is extensive but appears more iterative than controlled, which makes it harder to isolate the impact of specific design decisions such as structured versus natural-language formats.
 Comment ID: 1043
-Fix Comment:
+Fix Comment: Resolved via R1-12. The Method chapter now clarifies that prompt-form conclusions are strongest within a common experiment family and that prompt evolution across runners should be interpreted as structured comparative evidence rather than a perfectly isolated prompt-design ablation.
 ------------------------------------------------------------
 [Page 23]
 Context: .8
@@ -391,14 +391,14 @@ Scenario and
 he same scenario catalo
 Review comment: the use of fixed seeds and scenarios limits statistical validity, so results should be interpreted as exploratory. The absence of an external baseline also reduces the ability to contextualize findings. The scenario design introduces useful variation, but the rationale for these specific configurations is not sufficiently explained. While the categories (balanced, AGV-heavy, picker-heavy, varying scales) are listed, it remains unclear why these particular settings are necessary to answer the research questions. You should make the connection more explicit by explaining what aspect of coordination or collaboration each scenario is intended to stress and how this relates to evaluating model size or integration architecture. For example, larger or more imbalanced setups could be linked to scalability or coordination bottlenecks, while balanced small scenarios could serve as controlled baselines. As it stands, the scenarios appear as reasonable test cases, but without clear interpretation they risk being seen as arbitrary variations rather than systematically chosen conditions for analysis.
 Comment ID: 1045
-Fix Comment:
+Fix Comment: Resolved via R1-13. The Scenario and Model Matrix subsection now explains what each scenario family is intended to stress, including lower-pressure baseline cases, concurrency and scalability pressure, AGV-heavy support bottlenecks, and picker-heavy allocation pressure. The Experimental Protocol also states more clearly that fixed-seed results are exploratory and that no external baseline is used in the current comparison set.
 ------------------------------------------------------------
 [Page 24]
 Context: as final performance c
 The progression of th
 Review comment: The progression of the experimental campaign is described clearly, but the underlying rationale for this sequence is not sufficiently justified. While the shift from a throughput-focused objective to call-aware and then battery-aware settings is logical from an engineering perspective, it is not clearly connected to the research questions, which focus on model size and integration architecture. You should clarify why this progression is necessary for answering those questions, or explicitly frame it as an additional dimension of analysis beyond the core research scope. In particular, it would help to explain what each stage is intended to reveal, for example whether Objective 1 establishes a baseline for coordination performance, Objective 2 evaluates efficiency trade-offs in LLM usage, and Objective 3 targets constraint-aware behavior under energy limitations.As it stands, the progression risks appearing as iterative system development rather than a structured experimental design. The introduction of controller changes alongside objective changes further complicates interpretation, since improvements cannot be attributed solely to the new objective. To strengthen this section, you should make explicit what is being held constant and what is being varied at each stage, and how conclusions drawn from each phase contribute to answering the research questions. This would help position the progression as a systematic exploration rather than a sequence of incremental adjustments.
 Comment ID: 1046
-Fix Comment:
+Fix Comment: Resolved via R1-07. The Experimental Protocol subsection now explains the rationale for the progression from Objective 1 to Objective 2 and Objective 3, links each stage to what it is intended to reveal, and explicitly states that Objective 2 also used a more mature controller so the progression should not be interpreted as a pure objective-only comparison.
 ------------------------------------------------------------
 [Page 26]
 Context: 2.1
@@ -406,7 +406,7 @@ Did centralized or shared-context planning perform better?
 e architecture comparison in Objective 1 is summarized in Table 1.
 Review comment: The question of whether centralized or shared-context planning performs better should be answered explicitly in the results section rather than primarily discussed later. To support this, you should present direct, side-by-side comparisons under controlled conditions where only the planning architecture differs, while other factors such as model, prompt format, scenario, and objective are kept consistent. Key metrics such as delivery throughput, total deliveries, and coordination failures (e.g., deadlocks or clashes) should be reported in a way that makes the comparison immediately visible, for example through tables or aligned plots across the same scenarios.In addition, it would strengthen the analysis to clarify what is being compared and why, particularly in relation to the research questions. If multiple models or prompt variants are involved, consider fixing these when comparing architectures or clearly structuring the results so that comparisons remain interpretable. Even if statistical repetition is limited, including indicators of stability or noting variability would improve the credibility of the findings. Overall, the results section should first provide clear evidence answering the architectural comparison, while the discussion can then interpret the observed differences.
 Comment ID: 1047
-Fix Comment:
+Fix Comment: Resolved via R1-14. The results chapter now answers the architecture comparison directly in the Objective 1 results section with a matched natural-language table comparing centralized and shared-context planning under the same objective and prompt form, before later interpretation is given in the Discussion subsection.
 ------------------------------------------------------------
 [Page 27]
 Context: 2.2
@@ -414,7 +414,7 @@ Did JSON or natural-language prompting perform better?
 bjective 1 is also the main basis for comparing prompt representation under the
 Review comment: The comparison between JSON and natural-language prompting should be presented clearly in the results section with direct evidence, aligned with the broader goal of evaluating how LLM design choices affect collaboration effectiveness. You should report side-by-side results where prompt format is the only variable changed, while keeping model size and planning architecture consistent, so that the impact of prompt structure can be isolated. Relevant metrics such as delivery throughput, total deliveries, and coordination failures should be included, and it is acceptable to add small supporting indicators such as invalid action rates to reflect output reliability. The results should make it immediately clear under which conditions one format performs better, while the discussion can later interpret these differences in terms of reasoning quality, structure, and robustness.
 Comment ID: 1048
-Fix Comment:
+Fix Comment: Resolved via R1-14. The results chapter now presents direct side-by-side prompt-format evidence through a shared-context comparison table covering Objective 1 and Objective 2, so the natural-language versus JSON result is stated explicitly in the results before later interpretation.
 ------------------------------------------------------------
 [Page 28]
 Context: 3.1
@@ -430,5 +430,5 @@ System-Level Lessons from the Experiments
 he strongest overall lesson from Objectives 1 and 2 is that LLMs were m
 Review comment: have a new chapter for discussion thenA good discussion section should interpret the results in a way that directly answers the research questions, rather than restating findings or introducing new experiments. The structure should follow the research questions explicitly: for each question, summarize the relevant results, explain what they indicate, and assess whether they provide a clear answer or only partial evidence. The emphasis should be on reasoning, for example explaining why a certain model size led to better coordination, or why one architecture performed more reliably under specific constraints. This requires linking observed metrics, such as throughput or failure rates, to underlying mechanisms like prompt complexity, decision consistency, or coordination overhead.In addition, the discussion should critically assess the strength and limitations of the evidence. This includes acknowledging experimental constraints such as fixed seeds, limited scenarios, or confounding variables, and explaining how these affect the confidence of the conclusions. Where results are inconsistent or inconclusive, this should be stated clearly rather than forced into a definitive claim. It is also useful to reflect on broader implications, for example what the findings suggest about the practicality of LLM-based control in constrained multi-agent systems, and under what conditions the approach is likely to be beneficial. A strong discussion therefore connects results to research questions, explains observed behaviors, and evaluates how robust and generalizable the conclusions are.
 Comment ID: 1050
-Fix Comment:
+Fix Comment: Resolved via R1-08. The chapter now contains a dedicated Discussion subsection with subsubsections aligned to RQ1, RQ2, and RQ3, followed by broader implications and limitations of evidence. This separates result reporting from interpretation more clearly within the chapter.
 ------------------------------------------------------------

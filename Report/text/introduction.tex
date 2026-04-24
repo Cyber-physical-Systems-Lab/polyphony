@@ -54,20 +54,20 @@ Because the controller depends on repeated model inference, the study evaluates 
 The experimental program also asks whether the same control framework remains useful when the objective changes, first from pure shelf-delivery throughput to call-aware delivery, and later toward battery-aware behaviour.
 The three objective families are framed as comparable evaluations of one grounded runner style, so that objective changes can be studied under a common decision loop rather than as unrelated controller variants.
 In this thesis, observed failure behaviour refers to outcomes such as zero-delivery episodes, long no-delivery tails, invalid decisions, or repeated coordination breakdowns such as waiting loops and unresolved support dependencies.
-The introduction that follows therefore focuses on which \gls{llm}-based configurations are most effective for productive coordination in this constrained warehouse setting.
+The introduction that follows therefore focuses on which \gls{llm}-based configurations are most effective for productive collaboration in this constrained warehouse setting.
 
 \subsection{Research Questions}
 \label{sec:rq}
 The thesis is guided by the following main research question:
 \begin{quote}
-    \textbf{Main research question:} To what extent can prompted \glspl{llm} support grounded high-level decision-making for heterogeneous multi-robot coordination in a constrained warehouse environment?
+    \textbf{Main research question:} To what extent can prompted \glspl{llm} support grounded high-level decision-making for heterogeneous multi-robot collaboration in a constrained warehouse environment?
 \end{quote}
 To support a systematic investigation of the main research question, the study considers the following sub-questions:
 In this thesis, \emph{centralized planning} means that one prompt receives the shared state and returns decisions for all agents that currently need planning, whereas \emph{shared-context per-agent planning} means that agents are planned one at a time, but each prompt still contains a shared summary of the global warehouse state.
 \begin{enumerate}
-    \item \textbf{RQ1 (Model size):} How does language-model size affect coordination performance in the warehouse setting, measured by delivery throughput, language-model calls per delivery, and observed failure behaviour across scenarios?
-    \item \textbf{RQ2 (Planning architecture):} How do centralized and shared-context per-agent planning architectures differ in coordination performance, measured by delivery throughput, robustness across scenarios with different coordination pressure, and the frequency of non-productive runs or coordination failures?
-    \item \textbf{RQ3 (Prompt representation):} How do natural-language and \gls{json} prompt representations differ in coordination performance, measured by delivery throughput, call efficiency, and the consistency of valid, productive decisions?
+    \item \textbf{RQ1 (Model size):} How does language-model size affect collaborative task performance in the warehouse setting, measured by delivery throughput, language-model calls per delivery, and observed failure behaviour across scenarios?
+    \item \textbf{RQ2 (Planning architecture):} How do centralized and shared-context per-agent planning architectures differ in collaborative task performance, measured by delivery throughput, robustness across scenarios with different levels of role-interaction pressure, and the frequency of non-productive runs or collaboration failures?
+    \item \textbf{RQ3 (Prompt representation):} How do natural-language and \gls{json} prompt representations differ in collaborative task performance, measured by delivery throughput, call efficiency, and the consistency of valid, productive collaborative decisions?
 \end{enumerate}
 
 In this thesis, these questions are evaluated primarily through delivery throughput, language-model call efficiency, and observed failure behaviour. Depending on the experiment family, the analysis also considers robustness across scenarios, the prevalence of zero-delivery or long no-delivery runs, and whether productive coordination is maintained when the objective changes.

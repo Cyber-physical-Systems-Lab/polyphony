@@ -25,6 +25,7 @@ from state_translation_helper import (
     empty_shelf_action_ids,
     get_requested_action_ids,
     get_requested_shelves,
+    render_all_agents,
     render_self_state,
 )
 
@@ -436,8 +437,88 @@ PICKER_JSON_TEMPLATE = (
 )
 
 
+CENTRAL_LANGUAGE_TEMPLATE = (
+    "Main objective: {stated_objective}\n"
+    "You are one centralized planner for the Objective 2 warehouse task.\n"
+    "Plan only for the agents listed in the planning blocks below.\n"
+    "Agents not listed there already have an active commitment and will keep executing it.\n"
+    "\n"
+    "Global state snapshot:\n"
+    "All agents:\n{all_agents}\n"
+    "\n"
+    "Requested shelves:\n{requested_shelves}\n"
+    "\n"
+    "Charging place occupancy:\n{charging_occupancy}\n"
+    "\n"
+    "AGVs requesting picker support:\n{agv_support_requests}\n"
+    "\n"
+    "Committed actions for agents that are not being replanned:\n{committed_actions}\n"
+    "\n"
+    "Shared rules:\n{shared_rules}\n"
+    "\n"
+    "{role_rules}"
+    "Agents that require a new decision now:\n{planned_agent_ids}\n"
+    "Return exactly {planned_agent_count} action lines.\n"
+    "\n"
+    "Planning blocks:\n"
+    "{agent_sections}\n"
+    "\n"
+    "Output contract:\n"
+    "- Return one action line for every planned agent.\n"
+    "- Each line must contain the agent id, Action, Steps, and a short reason.\n"
+    "- Use only candidate action ids shown inside each planning block.\n"
+    "- Respect the per-agent constraints and recommended steps already shown in each block.\n"
+    "- Do not return actions for agents outside the planning blocks.\n"
+    "- If only one agent is listed, return exactly one line for that agent.\n"
+    "\n"
+    "Required output format:\n"
+    "Reasoning: short overall reason\n"
+    "agent_0 -> Action: 12, Steps: 3, Reason: short reason\n"
+    "agent_1 -> Action: 8, Steps: 2, Reason: short reason\n"
+)
+
+
+CENTRAL_JSON_TEMPLATE = (
+    "Main objective: {stated_objective}\n"
+    "You are one centralized planner for the Objective 2 warehouse task.\n"
+    "Plan only for the agents listed in the planning blocks below.\n"
+    "Agents not listed there already have an active commitment and will keep executing it.\n"
+    "The only valid response is one top-level JSON object for the whole centralized step.\n"
+    "\n"
+    "Global state snapshot:\n"
+    "All agents:\n{all_agents}\n"
+    "\n"
+    "Requested shelves:\n{requested_shelves}\n"
+    "\n"
+    "Charging place occupancy:\n{charging_occupancy}\n"
+    "\n"
+    "AGVs requesting picker support:\n{agv_support_requests}\n"
+    "\n"
+    "Committed actions for agents that are not being replanned:\n{committed_actions}\n"
+    "\n"
+    "Shared rules:\n{shared_rules}\n"
+    "\n"
+    "{role_rules}"
+    "Agents that require a new decision now:\n{planned_agent_ids}\n"
+    "Return exactly {planned_agent_count} action objects.\n"
+    "\n"
+    "Planning blocks:\n"
+    "{agent_sections}\n"
+    "\n"
+    "Return valid JSON only in this exact shape:\n"
+    "{required_actions_example}\n"
+    "Rules:\n"
+    "- Return one action object for every planned agent.\n"
+    "- Every action object must include agent_id, action, steps, and reason.\n"
+    "- Use only candidate action ids shown inside each planning block.\n"
+    "- Respect the per-agent constraints and suggested steps shown there.\n"
+    "- Do not return action objects for agents outside the planning blocks.\n"
+    "- If only one agent is listed, you may return a single action object in the actions list for that agent only.\n"
+)
+
+
 parser = ArgumentParser(
-    description="Run objective-2 shared-context LLM experiments across models and warehouse scenarios",
+    description="Run objective-2 centralized LLM experiments across models and warehouse scenarios",
     formatter_class=ArgumentDefaultsHelpFormatter,
 )
 parser.add_argument("--seed", type=int, default=0, help="Base episode seed")
@@ -453,7 +534,7 @@ parser.add_argument("--max_picker_hold_steps", type=int, default=3, help="Max ho
 parser.add_argument("--max_busy_steps_for_replan", type=int, default=0, help="Replan a busy shelf/travel agent after this many consecutive busy steps; use 0 to disable")
 parser.add_argument("--disable_support_needed_soon", action="store_true", help="Disable proactive picker support and keep only waiting_for_picker_support_now")
 parser.add_argument("--find_path_agent_aware_always", action="store_true", help="Force find_path to always consider other agents as obstacles")
-parser.add_argument("--results_dir", type=str, default="results/obj2_shared_context_llm_experiments", help="Directory for logs and summaries")
+parser.add_argument("--results_dir", type=str, default="results/obj2_centralized_llm_experiments", help="Directory for logs and summaries")
 parser.add_argument("--session_dir", type=str, default=None, help="Optional existing session directory path to resume into")
 parser.add_argument("--resume_from_model", type=str, default=None, help="Model name (exact string) to resume from")
 parser.add_argument("--resume_from_scenario", type=str, default=None, help="Scenario label to resume from when resuming a model")
@@ -3060,6 +3141,601 @@ def build_agent_prompt(
     return render_template(template, fields)
 
 
+def central_committed_action_lines(
+    env,
+    planning_order: List[int],
+    persisted_actions: List[int],
+    hold_steps_remaining: List[int],
+) -> List[str]:
+    planning_set = set(int(idx) for idx in planning_order)
+    lines: List[str] = []
+    for idx, agent in enumerate(env.agents):
+        if idx in planning_set:
+            continue
+        active_action = int(persisted_actions[idx]) if idx < len(persisted_actions) else 0
+        remaining_hold = int(hold_steps_remaining[idx]) if idx < len(hold_steps_remaining) else 0
+        current_target = int(getattr(agent, "target", 0) or 0)
+        action_id = active_action if active_action > 0 else current_target
+        if action_id > 0:
+            action_desc = describe_action_id_for_agent(env, agent, action_id)
+        else:
+            action_desc = "0:NOOP (distance_steps=0)"
+        lines.append(
+            f"agent_{idx} ({agent.type.name}): active_action={action_id} remaining_hold_steps={remaining_hold} busy={bool(agent.busy)} current_target={current_target} :: {action_desc}"
+        )
+    return lines or ["none"]
+
+
+def sanitize_single_agent_output_instructions(section_prompt: str, prompt_format: str) -> str:
+    if prompt_format != "json":
+        return section_prompt
+    blocked_fragments = (
+        "You are planning only for one ",
+        "Choose exactly one action for the current ",
+        "Return exactly one JSON object and nothing else.",
+        "Use only the keys reason, action, and steps.",
+        "Required response shape:",
+        "If unsure, still choose one valid integer action id and one steps value.",
+    )
+    kept_lines: List[str] = []
+    skip_json_shape_block = False
+    for raw_line in section_prompt.splitlines():
+        line = raw_line.strip()
+        if skip_json_shape_block:
+            if line.startswith("{") or line.startswith("{{"):
+                continue
+            skip_json_shape_block = False
+        if any(fragment in raw_line for fragment in blocked_fragments):
+            if "Required response shape:" in raw_line:
+                skip_json_shape_block = True
+            continue
+        kept_lines.append(raw_line)
+    return "\n".join(kept_lines)
+
+
+def build_required_actions_example(planning_order: List[int]) -> str:
+    example_rows = [
+        {
+            "agent_id": int(agent_idx),
+            "action": 12 + offset,
+            "steps": 3,
+            "reason": "short reason",
+        }
+        for offset, agent_idx in enumerate(planning_order)
+    ]
+    return json.dumps({"reasoning": "short overall reason", "actions": example_rows}, ensure_ascii=True)
+
+
+def compact_prompt_value(value: Any) -> str:
+    if value is None:
+        return "none"
+    if isinstance(value, bool):
+        return "yes" if value else "no"
+    if isinstance(value, (int, float)):
+        return str(value)
+    if isinstance(value, str):
+        return value if value else "none"
+    return json.dumps(value, ensure_ascii=True, separators=(",", ":"))
+
+
+def compact_mapping_lines(
+    mapping: Dict[str, Any],
+    ordered_keys: List[str] | None = None,
+    skip_empty: bool = True,
+) -> List[str]:
+    lines: List[str] = []
+    keys = ordered_keys if ordered_keys is not None else list(mapping.keys())
+    for key in keys:
+        if key not in mapping:
+            continue
+        value = mapping.get(key)
+        if skip_empty and value in (None, "", [], {}):
+            continue
+        lines.append(f"- {key}: {compact_prompt_value(value)}")
+    return lines or ["- none"]
+
+
+def compact_support_request_lines(
+    env,
+    persisted_actions: List[int],
+    hold_steps_remaining: List[int],
+) -> List[str]:
+    lines: List[str] = []
+    for row in effective_agv_support_rows(env, persisted_actions, hold_steps_remaining):
+        support_need = str(row.get("support_need", "none"))
+        if support_need == "none":
+            continue
+        lines.append(
+            "agent_{agv} support={support} target_action={target} distance_steps={distance} carrying={carrying}".format(
+                agv=int(row.get("agv_idx", -1)),
+                support=support_need,
+                target=int(row.get("effective_target_action_id", 0)),
+                distance=compact_prompt_value(row.get("distance_steps")),
+                carrying=compact_prompt_value(row.get("carrying")),
+            )
+        )
+    return lines or ["none"]
+
+
+def build_central_shared_context(
+    env,
+    planning_order: List[int],
+    persisted_actions: List[int],
+    hold_steps_remaining: List[int],
+) -> Dict[str, str]:
+    shared_rules_lines = [
+        "Use next_required_flow_state and hard constraints before longer-term preference.",
+        "Choose only from the candidate actions listed inside each planning block.",
+        "Agents not listed for replanning keep their committed action.",
+        "Use suggested steps when the action is stable enough to reduce unnecessary replans.",
+    ]
+    return {
+        "stated_objective": STATED_OBJECTIVE,
+        "all_agents": format_bullets(render_all_agents(env)),
+        "requested_shelves": format_bullets(get_requested_shelves(env)),
+        "charging_occupancy": format_bullets(charging_station_occupancy(env)),
+        "agv_support_requests": format_bullets(
+            compact_support_request_lines(env, persisted_actions, hold_steps_remaining)
+        ),
+        "committed_actions": format_bullets(
+            central_committed_action_lines(env, planning_order, persisted_actions, hold_steps_remaining)
+        ),
+        "planned_agent_ids": ", ".join(f"agent_{idx}" for idx in planning_order) if planning_order else "none",
+        "planned_agent_count": str(len(planning_order)),
+        "required_actions_example": build_required_actions_example(planning_order),
+        "shared_rules": format_bullets(
+            BASIC_SUMMARY_LINES
+            + TYPICAL_FLOW_LINES
+            + BATTERY_MODEL_LINES
+            + shared_rules_lines
+        ),
+    }
+
+
+def build_central_role_rules(planning_order: List[int], env) -> str:
+    role_blocks: List[str] = []
+    planned_roles = {env.agents[idx].type.name for idx in planning_order}
+    if "AGV" in planned_roles:
+        role_blocks.append("AGV-specific rules:\n" + format_bullets(decision_rules_for_agent("AGV")))
+    if "PICKER" in planned_roles:
+        role_blocks.append("PICKER-specific rules:\n" + format_bullets(decision_rules_for_agent("PICKER")))
+    if not role_blocks:
+        return "Role-specific rules:\n- none\n\n"
+    return "Role-specific rules:\n" + "\n\n".join(role_blocks) + "\n\n"
+
+
+def compact_candidate_action_lines(rows: List[Dict[str, Any]]) -> List[str]:
+    lines: List[str] = []
+    for row in rows:
+        action_id = int(row.get("action_id", 0))
+        action_type = str(row.get("action_type", "NOOP"))
+        distance_steps = int(row.get("distance_steps", 0))
+        suggested_steps = int(row.get("suggested_steps", 1))
+        tag = str(row.get("tag", "candidate"))
+        recommended_now = "yes" if bool(row.get("recommended_now", False)) else "no"
+        allowed_now = "no" if str(row.get("instruction", "")).startswith("forbidden_now") else "yes"
+        lines.append(
+            f"- {action_id} type={action_type} dist={distance_steps} steps={suggested_steps} tag={tag} recommended={recommended_now} allowed_now={allowed_now}"
+        )
+    return lines or ["- none"]
+
+
+def build_central_control_state_lines(agent_type: str, control_state: Dict[str, Any]) -> List[str]:
+    if agent_type == "AGV":
+        ordered_keys = [
+            "next_required_flow_state",
+            "battery_need",
+            "current_target_action",
+            "current_target_type",
+            "waiting_for_picker_support_now",
+            "picker_at_same_cell",
+            "picker_support_inbound_now",
+            "picker_support_distance_steps",
+            "needs_picker_for_load",
+            "needs_picker_for_unload",
+            "preferred_action_family",
+            "forbidden_action_family",
+            "goal_allowed",
+            "empty_shelf_return_required",
+            "charging_allowed_now",
+        ]
+    else:
+        ordered_keys = [
+            "next_required_flow_state",
+            "battery_need",
+            "support_needed_now",
+            "support_target_action",
+            "support_type",
+            "at_support_target",
+            "agv_waiting_for_picker_now",
+            "charging_allowed_now",
+        ]
+    return compact_mapping_lines(control_state, ordered_keys=ordered_keys)
+
+
+def build_central_role_context_lines(agent_type: str, role_context: Dict[str, Any]) -> List[str]:
+    if agent_type == "AGV":
+        ordered_keys = [
+            "phase",
+            "carrying_status",
+            "carrying_delivery_status",
+            "battery_need",
+            "current_target_type",
+            "current_target_distance_steps",
+            "goal_allowed",
+            "empty_shelf_return_required",
+            "preferred_action_family",
+            "forbidden_action_family",
+            "waiting_for_picker_support",
+            "picker_at_same_cell",
+            "picker_support_inbound_now",
+            "picker_support_distance_steps",
+            "needs_picker_for_load",
+            "needs_picker_for_unload",
+            "nearest_goal",
+            "nearest_charging_station",
+        ]
+    else:
+        ordered_keys = [
+            "phase",
+            "battery_need",
+            "support_needed_now",
+            "support_target_action_id",
+            "support_target_position",
+            "support_type",
+            "at_support_target",
+            "agv_waiting_for_picker_now",
+            "next_required_flow_state",
+            "charging_allowed_now",
+            "agv_support_timing_view",
+        ]
+    return compact_mapping_lines(role_context, ordered_keys=ordered_keys)
+
+
+def build_central_warning_lines(
+    movement_warning_payload: Dict[str, Any] | None,
+    blocking_warning_payload: Dict[str, Any] | None,
+    execution_warning_payload: Dict[str, Any] | None,
+) -> List[str]:
+    lines: List[str] = []
+    if movement_warning_payload is not None:
+        lines.extend(
+            compact_mapping_lines(
+                {
+                    "movement_not_moved_steps": movement_warning_payload.get("not_moved_steps"),
+                    "movement_busy_steps_count": movement_warning_payload.get("busy_steps_count"),
+                    "movement_busy_override_active": movement_warning_payload.get("busy_override_active"),
+                    "movement_previous_target": movement_warning_payload.get("previous_target_description"),
+                }
+            )
+        )
+    if blocking_warning_payload is not None:
+        lines.extend(
+            compact_mapping_lines(
+                {
+                    "blocked_by_agent_id": blocking_warning_payload.get("blocked_by_agent_id"),
+                    "blocking_agent_id": blocking_warning_payload.get("blocking_agent_id"),
+                    "blocking_reason": blocking_warning_payload.get("reason"),
+                }
+            )
+        )
+    if execution_warning_payload is not None:
+        lines.extend(
+            compact_mapping_lines(
+                {
+                    "forbidden_action_id_now": execution_warning_payload.get("forbidden_action_id_now"),
+                    "execution_unreachable_reason": execution_warning_payload.get("unreachable_target_reason"),
+                    "execution_cooldown_steps_remaining": execution_warning_payload.get("cooldown_steps_remaining"),
+                }
+            )
+        )
+    return lines
+
+
+def build_central_agent_section(
+    env,
+    agent_idx: int,
+    valid_masks: np.ndarray,
+    max_hold_steps: int,
+    persisted_actions: List[int],
+    hold_steps_remaining: List[int],
+    busy_steps_by_agent: List[int] | None = None,
+    busy_override_active: bool = False,
+) -> str:
+    agent = env.agents[agent_idx]
+    structured_candidate_actions = build_structured_candidate_actions(
+        env,
+        agent_idx,
+        valid_masks,
+        max_hold_steps,
+        persisted_actions,
+        hold_steps_remaining,
+    )
+    shared_context_payload = build_shared_context_payload(
+        env,
+        agent,
+        agent_idx,
+        valid_masks,
+        persisted_actions,
+        hold_steps_remaining,
+    )
+    role_specific_context = shared_context_payload.get("role_specific_context", {})
+    agv_hard_constraints_text = (
+        agv_hard_constraints_text_from_payload(role_specific_context)
+        if agent.type.name == "AGV"
+        else ""
+    )
+    picker_hard_constraints_text = (
+        picker_hard_constraints_text_from_payload(role_specific_context)
+        if agent.type.name == "PICKER"
+        else ""
+    )
+    last_decided_action_text, last_decided_action_payload = build_last_decided_action_state(
+        env,
+        agent_idx,
+        int(persisted_actions[agent_idx]),
+        int(hold_steps_remaining[agent_idx]),
+    )
+    movement_warning_text, movement_warning_payload = movement_warning_for_agent(
+        env,
+        agent_idx,
+        last_decided_action_payload,
+        busy_steps_count=(
+            busy_steps_by_agent[agent_idx]
+            if busy_steps_by_agent is not None and 0 <= agent_idx < len(busy_steps_by_agent)
+            else 0
+        ),
+        busy_override_active=busy_override_active,
+    )
+    del movement_warning_text
+    blocking_warning_text, blocking_warning_payload = blocking_warning_for_agent(env, agent_idx)
+    del blocking_warning_text
+    control_state_text, control_state_payload = control_state_for_agent(
+        env,
+        agent_idx,
+        persisted_actions,
+        hold_steps_remaining,
+    )
+    del control_state_text
+    empty_shelf_return_task_text, empty_shelf_return_task_payload = empty_shelf_return_task_block(
+        role_specific_context
+    )
+    del empty_shelf_return_task_text
+    post_load_helper_text, post_load_helper_payload = post_load_helper_for_agent(
+        env,
+        agent_idx,
+        persisted_actions,
+        hold_steps_remaining,
+    )
+    del post_load_helper_text
+    post_delivery_helper_text, post_delivery_helper_payload = post_delivery_helper_for_agent(
+        env,
+        agent_idx,
+        valid_masks,
+        persisted_actions,
+        hold_steps_remaining,
+    )
+    del post_delivery_helper_text
+    execution_warning_text, execution_warning_payload = execution_warning_for_agent(env, agent_idx)
+    del execution_warning_text
+    role_context_json = build_role_context_json(
+        env,
+        agent,
+        role_specific_context,
+        control_state_payload,
+        empty_shelf_return_task_payload,
+        post_delivery_helper_payload,
+        post_load_helper_payload,
+    )
+    current_control_state_json = build_current_control_state_json(
+        agent,
+        control_state_payload,
+        role_context_json,
+        structured_candidate_actions,
+    )
+    hard_constraints = split_bullet_text(
+        agv_hard_constraints_text if agent.type.name == "AGV" else picker_hard_constraints_text
+    )
+    warning_lines = build_central_warning_lines(
+        movement_warning_payload,
+        blocking_warning_payload,
+        execution_warning_payload,
+    )
+    last_decided_lines = split_bullet_text(last_decided_action_text)
+    lines = [
+        f"=== BEGIN AGENT agent_{agent_idx} ({agent.type.name}) ===",
+        f"Self state: {render_self_state_with_target_distance(env, agent)}",
+        "Last decided action state:",
+        *[f"- {line}" for line in last_decided_lines],
+    ]
+    if warning_lines:
+        lines.extend(["Warnings:", *warning_lines])
+    lines.extend(
+        [
+            "Current control state:",
+            *build_central_control_state_lines(agent.type.name, current_control_state_json),
+            "Role context:",
+            *build_central_role_context_lines(agent.type.name, role_context_json),
+            "Hard constraints:",
+            *[f"- {line}" for line in hard_constraints],
+            "Candidate actions:",
+            *compact_candidate_action_lines(structured_candidate_actions),
+            f"=== END AGENT agent_{agent_idx} ===",
+        ]
+    )
+    return "\n".join(lines)
+
+
+def build_central_prompt(
+    env,
+    planning_order: List[int],
+    valid_masks: np.ndarray,
+    prompt_format: str,
+    persisted_actions: List[int],
+    hold_steps_remaining: List[int],
+    args,
+    busy_steps_by_agent: List[int] | None = None,
+    busy_override_agents: set[int] | None = None,
+) -> Tuple[str, Dict[int, int]]:
+    busy_override_agents = set(busy_override_agents or set())
+    sections: List[str] = []
+    max_hold_steps_by_agent: Dict[int, int] = {}
+    for agent_idx in planning_order:
+        agent = env.agents[agent_idx]
+        max_hold_for_agent = max(1, int(args.max_action_hold_steps))
+        if agent.type.name == "PICKER":
+            max_hold_for_agent = min(max_hold_for_agent, max(1, int(args.max_picker_hold_steps)))
+        max_hold_steps_by_agent[int(agent_idx)] = int(max_hold_for_agent)
+        section_prompt = build_central_agent_section(
+            env,
+            agent_idx,
+            valid_masks,
+            max_hold_for_agent,
+            persisted_actions,
+            hold_steps_remaining,
+            busy_steps_by_agent=busy_steps_by_agent,
+            busy_override_active=(agent_idx in busy_override_agents),
+        )
+        sections.append(section_prompt)
+
+    fields = build_central_shared_context(
+        env,
+        planning_order,
+        persisted_actions,
+        hold_steps_remaining,
+    )
+    fields["role_rules"] = build_central_role_rules(planning_order, env)
+    fields["agent_sections"] = "\n\n".join(sections) if sections else "none"
+    template = CENTRAL_JSON_TEMPLATE if prompt_format == "json" else CENTRAL_LANGUAGE_TEMPLATE
+    return render_template(template, fields), max_hold_steps_by_agent
+
+
+def parse_central_language_actions(
+    text: str,
+    max_hold_steps_by_agent: Dict[int, int],
+    planned_agent_ids: List[int] | None = None,
+) -> Dict[int, Dict[str, Any]]:
+    parsed: Dict[int, Dict[str, Any]] = {}
+    planned_agent_ids = list(planned_agent_ids or [])
+    line_pattern = re.compile(
+        r"agent[_\s-]*(\d+)\s*(?:->|:)\s*action\s*[:=-]\s*(-?\d+)\s*[,|]\s*steps?\s*[:=-]\s*(-?\d+)(?:\s*[,|]\s*reason\s*[:=-]\s*(.*))?",
+        flags=re.IGNORECASE,
+    )
+    for match in line_pattern.finditer(text):
+        agent_idx = int(match.group(1))
+        if agent_idx not in max_hold_steps_by_agent:
+            continue
+        action_id = int(match.group(2))
+        steps = max(1, min(int(match.group(3)), int(max_hold_steps_by_agent[agent_idx])))
+        reason = (match.group(4) or "").strip()
+        parsed[agent_idx] = {"action": int(action_id), "steps": int(steps), "reason": reason}
+    if parsed:
+        return parsed
+
+    loose_line_pattern = re.compile(r"agent[_\s-]*(\d+).*", flags=re.IGNORECASE)
+    for raw_line in text.splitlines():
+        match = loose_line_pattern.search(raw_line)
+        if match is None:
+            continue
+        agent_idx = int(match.group(1))
+        if agent_idx not in max_hold_steps_by_agent:
+            continue
+        action_match = re.search(r"action\s*[:=-]\s*(-?\d+)|\b(-?\d+)\b", raw_line, flags=re.IGNORECASE)
+        if action_match is None:
+            continue
+        action_group = next(group for group in action_match.groups() if group is not None)
+        steps_match = re.search(r"steps?\s*[:=-]\s*(-?\d+)", raw_line, flags=re.IGNORECASE)
+        steps = 1 if steps_match is None else int(steps_match.group(1))
+        steps = max(1, min(int(steps), int(max_hold_steps_by_agent[agent_idx])))
+        parsed[agent_idx] = {"action": int(action_group), "steps": int(steps), "reason": raw_line.strip()}
+    if parsed:
+        return parsed
+
+    if len(planned_agent_ids) == 1 and planned_agent_ids[0] in max_hold_steps_by_agent:
+        agent_idx = int(planned_agent_ids[0])
+        action_match = re.search(r"action\s*[:=-]\s*(-?\d+)|\b(-?\d+)\b", text, flags=re.IGNORECASE)
+        if action_match is None:
+            return parsed
+        action_group = next(group for group in action_match.groups() if group is not None)
+        steps_match = re.search(r"steps?\s*[:=-]\s*(-?\d+)", text, flags=re.IGNORECASE)
+        steps = 1 if steps_match is None else int(steps_match.group(1))
+        steps = max(1, min(int(steps), int(max_hold_steps_by_agent[agent_idx])))
+        parsed[agent_idx] = {"action": int(action_group), "steps": int(steps), "reason": text.strip()}
+    return parsed
+
+
+def parse_central_json_actions(
+    text: str,
+    max_hold_steps_by_agent: Dict[int, int],
+    planned_agent_ids: List[int] | None = None,
+) -> Dict[int, Dict[str, Any]]:
+    planned_agent_ids = list(planned_agent_ids or [])
+    payload = json.loads(extract_json_object_text(text))
+    if not isinstance(payload, dict):
+        raise ValueError("Central JSON output must be an object")
+    actions = payload.get("actions")
+    if not isinstance(actions, list):
+        if all(key in payload for key in ("action", "steps")):
+            payload_agent = payload.get("agent_id")
+            if payload_agent is None:
+                if len(planned_agent_ids) != 1:
+                    raise ValueError("Central JSON output missing actions list")
+                payload_agent = planned_agent_ids[0]
+            actions = [
+                {
+                    "agent_id": payload_agent,
+                    "action": payload.get("action"),
+                    "steps": payload.get("steps"),
+                    "reason": payload.get("reason", payload.get("reasoning", "")),
+                }
+            ]
+        else:
+            raise ValueError("Central JSON output missing actions list")
+    parsed: Dict[int, Dict[str, Any]] = {}
+    for row in actions:
+        if not isinstance(row, dict):
+            continue
+        agent_idx = int(row.get("agent_id", -1))
+        if agent_idx not in max_hold_steps_by_agent:
+            continue
+        action_id = int(row.get("action", 0))
+        steps = max(1, min(int(row.get("steps", 1)), int(max_hold_steps_by_agent[agent_idx])))
+        reason = str(row.get("reason", row.get("reasoning", ""))).strip()
+        parsed[agent_idx] = {"action": int(action_id), "steps": int(steps), "reason": reason}
+    return parsed
+
+
+def parse_central_actions_with_metadata(
+    text: str,
+    prompt_format: str,
+    max_hold_steps_by_agent: Dict[int, int],
+    planned_agent_ids: List[int] | None = None,
+) -> Tuple[Dict[int, Dict[str, Any]], Dict[str, Any]]:
+    metadata: Dict[str, Any] = {
+        "parsed_llm_output": None,
+        "json_generation_failed": False,
+        "json_parse_error": None,
+    }
+    if prompt_format == "json":
+        try:
+            parsed_actions = parse_central_json_actions(text, max_hold_steps_by_agent, planned_agent_ids)
+            metadata["parsed_llm_output"] = {"actions": parsed_actions}
+            return parsed_actions, metadata
+        except Exception as exc:
+            metadata["json_generation_failed"] = True
+            metadata["json_parse_error"] = f"{type(exc).__name__}: {exc}"
+            parsed_actions = parse_central_language_actions(text, max_hold_steps_by_agent, planned_agent_ids)
+            metadata["parsed_llm_output"] = {
+                "actions": parsed_actions,
+                "fallback_parser": "language_action_lines",
+            }
+            return parsed_actions, metadata
+
+    parsed_actions = parse_central_language_actions(text, max_hold_steps_by_agent, planned_agent_ids)
+    metadata["parsed_llm_output"] = {"actions": parsed_actions}
+    return parsed_actions, metadata
+
+
 def parse_single_action_from_text(text: str) -> int:
     line_patterns = [
         r"^\s*action\s*[:=-]\s*(-?\d+)\b",
@@ -3457,7 +4133,7 @@ def persisted_action_completed_by_env(
     return False
 
 
-def plan_step_sequential(
+def plan_step_centralized(
     env,
     valid_masks: np.ndarray,
     args,
@@ -3467,7 +4143,7 @@ def plan_step_sequential(
     busy_steps_by_agent: List[int] | None = None,
     unload_wait_steps_by_agent: List[int] | None = None,
     latest_env_info: Dict[str, Any] | None = None,
-) -> Tuple[List[int], Dict[str, int], List[Dict[str, Any]]]:
+) -> Tuple[List[int], Dict[str, int], List[Dict[str, Any]], Dict[str, Any] | None]:
     actions = [0] * env.num_agents
     query_records: List[Dict[str, Any]] = []
     metrics = {
@@ -3479,6 +4155,7 @@ def plan_step_sequential(
         "forced_requeries_after_invalid_persisted_action": 0,
         "env_conflict_resolution_skips_this_step": 0,
     }
+    central_call_record: Dict[str, Any] | None = None
 
     latest_env_info = latest_env_info or {}
     effective_busy_steps = list(busy_steps_by_agent) if busy_steps_by_agent is not None else [0] * env.num_agents
@@ -3570,10 +4247,14 @@ def plan_step_sequential(
         if active_target > 0:
             actions[agent_idx] = int(active_target)
 
+    agents_requiring_llm: List[int] = []
+    max_hold_steps_by_agent: Dict[int, int] = {}
+
     for agent_idx in planning_order:
         max_hold_for_agent = max(1, int(args.max_action_hold_steps))
         if env.agents[agent_idx].type.name == "PICKER":
             max_hold_for_agent = min(max_hold_for_agent, max(1, int(args.max_picker_hold_steps)))
+        max_hold_steps_by_agent[int(agent_idx)] = int(max_hold_for_agent)
 
         persisted = int(persisted_actions[agent_idx]) if agent_idx < len(persisted_actions) else 0
         remaining = int(hold_steps_remaining[agent_idx]) if agent_idx < len(hold_steps_remaining) else 0
@@ -3638,19 +4319,19 @@ def plan_step_sequential(
         if remaining > 0 and (persisted < 0 or persisted >= env.action_size or valid_masks[agent_idx, persisted] <= 0):
             hold_steps_remaining[agent_idx] = 0
             metrics["forced_requeries_after_invalid_persisted_action"] += 1
+        agents_requiring_llm.append(agent_idx)
 
-        prompt = build_agent_prompt(
+    if agents_requiring_llm:
+        central_prompt, max_hold_steps_by_agent = build_central_prompt(
             env,
-            agent_idx,
+            agents_requiring_llm,
             valid_masks,
             args.prompt_format,
-            max_hold_for_agent,
-            persisted_action=persisted,
-            remaining_hold_steps=remaining,
-            persisted_actions_all=persisted_actions,
-            hold_steps_remaining_all=hold_steps_remaining,
+            persisted_actions,
+            hold_steps_remaining,
             busy_steps_by_agent=effective_busy_steps,
-            busy_override_active=(agent_idx in forced_busy_replan_agents),
+            busy_override_agents=forced_busy_replan_agents,
+            args=args,
         )
         metrics["llm_calls_this_step"] += 1
         llm_text = ""
@@ -3663,78 +4344,86 @@ def plan_step_sequential(
             llm_text = query_ollama_text(
                 model=model,
                 ollama_url=args.ollama_url,
-                prompt=prompt,
+                prompt=central_prompt,
                 timeout_s=args.request_timeout_s,
                 temperature=args.temperature,
                 num_predict=args.num_predict,
                 prompt_format=args.prompt_format,
             )
-            parsed_action, parsed_steps, parse_metadata = parse_action_and_steps_with_metadata(
+            parsed_actions, parse_metadata = parse_central_actions_with_metadata(
                 llm_text,
                 args.prompt_format,
-                max_hold_for_agent,
+                max_hold_steps_by_agent,
+                agents_requiring_llm,
             )
         except Exception as exc:
             raw_llm_text = llm_text
             llm_text = f"LLM_ERROR: {type(exc).__name__}: {exc}"
-            parsed_action = None
-            parsed_steps = 1
+            parsed_actions = {}
             metrics["llm_failures_this_step"] += 1
         else:
             raw_llm_text = llm_text
 
-        if (
-            parsed_action is None
-            or parsed_action < 0
-            or parsed_action >= env.action_size
-            or valid_masks[agent_idx, parsed_action] <= 0
-        ):
-            executed_action = discard_invalid_action(valid_masks, agent_idx)
-            metrics["llm_missing_or_invalid_actions_this_step"] += 1
-            resolution = "discarded_invalid_action_to_noop"
-            executed_steps = 1
-        else:
-            executed_action = int(parsed_action)
-            executed_steps = int(parsed_steps)
-            resolution = "accepted_llm_action"
-            if agent_idx in forced_busy_replan_agents:
-                resolution = "busy_override_replanned_after_max_busy_steps"
+        central_call_record = {
+            "central_prompt": central_prompt,
+            "central_llm_output": llm_text,
+            "raw_central_llm_output": raw_llm_text,
+            "parsed_central_llm_output": parse_metadata.get("parsed_llm_output"),
+            "json_generation_failed": bool(parse_metadata.get("json_generation_failed")),
+            "json_parse_error": parse_metadata.get("json_parse_error"),
+            "planned_agent_ids": [int(idx) for idx in agents_requiring_llm],
+        }
 
-        actions[agent_idx] = executed_action
-        persisted_actions[agent_idx] = int(executed_action)
-        hold_steps_remaining[agent_idx] = max(0, int(executed_steps) - 1)
-        query_records.append(
-            {
-                "agent_id": agent_idx,
-                "agent_type": env.agents[agent_idx].type.name,
-                "prompt": prompt,
-                "llm_output": llm_text,
-                "raw_llm_output": raw_llm_text,
-                "parsed_llm_output": parse_metadata.get("parsed_llm_output"),
-                "parsed_action": parsed_action,
-                "parsed_steps": int(parsed_steps),
-                "json_generation_failed": bool(parse_metadata.get("json_generation_failed")),
-                "json_parse_error": parse_metadata.get("json_parse_error"),
-                "executed_action": executed_action,
-                "executed_steps": int(executed_steps),
-                "remaining_hold_steps_after_step": int(hold_steps_remaining[agent_idx]),
-                "resolution": resolution,
-                "env_conflict_resolution_active": False,
-                "busy_override_active": bool(agent_idx in forced_busy_replan_agents),
-                "busy_steps_count": int(effective_busy_steps[agent_idx]) if agent_idx < len(effective_busy_steps) else 0,
-                "busy_override_threshold": int(max_busy_steps_for_replan),
-                "protected_unload_wait_active": bool(agent_idx in protected_unload_wait_agents),
-                "unload_wait_steps_count": int(effective_unload_wait_steps[agent_idx]) if agent_idx < len(effective_unload_wait_steps) else 0,
-                "min_unload_wait_steps": int(MIN_AGV_UNLOAD_WAIT_STEPS),
-                "resolution_failed_recently": bool(resolution_failed_recently[agent_idx]) if agent_idx < len(resolution_failed_recently) else False,
-                "unreachable_target_action_id": int(unreachable_target_action_ids[agent_idx]) if agent_idx < len(unreachable_target_action_ids) else 0,
-                "unreachable_target_reason": unreachable_target_reasons[agent_idx] if agent_idx < len(unreachable_target_reasons) else None,
-                "unreachable_target_cooldown_steps": int(unreachable_target_cooldowns[agent_idx]) if agent_idx < len(unreachable_target_cooldowns) else 0,
-                "suppressed_llm_query_reason": None,
-            }
-        )
+        for agent_idx in agents_requiring_llm:
+            parsed_row = parsed_actions.get(agent_idx)
+            parsed_action = int(parsed_row["action"]) if parsed_row is not None and "action" in parsed_row else None
+            parsed_steps = int(parsed_row["steps"]) if parsed_row is not None and "steps" in parsed_row else 1
+            if (
+                parsed_action is None
+                or parsed_action < 0
+                or parsed_action >= env.action_size
+                or valid_masks[agent_idx, parsed_action] <= 0
+            ):
+                executed_action = discard_invalid_action(valid_masks, agent_idx)
+                metrics["llm_missing_or_invalid_actions_this_step"] += 1
+                resolution = "discarded_invalid_action_to_noop"
+                executed_steps = 1
+            else:
+                executed_action = int(parsed_action)
+                executed_steps = int(parsed_steps)
+                resolution = "accepted_llm_action"
+                if agent_idx in forced_busy_replan_agents:
+                    resolution = "busy_override_replanned_after_max_busy_steps"
 
-    return actions, metrics, query_records
+            actions[agent_idx] = int(executed_action)
+            persisted_actions[agent_idx] = int(executed_action)
+            hold_steps_remaining[agent_idx] = max(0, int(executed_steps) - 1)
+            query_records.append(
+                {
+                    "agent_id": agent_idx,
+                    "agent_type": env.agents[agent_idx].type.name,
+                    "parsed_action": parsed_action,
+                    "parsed_steps": int(parsed_steps),
+                    "executed_action": int(executed_action),
+                    "executed_steps": int(executed_steps),
+                    "remaining_hold_steps_after_step": int(hold_steps_remaining[agent_idx]),
+                    "resolution": resolution,
+                    "env_conflict_resolution_active": False,
+                    "busy_override_active": bool(agent_idx in forced_busy_replan_agents),
+                    "busy_steps_count": int(effective_busy_steps[agent_idx]) if agent_idx < len(effective_busy_steps) else 0,
+                    "busy_override_threshold": int(max_busy_steps_for_replan),
+                    "protected_unload_wait_active": bool(agent_idx in protected_unload_wait_agents),
+                    "unload_wait_steps_count": int(effective_unload_wait_steps[agent_idx]) if agent_idx < len(effective_unload_wait_steps) else 0,
+                    "min_unload_wait_steps": int(MIN_AGV_UNLOAD_WAIT_STEPS),
+                    "resolution_failed_recently": bool(resolution_failed_recently[agent_idx]) if agent_idx < len(resolution_failed_recently) else False,
+                    "unreachable_target_action_id": int(unreachable_target_action_ids[agent_idx]) if agent_idx < len(unreachable_target_action_ids) else 0,
+                    "unreachable_target_reason": unreachable_target_reasons[agent_idx] if agent_idx < len(unreachable_target_reasons) else None,
+                    "unreachable_target_cooldown_steps": int(unreachable_target_cooldowns[agent_idx]) if agent_idx < len(unreachable_target_cooldowns) else 0,
+                    "suppressed_llm_query_reason": None,
+                }
+            )
+
+    return actions, metrics, query_records, central_call_record
 
 
 def normalize_reset_output(reset_output: Any) -> Any:
@@ -3788,7 +4477,7 @@ def run_single_episode(
     while True:
         valid_masks = safe_valid_action_masks(base_env)
         pre_step_agents = agent_step_snapshot(base_env)
-        actions, step_metrics, query_records = plan_step_sequential(
+        actions, step_metrics, query_records, central_call_record = plan_step_centralized(
             base_env,
             valid_masks,
             args,
@@ -3804,9 +4493,7 @@ def run_single_episode(
         total_action_reuse += step_metrics["action_reuse_this_step"]
         total_llm_failures += step_metrics["llm_failures_this_step"]
         total_llm_missing_or_invalid_actions += step_metrics["llm_missing_or_invalid_actions_this_step"]
-        total_json_generation_failures += sum(
-            1 for row in query_records if bool(row.get("json_generation_failed"))
-        )
+        total_json_generation_failures += int(bool(central_call_record and central_call_record.get("json_generation_failed")))
 
         _, _, terminateds, truncateds, info = env.step(actions)
         latest_env_info = dict(info)
@@ -3859,6 +4546,15 @@ def run_single_episode(
         step_records.append(
             {
                 "step": step_idx,
+                "central_prompt": central_call_record.get("central_prompt") if central_call_record else None,
+                "central_prompt_char_count": len(central_call_record.get("central_prompt") or "") if central_call_record else 0,
+                "central_llm_output": central_call_record.get("central_llm_output") if central_call_record else None,
+                "raw_central_llm_output": central_call_record.get("raw_central_llm_output") if central_call_record else None,
+                "parsed_central_llm_output": central_call_record.get("parsed_central_llm_output") if central_call_record else None,
+                "planned_agent_ids": central_call_record.get("planned_agent_ids", []) if central_call_record else [],
+                "planned_agent_count": len(central_call_record.get("planned_agent_ids", [])) if central_call_record else 0,
+                "json_generation_failed": bool(central_call_record.get("json_generation_failed")) if central_call_record else False,
+                "json_parse_error": central_call_record.get("json_parse_error") if central_call_record else None,
                 "actions": actions,
                 "step_metrics": step_metrics,
                 "agents_before_step": pre_step_agents,

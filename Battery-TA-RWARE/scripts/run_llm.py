@@ -1485,7 +1485,14 @@ def build_language_prompt(env, valid_masks: np.ndarray, step_count: int, max_can
     )
 
 
-def query_ollama_text(model: str, ollama_url: str, prompt: str, timeout_s: int) -> str:
+def query_ollama_text(
+    model: str,
+    ollama_url: str,
+    prompt: str,
+    timeout_s: int,
+    retry_500_count: int = 5,
+    retry_500_backoff_s: float = 1.0,
+) -> str:
     payload = {
         "model": model,
         "prompt": prompt,
@@ -1498,9 +1505,18 @@ def query_ollama_text(model: str, ollama_url: str, prompt: str, timeout_s: int) 
         headers={"Content-Type": "application/json"},
         method="POST",
     )
-    with request.urlopen(req, timeout=timeout_s) as resp:
-        body = json.loads(resp.read().decode("utf-8"))
-    return str(body.get("response", "")).strip()
+    total_attempts = max(1, int(retry_500_count) + 1)
+    for attempt_idx in range(total_attempts):
+        try:
+            with request.urlopen(req, timeout=timeout_s) as resp:
+                body = json.loads(resp.read().decode("utf-8"))
+            return str(body.get("response", "")).strip()
+        except error.HTTPError as exc:
+            if exc.code != 500 or attempt_idx + 1 >= total_attempts:
+                raise
+            if retry_500_backoff_s > 0:
+                time.sleep(float(retry_500_backoff_s) * (2**attempt_idx))
+    raise RuntimeError("Unreachable: exhausted Ollama retries without returning or raising")
 
 
 def derive_ollama_base_url(ollama_url: str) -> str:

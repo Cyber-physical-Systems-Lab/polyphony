@@ -37,6 +37,11 @@ T.~Arai, E.~Pagello, and L.~E. Parker, ``Editorial: Advances in multi-robot
   systems,'' \emph{IEEE Transactions on Robotics and Automation}, vol.~18,
   no.~5, pp. 655--661, 2002.
 
+\bibitem{barros2021rmfs}
+{\'I}.~R. d.~C. Barros and T.~P.~d. Nascimento, ``Robotic mobile fulfillment
+  systems: A survey on recent developments and research opportunities,''
+  \emph{Robotics and Autonomous Systems}, vol. 137, p. 103729, 2021.
+
 \bibitem{bhat2025closedloopgrounding}
 V.~Bhat, A.~U. Kaypak, P.~Krishnamurthy, R.~Karri, and F.~Khorrami, ``Grounding
   large language models for robot task planning using closed-loop state
@@ -62,6 +67,11 @@ R.~Dunbar, \emph{Grooming, Gossip, and the Evolution of Language}.\hskip 1em
   plus 0.5em minus 0.4em\relax Cambridge, MA, USA: Harvard University Press,
   1996.
 
+\bibitem{gerkey2004formal}
+B.~P. Gerkey and M.~J. Matari{\'c}, ``A formal analysis and taxonomy of task
+  allocation in multi-robot systems,'' \emph{The International Journal of
+  Robotics Research}, vol.~23, no.~9, pp. 939--954, 2004.
+
 \bibitem{huang2022lmp}
 W.~Huang, P.~Abbeel, D.~Pathak, and I.~Mordatch, ``Language models as zero-shot
   planners: Extracting actionable knowledge for embodied agents,'' \emph{arXiv
@@ -80,11 +90,25 @@ R.~Karam, A.~A. Nguyen, R.~Lin, D.~R. Martin, D.~Morales, B.~A. Butler, and
   M.~Egerstedt, ``Collaboration in multi-robot systems: Taxonomy and survey
   over frameworks for collaboration,'' 2026.
 
+\bibitem{krnjaic2024iros}
+A.~Krnjaic, R.~D. Steleac, J.~D. Thomas, G.~Papoudakis, L.~Sch{\"a}fer,
+  A.~W.~K. To, K.-H. Lao, M.~Cubuktepe, M.~Haley, P.~B{\"o}rsting, and S.~V.
+  Albrecht, ``Scalable multi-agent reinforcement learning for warehouse
+  logistics with robotic and human co-workers,'' in \emph{2024 IEEE/RSJ
+  International Conference on Intelligent Robots and Systems (IROS)}, 2024, pp.
+  677--684.
+
 \bibitem{krnjaic2022scalable}
 A.~Krnjaic, R.~D. Steleac, J.~D. Thomas, G.~Papoudakis, L.~Sch{\"a}fer, A.~Wing
   Keung~To, K.-H. Lao, M.~Cubuktepe, M.~Haley, P.~B{\"o}rsting, and S.~V.
   Albrecht, ``Scalable multi-agent reinforcement learning for warehouse
   logistics with robotic and human co-workers,'' 2022.
+
+\bibitem{li2021lifelong}
+J.~Li, A.~Tinka, S.~Kiesel, J.~W. Durham, T.~K.~S. Kumar, and S.~Koenig,
+  ``Lifelong multi-agent path finding in large-scale warehouses,'' in
+  \emph{Proceedings of the AAAI Conference on Artificial Intelligence},
+  vol.~35, no.~13, 2021, pp. 11\,272--11\,281.
 
 \bibitem{mandi2024roco}
 \BIBentryALTinterwordspacing
@@ -122,9 +146,19 @@ M.~A. Sebok and H.~G. Tanner, ``Cooperative planning for physically interacting
   \url{https://www.frontiersin.org/articles/10.3389/frobt.2024.1172105/full}
 \BIBentrySTDinterwordspacing
 
+\bibitem{sharon2015conflict}
+G.~Sharon, R.~Stern, A.~Felner, and N.~R. Sturtevant, ``Conflict-based search
+  for optimal multi-agent pathfinding,'' \emph{Artificial Intelligence}, vol.
+  219, pp. 40--66, 2015.
+
 \bibitem{tomasello2008origins}
 M.~Tomasello, \emph{Origins of Human Communication}.\hskip 1em plus 0.5em minus
   0.4em\relax Cambridge, MA, USA: MIT Press, 2008.
+
+\bibitem{wurman2008coordinating}
+P.~R. Wurman, R.~D'Andrea, and M.~Mountz, ``Coordinating hundreds of
+  cooperative, autonomous vehicles in warehouses,'' \emph{AI Magazine},
+  vol.~29, no.~1, pp. 9--20, 2008.
 
 \bibitem{xiao2026probingprompt}
 L.~Xiao and T.~Yamasaki, ``Probing prompt design for socially compliant robot

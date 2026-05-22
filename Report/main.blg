@@ -20,45 +20,45 @@ Warning--empty journal in papoudakis2020benchmarking
 Warning--empty journal in xiao2026probingprompt
 
 Done.
-You've used 22 entries,
+You've used 28 entries,
             4566 wiz_defined-function locations,
-            1014 strings with 13239 characters,
-and the built_in function-call counts, 17326 in all, are:
-= -- 1478
-> -- 737
-< -- 46
-+ -- 357
-- -- 222
-* -- 1017
-:= -- 2704
-add.period$ -- 42
-call.type$ -- 22
-change.case$ -- 173
-chr.to.int$ -- 99
-cite$ -- 26
-duplicate$ -- 1061
-empty$ -- 1219
-format.name$ -- 238
-if$ -- 3787
+            1052 strings with 14603 characters,
+and the built_in function-call counts, 23998 in all, are:
+= -- 2076
+> -- 956
+< -- 99
++ -- 475
+- -- 284
+* -- 1389
+:= -- 3660
+add.period$ -- 54
+call.type$ -- 28
+change.case$ -- 219
+chr.to.int$ -- 216
+cite$ -- 32
+duplicate$ -- 1468
+empty$ -- 1661
+format.name$ -- 300
+if$ -- 5303
 int.to.chr$ -- 0
-int.to.str$ -- 21
-missing$ -- 229
-newline$ -- 98
-num.names$ -- 42
-pop$ -- 714
+int.to.str$ -- 27
+missing$ -- 299
+newline$ -- 116
+num.names$ -- 54
+pop$ -- 897
 preamble$ -- 1
-purify$ -- 153
+purify$ -- 193
 quote$ -- 4
-skip$ -- 1185
+skip$ -- 1668
 stack$ -- 0
-substring$ -- 383
-swap$ -- 723
-text.length$ -- 13
+substring$ -- 720
+swap$ -- 1073
+text.length$ -- 27
 text.prefix$ -- 0
 top$ -- 7
-type$ -- 214
+type$ -- 280
 warning$ -- 4
-while$ -- 63
-width$ -- 23
-write$ -- 221
+while$ -- 96
+width$ -- 29
+write$ -- 283
 (There were 4 warnings)

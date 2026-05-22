@@ -4,19 +4,19 @@
 \contentsline {paragraph}{Acknowledgement}{iii}{section*.2}%
 \contentsline {section}{Acronyms}{vi}{section*.4}%
 \contentsline {section}{\numberline {1}Introduction}{1}{section.1}%
-\contentsline {subsection}{\numberline {1.1}Research Questions}{4}{subsection.1.1}%
-\contentsline {subsection}{\numberline {1.2}Contributions}{5}{subsection.1.2}%
-\contentsline {subsection}{\numberline {1.3}Report Outline}{5}{subsection.1.3}%
-\contentsline {section}{\numberline {2}Background and Related Work}{6}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Multi-Robot Systems and Coordination}{6}{subsection.2.1}%
-\contentsline {subsection}{\numberline {2.2}Warehouse Task Assignment Environments}{7}{subsection.2.2}%
-\contentsline {subsection}{\numberline {2.3}Language-Model-Based Planning and Grounding}{8}{subsection.2.3}%
-\contentsline {subsection}{\numberline {2.4}Why Study Model Size and Prompt Design?}{8}{subsection.2.4}%
-\contentsline {section}{\numberline {3}System and Method}{9}{section.3}%
-\contentsline {subsection}{\numberline {3.1}Overview}{9}{subsection.3.1}%
-\contentsline {paragraph}{What is fixed and what is varied.}{10}{section*.6}%
-\contentsline {paragraph}{Interpretation and controls.}{10}{section*.7}%
-\contentsline {subsection}{\numberline {3.2}Environment: Battery-TA-RWARE}{10}{subsection.3.2}%
+\contentsline {subsection}{\numberline {1.1}Research Questions}{3}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Contributions}{4}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3}Report Outline}{4}{subsection.1.3}%
+\contentsline {section}{\numberline {2}Background and Related Work}{5}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Multi-Robot Systems and Coordination}{5}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Warehouse Task Assignment Environments}{6}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Language-Model-Based Planning and Grounding}{7}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Why Study Model Size and Prompt Design?}{7}{subsection.2.4}%
+\contentsline {section}{\numberline {3}Methodology}{8}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Overview}{8}{subsection.3.1}%
+\contentsline {paragraph}{What is fixed and what is varied.}{9}{section*.6}%
+\contentsline {paragraph}{Interpretation and controls.}{9}{section*.7}%
+\contentsline {subsection}{\numberline {3.2}Environment: Battery-TA-RWARE}{9}{subsection.3.2}%
 \contentsline {subsection}{\numberline {3.3}Language-Model Control Loop}{10}{subsection.3.3}%
 \contentsline {subsection}{\numberline {3.4}Experiment Families and Objectives}{13}{subsection.3.4}%
 \contentsline {paragraph}{Objective 1: maximize total shelf deliveries.}{13}{section*.8}%

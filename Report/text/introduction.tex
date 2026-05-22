@@ -2,25 +2,25 @@ Accounts of language use and language evolution have often linked language to co
 In these accounts, language is not only a means of describing the world, but also a means of aligning intentions, communicating plans, and organizing joint activity.
 This perspective motivates the present thesis: if language is closely associated with coordination in human settings, then language-capable models may also be worth studying as decision components in multi-agent systems, provided that the setting is concrete enough to test that idea under operational constraints.
 
-Warehouse automation provides such a setting.
-In the warehouse domain studied here, heterogeneous robot fleets must coordinate under shared spatial and task constraints: carrier \glspl{agv} transport shelves, picker agents support load and unload operations, and both roles compete for shelves, corridors, and charging stations while still trying to achieve a shared operational objective.
-The coordination problem is therefore not only where agents should move, but also which shelf should be served next, when agents should wait for support, when a carried shelf should be delivered or returned, and when battery recovery should take priority over immediate task progress.
+Warehouse automation provides a concrete setting in which these coordination problems can be studied under operational constraints.
+Large-scale robotic warehouses became a prominent example of multi-robot coordination through systems such as Kiva, where many autonomous drive units transport movable inventory pods to human pick stations~\cite{wurman2008coordinating}.
+The key operational idea in such goods-to-person fulfilment systems is that mobile robots bring storage units to stationary workers, rather than requiring workers to walk through storage aisles.
+This makes warehouse robotics a useful real-world domain for studying task allocation, congestion, synchronization, and fleet-level coordination among many autonomous vehicles~\cite{barros2021rmfs}.
 
-Path planning alone is not sufficient in this setting.
-Productive coordination also requires agents to synchronize role-dependent actions, react when progress stalls, and adapt when the global objective changes.
-For example, an \gls{agv} may reach a shelf and still fail to make progress if a picker is not synchronized in time; repeated lack of position change can indicate interaction conflicts in the environment and motivate trying a different action; and a controller may need to shift behavior when the objective changes from maximizing deliveries alone to also reducing unnecessary \gls{llm} calls or respecting battery-related constraints.
+The environment studied in this thesis follows this broader goods-to-person warehouse tradition, but uses the heterogeneous Battery-TA-RWARE setting, which adapts the Task-Assignment Robotic Warehouse environment introduced by Krnjaic et al.~\cite{krnjaic2022scalable,krnjaic2024iros}.
+TA-RWARE is motivated by Quicktron QuickBin-style goods-to-person systems, in which storage retrieval and transport can be split across different robot types.
+This differs from Kiva-style systems, where a drive unit can lift and transport an inventory pod by itself.
+In TA-RWARE, carrier \glspl{agv} transport storage mediums such as shelves or totes, while picker agents support the loading and unloading operations required to place those storage mediums onto \glspl{agv}.
+The human picker at the delivery station is not part of the simulated multi-agent system; in TA-RWARE, the picker role denotes a picking robot that lifts storage mediums onto \glspl{agv}, while the human worker remains outside the simulated robot team.
+This terminology is important because the thesis studies coordination between robot roles, not human-robot picking at the workstation.
+
+The resulting decision problem is therefore not only where agents should move, but also which shelf should be served next, when an \gls{agv} should wait for a picker robot, when a carried shelf should be delivered or returned, and when battery recovery should take priority over immediate task progress.
+This role separation introduces interdependent tasks: \glspl{agv} and picker robots must select compatible storage targets and arrive with sufficient temporal alignment for pickup operations to succeed~\cite{krnjaic2022scalable}.
+This is a task-level coordination problem as well as a motion problem: multi-robot task allocation concerns which agents should perform which tasks, while multi-agent path finding concerns collision-free movement to assigned goals~\cite{gerkey2004formal,sharon2015conflict}.
+Warehouse settings further make this distinction visible because agents are repeatedly assigned new goals while operating in shared space~\cite{li2021lifelong}.
+Productive coordination therefore requires role synchronization, task commitment, stall recovery, and adaptation to changing objectives.
+For example, an \gls{agv} may reach a shelf and still fail to make progress if a picker robot is not synchronized in time; repeated lack of position change can indicate interaction conflicts in the environment and motivate trying a different action; and a controller may need to shift behavior when the objective changes from maximizing deliveries alone to also reducing unnecessary model calls or respecting battery-related constraints.
 The thesis therefore studies the higher-level decision layer above low-level motion: selecting grounded macro actions that determine what each agent should do next under the current task, coordination, and battery conditions.
-
-To evaluate this decision layer in a controlled way, the thesis uses Battery-TA-RWARE, an adaptation of the Task-Assignment Robotic Warehouse environment~\cite{krnjaic2022scalable}.
-Battery-TA-RWARE is a simplified but structured testbed that retains the key coordination features of the warehouse problem: heterogeneous agent roles, requested shelves, shared corridors, charging stations, and explicit load/unload dependencies between \glspl{agv} and pickers.
-At the same time, it abstracts away continuous low-level control by handling motion internally, making it suitable for studying whether better high-level decisions improve coordination under grounded discrete actions.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.95\textwidth]{../Battery-TA-RWARE/docs/img/BatteryTA-RWARE.png}
-    \caption{Illustration of the task-assignment warehouse setting used in this thesis.}
-    \label{fig:tarware_overview}
-\end{figure}
 
 \Glspl{mrs} provide useful background for this problem.
 Early surveys emphasized group architecture, resource conflicts, and learning~\cite{cao1997cooperative}, while later overviews highlighted communication, task allocation/control, and motion coordination as recurring themes~\cite{arai2002advances}.
@@ -38,23 +38,6 @@ Instead of learning a task-specific policy from scratch, an \gls{llm} can be pro
 In this thesis, a high-level decision means selecting a discrete environment action identifier, such as moving toward a shelf, a goal station, or a charging station, rather than generating free-form robot commands.
 Recent robotics work has used \glspl{llm} together with explicit grounding and feasibility checks so that language reasoning remains tied to validated actions instead of unconstrained text outputs~\cite{ahn2022do}.
 This makes \glspl{llm} a plausible object of study for warehouse coordination, but it also raises a concrete question: can they support productive heterogeneous coordination under discrete action constraints, limited context, and changing objectives?
-
-The thesis studies this question along three main design axes.
-The first is planning architecture: whether one prompt should produce decisions for all agents that currently need planning, or whether agents should be planned one at a time while still receiving shared global context.
-The second is prompt representation: whether the same decision-relevant state should be expressed as compact natural language or as a more explicitly structured \gls{json} prompt.
-The third is model size, since the experiments compare smaller and larger prompted language models under the same warehouse setting.
-
-This thesis studies \gls{llm}-driven decision-making in that grounded warehouse setting.
-The evaluated control loop summarizes the current state into a compact prompt, queries an \gls{llm} either jointly or per agent depending on architecture, parses the returned action identifier, and validates it against the environment's current feasible-action mask, that is, the set of actions currently allowed for that agent, before execution.
-Depending on the runner, the controller may both restrict the candidate actions shown in the prompt and validate the selected action after generation, so feasibility is enforced by both candidate shaping and post-selection checking rather than by a free-form output alone.
-The controller operates in discrete simulation time: the system state is evaluated at every environment step, but \gls{llm} queries are issued only when an agent requires a new high-level decision.
-The controller can also use the observed consequence of executed actions after a simulation step, for example whether progress occurred, whether an agent remained blocked or busy, or whether replanning is needed.
-This makes the approach neither unconstrained continuous control nor pure event triggering, but a step-synchronous control scheme with conditional replanning.
-Because the controller depends on repeated model inference, the study evaluates not only delivery throughput but also call efficiency, since unnecessary model queries increase latency and computational cost without improving coordination.
-The experimental program also asks whether the same control framework remains useful when the objective changes, first from pure shelf-delivery throughput to call-aware delivery, and later toward battery-aware behaviour.
-The three objective families are framed as comparable evaluations of one grounded runner style, so that objective changes can be studied under a common decision loop rather than as unrelated controller variants.
-In this thesis, observed failure behaviour refers to outcomes such as zero-delivery episodes, long no-delivery tails, invalid decisions, or repeated coordination breakdowns such as waiting loops and unresolved support dependencies.
-The introduction that follows therefore focuses on which \gls{llm}-based configurations are most effective for productive collaboration in this constrained warehouse setting.
 
 \subsection{Research Questions}
 \label{sec:rq}

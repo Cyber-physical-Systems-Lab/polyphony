@@ -30,6 +30,13 @@ At any time, a set of shelves is requested. Carrier \glspl{agv} must transport r
 Picker agents are required to meet \glspl{agv} at shelf locations for load and unload interactions, creating explicit heterogeneous coordination constraints.
 Agents additionally have a battery state that decreases with movement and interactions; charging stations are available at fixed locations.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{../Battery-TA-RWARE/docs/img/BatteryTA-RWARE.png}
+    \caption{Illustration of the task-assignment warehouse setting used in this thesis.}
+    \label{fig:tarware_overview}
+\end{figure}
+
 The environment exposes a discrete action space where each action corresponds to selecting a target location:
 \begin{itemize}
     \item \textbf{Shelf actions:} choose a shelf location (e.g., to pick up or return a shelf).

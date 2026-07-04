@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2026.2.25)  6 MAY 2026 14:34
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2026.2.25)  3 JUL 2026 12:13
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1154,7 +1154,7 @@ LaTeX Info: Redefining \Ref on input line 44.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-<./dependencies/logo_side.pdf, id=183, 298.61563pt x 422.57875pt>
+<./dependencies/logo_side.pdf, id=171, 298.61563pt x 422.57875pt>
 File: ./dependencies/logo_side.pdf Graphic file (type pdf)
 <use ./dependencies/logo_side.pdf>
 Package pdftex.def Info: ./dependencies/logo_side.pdf  used on input line 90.
@@ -1279,68 +1279,85 @@ Overfull \hbox (2.03084pt too wide) in paragraph at lines 4--6
 
 
 ]
-Overfull \hbox (14.87062pt too wide) in paragraph at lines 29--34
-[]\OT1/ptm/m/n/12 Many ap-proaches ad-dress such co-or-di-na-tion prob-lems us-
-ing op-ti-miza-tion, hand-engineered
+Overfull \hbox (0.5183pt too wide) in paragraph at lines 13--14
+\OT1/ptm/m/n/12 ships be-tween words and phrases [[]]. Neu-ral prob-a-bilis-tic
+ lan-guage mod-els later showed
  []
 
-[2]
-Overfull \hbox (14.08897pt too wide) in paragraph at lines 46--47
-[]\OT1/ptm/b/n/12 Main re-search ques-tion: \OT1/ptm/m/n/12 To what ex-tent can
- prompted [][]LMs[] sup-port grounded
+[2] [3]
+<figures/WarehouseFlowcr.jpg, id=425, 963.6pt x 209.28188pt>
+File: figures/WarehouseFlowcr.jpg Graphic file (type jpg)
+<use figures/WarehouseFlowcr.jpg>
+Package pdftex.def Info: figures/WarehouseFlowcr.jpg  used on input line 40.
+(pdftex.def)             Requested size: 397.3397pt x 86.2947pt.
+<figures/Rack-shelves-bin.png, id=429, 715.473pt x 797.379pt>
+File: figures/Rack-shelves-bin.png Graphic file (type png)
+<use figures/Rack-shelves-bin.png>
+Package pdftex.def Info: figures/Rack-shelves-bin.png  used on input line 51.
+(pdftex.def)             Requested size: 397.3397pt x 442.81827pt.
+ [4 <./figures/WarehouseFlowcr.jpg>] [5 <./figures/Rack-shelves-bin.png>]
+<figures/KivaWarehouse.png, id=450, 1407.2575pt x 1126.2075pt>
+File: figures/KivaWarehouse.png Graphic file (type png)
+<use figures/KivaWarehouse.png>
+Package pdftex.def Info: figures/KivaWarehouse.png  used on input line 66.
+(pdftex.def)             Requested size: 397.3397pt x 317.98238pt.
+ [6 <./figures/KivaWarehouse.png (PNG copy)>] [7] [8]
+Overfull \hbox (4.62279pt too wide) in paragraph at lines 103--104
+\OT1/ptm/m/n/12 than fo-cus-ing on low-level robot con-trol, the study ex-am-in
+es how dif-fer-ent de-sign choices
  []
 
-
-Overfull \hbox (13.87279pt too wide) in paragraph at lines 52--53
-\OT1/ptm/m/n/12 liv-ery through-put, ro-bust-ness across sce-nar-ios with dif-f
-er-ent lev-els of role-interaction
+[9]
+Overfull \hbox (4.66902pt too wide) in paragraph at lines 125--126
+\OT1/ptm/m/n/12 vi-ron-ment rep-re-sen-ta-tions af-fect col-lab-o-ra-tive task 
+per-for-mance, mea-sured through
  []
 
-
-Overfull \hbox (18.63814pt too wide) in paragraph at lines 56--57
-[]\OT1/ptm/m/n/12 In this the-sis, these ques-tions are eval-u-ated pri-mar-ily
- through de-liv-ery through-put, language-
- []
-
-[3]
-LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 6
-2.
- (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ts1ptm.fd
+LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 1
+37.
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
-)
-Overfull \hbox (1.8976pt too wide) in paragraph at lines 62--63
-\OT1/ptm/m/n/12 trol in het-ero-ge-neous ware-house co-or-di-na-tion, where pro
--posed de-ci-sions are trans-
+) [10]) [11]
+(./text/background.tex [12
+
+]
+Overfull \hbox (0.26642pt too wide) in paragraph at lines 13--14
+\OT1/ptm/m/n/12 to-wards learning-based ap-proaches, par-tic-u-larly Re-in-forc
+e-ment Learn-ing (RL), in which
  []
 
-) (./text/background.tex [4] [5] [6]) [7] (./text/method.tex [8]
-<../Battery-TA-RWARE/docs/img/BatteryTA-RWARE.png, id=517, 1050.92625pt x 700.8
+[13]
+Overfull \hbox (9.22913pt too wide) in paragraph at lines 21--22
+\OT1/ptm/m/n/12 bio-sis prin-ci-ples into a Cen-tralised Train-ing with De-cen-
+tralised Ex-e-cu-tion (CTDE) MARL
+ []
+
+[14] [15] [16] [17]) [18] [19] (./text/method.tex [20
+
+]
+<../Battery-TA-RWARE/docs/img/BatteryTA-RWARE.png, id=642, 1050.92625pt x 700.8
 6844pt>
 File: ../Battery-TA-RWARE/docs/img/BatteryTA-RWARE.png Graphic file (type png)
 <use ../Battery-TA-RWARE/docs/img/BatteryTA-RWARE.png>
 Package pdftex.def Info: ../Battery-TA-RWARE/docs/img/BatteryTA-RWARE.png  used
  on input line 35.
 (pdftex.def)             Requested size: 397.3397pt x 264.98528pt.
- [9]
+ [21 <../Battery-TA-RWARE/docs/img/BatteryTA-RWARE.png>]
 Overfull \hbox (5.88055pt too wide) in paragraph at lines 52--53
 []\OT1/ptm/b/n/12 State sum-ma-riza-tion: \OT1/ptm/m/n/12 ex-tract salient fea-
 tures of the global state (re-quested shelves
  []
 
-[10 <../Battery-TA-RWARE/docs/img/BatteryTA-RWARE.png>] [11] [12]
-Overfull \hbox (1.35695pt too wide) in paragraph at lines 123--126
- []\OT1/phv/b/n/12 Objective 2: op-ti-mize [][]LM[] calls while main-tain-ing d
-e-liv-ery through-put.[] \OT1/ptm/m/n/12 The
+[22] [23]
+Overfull \hbox (3.60298pt too wide) in paragraph at lines 113--117
+\OT1/ptm/m/n/12 The ex-per-i-ments are or-ga-nized as a con-trolled com-par-i-s
+on within the grounded language-
  []
 
-[13] [14]
-Overfull \hbox (11.85753pt too wide) in paragraph at lines 163--164
-[]\OT1/ptm/m/n/12 and ob-jec-tive for-mu-la-tion (shelf-delivery only, call-awa
-re shelf de-liv-ery, and battery-
- []
+[24] [25] [26]) [27] [28] (./text/result_discussion.tex [29
 
-[15] [16] [17]) (./text/result_discussion.tex [18] [19] [20] [21])
-(./text/conclusions.tex [22]
+] [30] [31])
+[32] [33] (./text/conclusions.tex
 LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 6
 .
 
@@ -1367,8 +1384,10 @@ File: omspcr.fd
 )
 LaTeX Font Info:    Font shape `OMS/pcr/m/n' in size <12> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 2.
- [23])) [24]
-(./main.bbl [25] [26]) [27] (./text/appendix.tex
+ [34
+
+])) [35]
+(./main.bbl [36] [37] [38] [39] [40]) [41] (./text/appendix.tex
 Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on i
 nput line 9.
 
@@ -1377,42 +1396,45 @@ Overfull \hbox (10.75262pt too wide) in paragraph at lines 50--51
 -tive 1, shared-context per-agent
  []
 
-[28]
+[42
+
+]
 Overfull \hbox (2.1968pt too wide) in paragraph at lines 52--53
 []$\OT1/ptm/m/n/12 results / battery$: planned battery-oriented ex-per-i-ments 
 (not yet pop-u-lated with com-
  []
 
-[29]) [30] (./main.aux)
+[43]) [44] (./main.aux)
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 0.5pt have occurred.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 7A2CAF81E90BD39236973E7E4B41018D;8121.
+(rerunfilecheck)             Checksum: 35113C6DC9B744819A7C724E483345B6;7804.
  ) 
 Here is how much of TeX's memory you used:
- 35907 strings out of 479647
- 672666 string characters out of 5878802
- 1191085 words of memory out of 5000000
- 53008 multiletter control sequences out of 15000+600000
+ 35983 strings out of 479647
+ 674376 string characters out of 5878802
+ 1192085 words of memory out of 5000000
+ 53051 multiletter control sequences out of 15000+600000
  507026 words of font info for 100 fonts, out of 8000000 for 9000
  350 hyphenation exceptions out of 8191
- 100i,12n,95p,1130b,1338s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 100i,12n,95p,1543b,1338s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
 e/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texm
 f-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/
 fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/
-type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/hel
-vetic/uhvb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvr8a
-.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/shar
-e/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf
--dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/typ
-e1/urw/times/utmri8a.pfb>
-Output written on main.pdf (39 pages, 620539 bytes).
+type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/u
+rw/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/u
+hvb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></
+usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texli
+ve/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/f
+onts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/
+times/utmri8a.pfb>
+Output written on main.pdf (53 pages, 3640254 bytes).
 PDF statistics:
- 815 PDF objects out of 1000 (max. 8388607)
- 736 compressed objects within 8 object streams
- 191 named destinations out of 1000 (max. 500000)
- 375 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 956 PDF objects out of 1000 (max. 8388607)
+ 855 compressed objects within 9 object streams
+ 219 named destinations out of 1000 (max. 500000)
+ 366 words of extra memory for PDF output out of 10000 (max. 10000000)
 

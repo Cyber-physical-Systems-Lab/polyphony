@@ -25,7 +25,7 @@ The experiments are controlled in the sense that scenario ids, seeds, and runner
 The surrounding validation layer filters infeasible outputs before execution, and the same comparison axes are used across the objective families.
 
 \subsection{Environment: Battery-TA-RWARE}
-Battery-TA-RWARE is a discrete-time, grid-based warehouse simulation derived from \gls{tarware}~\cite{krnjaic2022scalable}.
+Battery-TA-RWARE is a discrete-time, grid-based warehouse simulation derived from \gls{tarware}~\cite{krnjaic2024warehouse}.
 At any time, a set of shelves is requested. Carrier \glspl{agv} must transport requested shelves to goal locations and then return them to storage.
 Picker agents are required to meet \glspl{agv} at shelf locations for load and unload interactions, creating explicit heterogeneous coordination constraints.
 Agents additionally have a battery state that decreases with movement and interactions; charging stations are available at fixed locations.
@@ -109,108 +109,58 @@ Two design choices are central for feasibility:
 
 The reported behaviour is therefore the behaviour of the complete control framework: prompt design, model output, candidate shaping, validation logic, and replanning policy act together inside the same supervisory loop.
 
-\subsection{Experiment Families and Objectives}
-The implemented experiments are grouped into three objective families.
-Across these families, the common control framework is the grounded language-model loop described above: step-synchronous execution, conditional replanning, explicit action validation, and action persistence when configured.
-Across all three objective families, the same controlled variables are intended: planning architecture, prompt representation, model size, scenario catalogue, and evaluation metrics.
-What changes between the families is the objective function.
+\subsection{Experiment Design and Comparison Axes}
+The experiments are organized as a controlled comparison within the grounded language-model control loop described above.
+Across the experiment families, the environment, discrete action space, validation layer, scenario catalogue, local-inference setup, and evaluation metrics are kept as stable as practical.
+The main factors that change are the objective formulation, model size, planning architecture, and prompt representation.
+This structure is important because the thesis does not only ask whether an \gls{llm} can control the warehouse agents; it asks how different ways of using the \gls{llm} affect collaborative task performance under comparable conditions.
 
-\paragraph{Objective 1: maximize total shelf deliveries.}
-The first family fixes the operational objective to raw shelf-delivery throughput.
-This family provides the delivery-only baseline against which the other objective formulations are interpreted.
+The objective families define the main progression of the experimental campaign.
+The first family uses a delivery-only objective, where the controller is evaluated primarily on raw shelf-delivery throughput.
+This establishes the baseline interpretation for the later experiments: the controller is expected to select high-level actions that move requested shelves through the warehouse as effectively as possible.
+The second family keeps the same warehouse task and comparison axes, but changes the objective into a call-aware formulation that seeks to maintain delivery performance while reducing unnecessary \gls{llm} queries.
+In this family, the output interface includes a \nolinkurl{Steps} field, allowing a selected action to persist for multiple simulation steps when repeated replanning is not useful.
+The third family extends the same framework toward battery-aware control, where the purpose is to study whether the controller can incorporate resource constraints in addition to throughput and call efficiency.
+Together, these objective families make it possible to compare not only absolute delivery performance, but also how the same supervisory loop behaves when the definition of a good decision changes.
 
-\paragraph{Objective 2: optimize \gls{llm} calls while maintaining delivery throughput.}
-The second family changes the objective from delivery-only to a joint objective: increase shelf deliveries while reducing unnecessary \gls{llm} queries.
-It primarily supports RQ1 and the call-efficiency analysis while keeping the same control framework and the same comparison axes as Objective~1.
-In this family, the output interface includes a \nolinkurl{Steps} field so that the selected action can remain active for multiple steps when that serves the call-aware objective.
+Two planning architectures are compared inside this framework.
+In the centralized architecture, one \gls{llm} call plans for all agents that currently need a decision, using a prompt that exposes the global state and the relevant candidate actions.
+This gives the model an explicit opportunity to coordinate joint behaviour, but it also increases the prompt size and output complexity as the number of agents and candidate actions grows.
+In the shared-context per-agent architecture, the model plans for one agent at a time.
+Each prompt still contains global information, but the required output concerns only the current agent.
+This reduces parsing burden and makes the decision format simpler, while shifting coordination from one explicit joint plan to a sequence of local decisions made with shared context.
+The comparison is therefore meaningful because it separates two practical ways of embedding language models in multi-agent control: broad joint reasoning versus simpler repeated decisions.
 
-\paragraph{Objective 3: battery-aware objective.}
-A third family is defined for explicitly battery-oriented evaluation.
-Its role is to extend the same framework toward constraint-aware behaviour beyond throughput and call efficiency.
+Prompt representation is treated as another comparison axis rather than as a separate experiment in isolation.
+The prompts always ground the model's choice in explicit action ids and role-relevant state, including requested-shelf mappings, rules for \glspl{agv} and pickers, support relations such as waiting-for-picker context, battery-state abstractions, and filtered or prioritized candidate actions.
+What varies is the form in which the model is asked to respond, especially natural-language action selection versus structured \gls{json} output.
+This comparison tests whether stronger output structure improves reliability without changing the underlying warehouse task.
+Taken together, the principal comparison axes are model size, centralized versus shared-context per-agent planning, natural-language versus \gls{json} prompting, and the three objective formulations of delivery-only, call-aware delivery, and battery-aware control.
 
-\subsection{Planning Architectures}
-The experiments compare two distinct ways of integrating the \gls{llm} into the decision loop.
+\subsection{Scenarios, Models, and Metrics}
+The same scenario catalogue is reused across the experiment families so that differences in observed behaviour can be interpreted against known coordination pressures rather than against unrelated task changes.
+The scenarios are \nolinkurl{tiny_balanced_1v1}, \nolinkurl{small_balanced_2v2}, \nolinkurl{medium_balanced_4v4}, \nolinkurl{small_agv_heavy_4v2}, \nolinkurl{medium_agv_heavy_6v2}, and \nolinkurl{small_picker_heavy_2v4}.
+These scenarios cover simple balanced collaboration, increased concurrency, larger warehouse layouts, \gls{agv}-heavy settings where picker support can become a bottleneck, and picker-heavy settings where allocation efficiency and underutilization become more visible.
+The scenario set therefore tests whether a model, prompt form, or planning architecture remains productive when the source of coordination difficulty changes.
 
-\paragraph{Centralized planning.}
-In the centralized architecture, one \gls{llm} call plans all agents that currently need a decision. This design exposes the full global state and all relevant candidate actions in one prompt. Its intended advantage is explicit joint coordination. Its main risk is prompt overload: as the number of agents and candidate actions increases, the prompt becomes large and more difficult to parse reliably.
+The model set spans smaller and larger local models: \nolinkurl{llama3.2:1b}, \nolinkurl{llama3.2:3b}, \nolinkurl{mistral:7b}, \nolinkurl{gemma3:12b}, \nolinkurl{phi4}, and \nolinkurl{qwen2.5:14b}.
+Using models of different sizes supports the thesis question about whether larger models produce better coordination, or whether smaller models can remain competitive when the prompt is sufficiently grounded and the validation layer prevents infeasible actions from being executed.
+Because all models operate through the same discrete-action interface, the comparison concerns decision quality within the same controller framework rather than differences in low-level robot control.
 
-\paragraph{Shared-context per-agent planning.}
-In the shared-context architecture, the \gls{llm} plans one agent at a time. Each prompt still includes global information, but the final decision concerns only the current agent. This reduces the output burden and simplifies parsing, at the cost of requiring coordination to emerge from repeated local decisions rather than from one explicit joint plan. In the thesis evaluation, this architecture is the main vehicle for comparing prompt forms and model sizes under a common decision structure.
-
-\subsection{Prompt Structures}
-The prompt comparison in this thesis varies along two axes:
-\begin{itemize}
-    \item \textbf{Planning scope:} centralized joint planning versus per-agent planning with shared context.
-    \item \textbf{Output structure:} natural-language responses versus \gls{json} responses.
-\end{itemize}
-
-The prompts include:
-\begin{itemize}
-    \item explicit requested-shelf to action-id mappings,
-    \item role-specific rules for \glspl{agv} and pickers,
-    \item support relations such as waiting-for-picker context,
-    \item battery-state abstractions,
-    \item candidate action filtering or prioritization,
-    \item and, in Objective~2, an explicit \nolinkurl{Steps} field as part of the call-aware output interface for reducing unnecessary \gls{llm} calls.
-\end{itemize}
-
-\subsection{Comparison Axes}
-The main comparison axes are:
-\begin{itemize}
-    \item model size,
-    \item planning architecture (centralized versus shared-context per-agent),
-    \item prompt form (natural language versus \gls{json}),
-    \item and objective formulation (shelf-delivery only, call-aware shelf delivery, and battery-aware control) under the same grounded control framework.
-\end{itemize}
-
-\subsection{Evaluation Metrics}
-The main metric is delivery throughput, expressed as a pick rate (deliveries per hour) derived from the number of delivered shelves and the simulated episode duration.
-Additional metrics are collected to capture coordination and safety:
-\begin{itemize}
-    \item total shelf deliveries,
-    \item number of clashes and deadlocks/stuck events,
-    \item distance travelled by each agent type,
-    \item episode return (environment reward),
-    \item episode length and inference speed/latency (when measured).
-\end{itemize}
-The primary purpose of these metrics is to evaluate whether the language-model-based controller adapts productively when the objective changes.
-Throughput remains the central outcome measure, since each objective still depends on productive task completion.
-The additional metrics are used as supporting evidence for how that adaptation occurs in practice, for example whether a configuration maintains delivery performance, reduces unnecessary model calls, or exhibits coordination failures such as clashes, deadlocks, zero-delivery runs, or long no-delivery tails.
-
-\subsection{Scenario and Model Matrix}
-The same scenario catalogue is reused across the experiment families:
-\begin{itemize}
-    \item \nolinkurl{tiny_balanced_1v1},
-    \item \nolinkurl{small_balanced_2v2},
-    \item \nolinkurl{medium_balanced_4v4},
-    \item \nolinkurl{small_agv_heavy_4v2},
-    \item \nolinkurl{medium_agv_heavy_6v2},
-    \item \nolinkurl{small_picker_heavy_2v4}.
-\end{itemize}
-These scenarios were selected to probe different coordination pressures: simple balanced collaboration, increased concurrency, larger warehouses, \gls{agv}-heavy support bottlenecks, and picker-heavy underutilization.
-More specifically, the balanced small scenarios provide lower-pressure comparison points for model and prompt behaviour, the larger balanced scenarios expose increased concurrency and scalability pressure, the \gls{agv}-heavy scenarios stress picker-support bottlenecks and waiting dependencies, and the picker-heavy scenarios stress allocation efficiency and underutilization.
-The scenario set is used to test whether the same model or architecture remains productive when the source of coordination difficulty changes.
-
-The model set spans smaller and larger local models:
-\begin{itemize}
-    \item \nolinkurl{llama3.2:1b},
-    \item \nolinkurl{llama3.2:3b},
-    \item \nolinkurl{mistral:7b},
-    \item \nolinkurl{gemma3:12b},
-    \item \nolinkurl{phi4},
-    \item \nolinkurl{qwen2.5:14b}.
-\end{itemize}
+The primary metric is delivery throughput, expressed as pick rate, which is computed from the number of delivered shelves and the simulated episode duration.
+Total shelf deliveries are also reported directly because they are easy to interpret in relation to the task objective and the episode-level delivery ceiling.
+Additional metrics are collected to explain how a controller reaches its throughput outcome: clashes, deadlocks or stuck events, distance travelled by each agent type, episode return, episode length, and inference speed or latency when measured.
+These supporting metrics are necessary because two configurations can achieve similar delivery counts for different reasons.
+For example, one configuration may maintain throughput with fewer model calls, while another may show the same delivery count but with more clashes, longer no-delivery tails, or inefficient movement.
+The metrics therefore connect the numerical result to the underlying collaborative behaviour.
 
 \subsection{Experimental Protocol}
-The reported experiment sessions were run with fixed environment ids and a fixed seed.
-This defines a controlled set of comparable runs for the reported objective families.
-
-The progression of the experimental campaign was:
-\begin{enumerate}
-    \item Objective~1 shelf-delivery experiments,
-    \item Objective~2 call-aware shelf-delivery experiments under the same control framework and comparison axes,
-    \item Objective~3 battery-aware experiments.
-\end{enumerate}
+The reported experiment sessions were run with fixed environment ids and a fixed seed, creating a controlled set of comparable runs for the reported objective families.
+Within that controlled setup, the campaign proceeds from Objective~1 delivery-only experiments to Objective~2 call-aware delivery experiments and then to Objective~3 battery-aware experiments.
+This ordering is deliberate.
+The delivery-only experiments first establish how the models, prompt forms, and planning architectures behave when the objective is simply to complete warehouse deliveries.
+The call-aware experiments then ask whether the same framework can reduce unnecessary replanning without losing the productive behaviour established in the first family.
+The battery-aware experiments extend the evaluation to resource-sensitive decision making, where the controller must consider battery constraints as part of the same high-level assignment problem.
 
 Section~\ref{sec:result_discussion} reports Objective~1 for the shelf-delivery comparisons, Objective~2 for the call-aware comparisons, and Objective~3 for the battery-aware objective.
 In the current simulation setup, a run can achieve at most 20 deliveries, and the results chapter uses that ceiling to contextualize reported scores.

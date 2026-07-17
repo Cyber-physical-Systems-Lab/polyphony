@@ -1,11 +1,9 @@
 This thesis evaluates \gls{llm}-driven decision-making for heterogeneous multi-robot collaboration in a task-assignment warehouse setting with battery constraints.
 The implemented control loop grounds decisions to discrete environment action identifiers, queries an \gls{llm} using centralized or per-agent shared-context prompts, and enforces feasibility through action-mask validation.
 
-The reported results cover Objective~1 and Objective~2. Objective~1 provides the current data for planning-architecture and prompt-format comparisons under the shelf-delivery objective. Objective~2 provides the current data for call-aware control, including delivery totals, calls per delivery, seconds per delivery, and the model-size comparison for the shared-context natural-language session.
+The reported results cover the shelf-delivery, call-aware, and battery-aware objective families. The shelf-delivery objective provides the data for planning-architecture and prompt-format comparisons. The call-aware and battery-aware objectives provide the data for the objective-sensitivity analysis in the shared-context natural-language setting.
 
-Within the available data, Objective~1 reports more deliveries for shared-context planning than for centralized planning in the matched natural-language comparison, and more deliveries for natural-language prompting than for \gls{json} prompting in the matched shared-context comparison. Objective~2 reports 303 deliveries for the completed natural-language shared-context session and 53 deliveries for the completed \gls{json} shared-context session. In the completed natural-language model comparison for Objective~2, \texttt{llama3.2:3b} produced the highest total delivery count.
-
-Completed aggregate results are not yet available for Objective~3, the battery-aware objective. This objective remains part of the defined evaluation framework, but its aggregate outcome is not yet reported in the current results chapter.
+Within the available data, natural-language prompting produced higher delivery throughput and higher call-normalised delivery efficiency than \gls{json} prompting across the reported scenario and model groupings. Shared-context planning produced higher mean deliveries than centralized planning in the scenario-level comparison, while centralized planning used fewer \gls{llm} calls. The objective-sensitivity analysis showed mixed adaptation: the call-aware objective did not consistently reduce \gls{llm} usage, and battery-aware productivity varied by model.
 
 \subsection{Future Work}
 \label{sec:futurework}

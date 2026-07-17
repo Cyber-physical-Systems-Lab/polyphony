@@ -48,31 +48,32 @@ S.~R. Fischer, \emph{A History of Writing}.\hskip 1em plus 0.5em minus
 \BIBentryALTinterwordspacing
 D.~Jurafsky and J.~H. Martin, \emph{Speech and Language Processing: An
   Introduction to Natural Language Processing, Computational Linguistics, and
-  Speech Recognition with Language Models}, 3rd~ed.\hskip 1em plus 0.5em minus
-  0.4em\relax Draft manuscript, 2025, draft version. [Online]. Available:
+  Speech Recognition with Language Models}, 3rd~ed., 2026, online manuscript
+  released January 6, 2026. [Online]. Available:
   \url{https://web.stanford.edu/~jurafsky/slp3/}
 \BIBentrySTDinterwordspacing
 
 \bibitem{bengio2003neural}
-\BIBentryALTinterwordspacing
 Y.~Bengio, R.~Ducharme, P.~Vincent, and C.~Janvin, ``A neural probabilistic
-  language model,'' \emph{Journal of Machine Learning Research}, vol.~3, pp.
-  1137--1155, 2003. [Online]. Available:
-  \url{https://jmlr.org/papers/v3/bengio03a.html}
-\BIBentrySTDinterwordspacing
+  language model,'' \emph{J. Mach. Learn. Res.}, vol.~3, no. null, p.
+  1137–1155, Mar. 2003.
 
 \bibitem{mikolov2013distributed}
+\BIBentryALTinterwordspacing
 T.~Mikolov, K.~Chen, G.~Corrado, and J.~Dean, ``Efficient estimation of word
-  representations in vector space,'' \emph{arXiv preprint arXiv:1301.3781},
-  2013.
+  representations in vector space,'' 2013. [Online]. Available:
+  \url{https://arxiv.org/abs/1301.3781}
+\BIBentrySTDinterwordspacing
 
 \bibitem{vaswani2017attention}
 \BIBentryALTinterwordspacing
-A.~Vaswani, N.~Shazeer, N.~Parmar, J.~Uszkoreit, L.~Jones, A.~N. Gomez,
-  {\L}.~Kaiser, and I.~Polosukhin, ``Attention is all you need,'' in
-  \emph{Advances in Neural Information Processing Systems}, vol.~30, 2017.
-  [Online]. Available:
-  \url{https://proceedings.neurips.cc/paper/7181-attention-is-all-you-need}
+A.~Vaswani, N.~Shazeer, N.~Parmar, J.~Uszkoreit, L.~Jones, A.~N. Gomez, L.~u.
+  Kaiser, and I.~Polosukhin, ``Attention is all you need,'' in \emph{Advances
+  in Neural Information Processing Systems}, I.~Guyon, U.~V. Luxburg,
+  S.~Bengio, H.~Wallach, R.~Fergus, S.~Vishwanathan, and R.~Garnett, Eds.,
+  vol.~30.\hskip 1em plus 0.5em minus 0.4em\relax Curran Associates, Inc.,
+  2017. [Online]. Available:
+  \url{https://proceedings.neurips.cc/paper_files/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf}
 \BIBentrySTDinterwordspacing
 
 \bibitem{bommasani2021foundation}
@@ -111,9 +112,11 @@ T.~B. Brown, B.~Mann, N.~Ryder, M.~Subbiah, J.~D. Kaplan, P.~Dhariwal,
 \BIBentrySTDinterwordspacing
 
 \bibitem{huang2022lmp}
+\BIBentryALTinterwordspacing
 W.~Huang, P.~Abbeel, D.~Pathak, and I.~Mordatch, ``Language models as zero-shot
-  planners: Extracting actionable knowledge for embodied agents,'' \emph{arXiv
-  preprint arXiv:2201.07207}, 2022.
+  planners: Extracting actionable knowledge for embodied agents,'' 2022.
+  [Online]. Available: \url{https://arxiv.org/abs/2201.07207}
+\BIBentrySTDinterwordspacing
 
 \bibitem{wang2023planandsolve}
 \BIBentryALTinterwordspacing
@@ -125,9 +128,11 @@ L.~Wang, W.~Xu, Y.~Lan, Z.~Hu, Y.~Lan, R.~K.-W. Lee, and E.-P. Lim,
 \BIBentrySTDinterwordspacing
 
 \bibitem{yao2022react}
+\BIBentryALTinterwordspacing
 S.~Yao, J.~Zhao, D.~Yu, N.~Du, I.~Shafran, K.~Narasimhan, and Y.~Cao, ``React:
-  Synergizing reasoning and acting in language models,'' \emph{arXiv preprint
-  arXiv:2210.03629}, 2022.
+  Synergizing reasoning and acting in language models,'' 2023. [Online].
+  Available: \url{https://arxiv.org/abs/2210.03629}
+\BIBentrySTDinterwordspacing
 
 \bibitem{yao2023tree}
 \BIBentryALTinterwordspacing
@@ -154,12 +159,10 @@ Z.~Yan, N.~Jouandeau, and A.~A. Cherif, ``A survey and analysis of multi-robot
   \url{https://journals.sagepub.com/doi/full/10.5772/57313}
 \BIBentrySTDinterwordspacing
 
-\bibitem{statista2025ecommerce}
-{Statista}, ``E-commerce market data and statistics,'' 2025, global retail
-  e-commerce sales estimates.
-
 \bibitem{unctad2024digital}
-{UNCTAD}, ``Digital economy report 2024,'' 2024.
+{United Nations Conference on Trade and Development}, ``Digital economy report
+  2024,'' \url{https://unctad.org/publication/digital-economy-report-2024},
+  2024, accessed: Jul. 10, 2026.
 
 \bibitem{bartholdi2019warehouse}
 \BIBentryALTinterwordspacing
@@ -170,19 +173,30 @@ J.~J. Bartholdi, III and S.~T. Hackman, \emph{Warehouse \& Distribution
 \BIBentrySTDinterwordspacing
 
 \bibitem{dekoster2007design}
-R.~de~Koster, T.~Le-Duc, and K.~J. Roodbergen, ``Design and control of
+\BIBentryALTinterwordspacing
+R.~{de Koster}, T.~Le-Duc, and K.~J. Roodbergen, ``Design and control of
   warehouse order picking: A literature review,'' \emph{European Journal of
-  Operational Research}, vol. 182, no.~2, pp. 481--501, 2007.
+  Operational Research}, vol. 182, no.~2, pp. 481--501, 2007. [Online].
+  Available:
+  \url{https://www.sciencedirect.com/science/article/pii/S0377221706006473}
+\BIBentrySTDinterwordspacing
 
 \bibitem{boysen2019warehousing}
-N.~Boysen, R.~de~Koster, and F.~Weidinger, ``Warehousing in the e-commerce era:
-  A survey,'' \emph{European Journal of Operational Research}, vol. 277, no.~2,
-  pp. 396--411, 2019.
+\BIBentryALTinterwordspacing
+N.~Boysen, R.~{de Koster}, and F.~Weidinger, ``Warehousing in the e-commerce
+  era: A survey,'' \emph{European Journal of Operational Research}, vol. 277,
+  no.~2, pp. 396--411, 2019. [Online]. Available:
+  \url{https://www.sciencedirect.com/science/article/pii/S0377221718307185}
+\BIBentrySTDinterwordspacing
 
 \bibitem{barros2021rmfs}
-{\'I}.~R. d.~C. Barros and T.~P.~d. Nascimento, ``Robotic mobile fulfillment
-  systems: A survey on recent developments and research opportunities,''
-  \emph{Robotics and Autonomous Systems}, vol. 137, p. 103729, 2021.
+\BIBentryALTinterwordspacing
+Ítalo Renan~{da Costa Barros} and T.~P. Nascimento, ``Robotic mobile
+  fulfillment systems: A survey on recent developments and research
+  opportunities,'' \emph{Robotics and Autonomous Systems}, vol. 137, p. 103729,
+  2021. [Online]. Available:
+  \url{https://www.sciencedirect.com/science/article/pii/S0921889021000142}
+\BIBentrySTDinterwordspacing
 
 \bibitem{wurman2008coordinating}
 P.~R. Wurman, R.~D'Andrea, and M.~Mountz, ``Coordinating hundreds of
@@ -190,9 +204,12 @@ P.~R. Wurman, R.~D'Andrea, and M.~Mountz, ``Coordinating hundreds of
   vol.~29, no.~1, pp. 9--20, 2008.
 
 \bibitem{karam2026collaborationmrs}
+\BIBentryALTinterwordspacing
 R.~Karam, A.~A. Nguyen, R.~Lin, D.~R. Martin, D.~Morales, B.~A. Butler, and
   M.~Egerstedt, ``Collaboration in multi-robot systems: Taxonomy and survey
-  over frameworks for collaboration,'' 2026.
+  over frameworks for collaboration,'' 2026. [Online]. Available:
+  \url{https://arxiv.org/abs/2603.23898}
+\BIBentrySTDinterwordspacing
 
 \bibitem{papoudakis2021benchmarking}
 \BIBentryALTinterwordspacing
@@ -203,28 +220,33 @@ G.~Papoudakis, F.~Christianos, L.~Sch{\"a}fer, and S.~V. Albrecht,
 \BIBentrySTDinterwordspacing
 
 \bibitem{krnjaic2024warehouse}
-A.~Krnjaic, R.~D. Steleac, J.~D. Thomas, G.~Papoudakis, L.~Sch{\"a}fer,
-  A.~W.~K. To, K.-H. Lao, M.~Cubuktepe, M.~Haley, P.~B{\"o}rsting, and S.~V.
+A.~Krnjaic, R.~D. Steleac, J.~D. Thomas, G.~Papoudakis, L.~Schäfer, A.~W.
+  Keung~To, K.-H. Lao, M.~Cubuktepe, M.~Haley, P.~Börsting, and S.~V.
   Albrecht, ``Scalable multi-agent reinforcement learning for warehouse
   logistics with robotic and human co-workers,'' in \emph{2024 IEEE/RSJ
   International Conference on Intelligent Robots and Systems (IROS)}, 2024, pp.
   677--684.
 
 \bibitem{brockman2016gym}
+\BIBentryALTinterwordspacing
 G.~Brockman, V.~Cheung, L.~Pettersson, J.~Schneider, J.~Schulman, J.~Tang, and
-  W.~Zaremba, ``{OpenAI Gym},'' \emph{arXiv preprint arXiv:1606.01540}, 2016.
+  W.~Zaremba, ``Openai gym,'' 2016. [Online]. Available:
+  \url{https://arxiv.org/abs/1606.01540}
+\BIBentrySTDinterwordspacing
 
 \bibitem{towers2024gymnasium}
-M.~Towers, A.~Kwiatkowski, J.~Terry, J.~U. Balis, G.~De~Cola, T.~Deleu,
-  M.~Goul{\~a}o, A.~Kallinteris, M.~Krimmel, A.~KG, R.~Perez-Vicente,
-  A.~Pierr{\'e}, S.~Schulhoff, J.~J. Tai, A.~T.~J. Shen, and O.~G. Younis,
-  ``Gymnasium: A standard interface for reinforcement learning environments,''
-  \emph{arXiv preprint arXiv:2407.17032}, 2024.
+\BIBentryALTinterwordspacing
+M.~Towers, A.~Kwiatkowski, J.~Terry, J.~U. Balis, G.~D. Cola, T.~Deleu,
+  M.~Goulão, A.~Kallinteris, M.~Krimmel, A.~KG, R.~Perez-Vicente, A.~Pierré,
+  S.~Schulhoff, J.~J. Tai, H.~Tan, and O.~G. Younis, ``Gymnasium: A standard
+  interface for reinforcement learning environments,'' 2025. [Online].
+  Available: \url{https://arxiv.org/abs/2407.17032}
+\BIBentrySTDinterwordspacing
 
 \bibitem{gerkey2004formal}
-B.~P. Gerkey and M.~J. Matari{\'c}, ``A formal analysis and taxonomy of task
-  allocation in multi-robot systems,'' \emph{The International Journal of
-  Robotics Research}, vol.~23, no.~9, pp. 939--954, 2004.
+B.~Gerkey and M.~Mataric, ``A formal analysis and taxonomy of task allocation
+  in multi-robot systems,'' \emph{I. J. Robotic Res.}, vol.~23, pp. 939--954,
+  09 2004.
 
 \bibitem{sharon2015conflict}
 G.~Sharon, R.~Stern, A.~Felner, and N.~R. Sturtevant, ``Conflict-based search
@@ -232,20 +254,24 @@ G.~Sharon, R.~Stern, A.~Felner, and N.~R. Sturtevant, ``Conflict-based search
   219, pp. 40--66, 2015.
 
 \bibitem{ahn2022do}
+\BIBentryALTinterwordspacing
 M.~Ahn, A.~Brohan, N.~Brown, Y.~Chebotar, O.~Cortes, B.~David, C.~Finn, C.~Fu,
   K.~Gopalakrishnan, K.~Hausman, A.~Herzog, D.~Ho, J.~Hsu, J.~Ibarz, B.~Ichter,
-  A.~Irpan, E.~Jang, R.~Jauregui~Ruano, K.~Jeffrey, S.~Jesmonth, N.~Joshi,
+  A.~Irpan, E.~Jang, R.~J. Ruano, K.~Jeffrey, S.~Jesmonth, N.~J. Joshi,
   R.~Julian, D.~Kalashnikov, Y.~Kuang, K.-H. Lee, S.~Levine, Y.~Lu, L.~Luu,
   C.~Parada, P.~Pastor, J.~Quiambao, K.~Rao, J.~Rettinghouse, D.~Reyes,
   P.~Sermanet, N.~Sievers, C.~Tan, A.~Toshev, V.~Vanhoucke, F.~Xia, T.~Xiao,
   P.~Xu, S.~Xu, M.~Yan, and A.~Zeng, ``Do as i can, not as i say: Grounding
-  language in robotic affordances,'' \emph{arXiv preprint arXiv:2204.01691},
-  2022.
+  language in robotic affordances,'' 2022. [Online]. Available:
+  \url{https://arxiv.org/abs/2204.01691}
+\BIBentrySTDinterwordspacing
 
 \bibitem{liang2022code}
+\BIBentryALTinterwordspacing
 J.~Liang, W.~Huang, F.~Xia, P.~Xu, K.~Hausman, B.~Ichter, P.~Florence, and
   A.~Zeng, ``Code as policies: Language model programs for embodied control,''
-  \emph{arXiv preprint arXiv:2209.07753}, 2022.
+  2023. [Online]. Available: \url{https://arxiv.org/abs/2209.07753}
+\BIBentrySTDinterwordspacing
 
 \bibitem{mandi2024roco}
 \BIBentryALTinterwordspacing
@@ -256,14 +282,20 @@ Z.~Mandi, S.~Jain, and S.~Song, ``Roco: Dialectic multi-robot collaboration
 \BIBentrySTDinterwordspacing
 
 \bibitem{sahoo2024promptsurvey}
-P.~Sahoo, A.~K. Singh, S.~Saha, V.~Jain, S.~Mondal, and A.~K. Chadha, ``A
+\BIBentryALTinterwordspacing
+P.~Sahoo, A.~K. Singh, S.~Saha, V.~Jain, S.~Mondal, and A.~Chadha, ``A
   systematic survey of prompt engineering in large language models: Techniques
-  and applications,'' \emph{ACM Computing Surveys}, 2024.
+  and applications,'' 2025. [Online]. Available:
+  \url{https://arxiv.org/abs/2402.07927}
+\BIBentrySTDinterwordspacing
 
 \bibitem{tam2024letmespeak}
-Z.~R. Tam, A.~H. Kargaran, D.~Khyani, T.~Gerstenberg, and H.~K{\"a}mper, ``Let
-  me speak freely? a study on the impact of format restrictions on performance
-  of large language models,'' \emph{arXiv preprint arXiv:2408.02442}, 2024.
+\BIBentryALTinterwordspacing
+Z.~R. Tam, C.-K. Wu, Y.-L. Tsai, C.-Y. Lin, H.~yi~Lee, and Y.-N. Chen, ``Let me
+  speak freely? a study on the impact of format restrictions on performance of
+  large language models,'' 2024. [Online]. Available:
+  \url{https://arxiv.org/abs/2408.02442}
+\BIBentrySTDinterwordspacing
 
 \bibitem{niu2025rewardshaping}
 X.~Niu and D.~G. Broo, ``Investigating symbiosis in robotic ecosystems: A case
@@ -285,65 +317,106 @@ P.~Li, Z.~An, S.~Abrar, and L.~Zhou, ``Large language models for multi-robot
 \BIBentrySTDinterwordspacing
 
 \bibitem{huang2022innermonologue}
-W.~Huang, F.~Xia, T.~Xiao, H.~Chan, J.~Liang, P.~Florence, A.~Zeng, J.~Tompson,
-  I.~Mordatch, Y.~Chebotar \emph{et~al.}, ``Inner monologue: Embodied reasoning
-  through planning with language models,'' \emph{arXiv preprint
-  arXiv:2207.05608}, 2022.
-
-\bibitem{singh2023progprompt}
-I.~Singh, V.~Blukis, A.~Mousavian, A.~Goyal, D.~Xu, J.~Tremblay, D.~Fox,
-  J.~Thomason, and A.~Garg, ``Progprompt: Generating situated robot task plans
-  using large language models,'' in \emph{Proceedings of the IEEE International
-  Conference on Robotics and Automation (ICRA)}, 2023.
-
-\bibitem{cao1997cooperative}
-Y.~U. Cao, A.~S. Fukunaga, and A.~B. Kahng, ``Cooperative mobile robotics:
-  Antecedents and directions,'' \emph{Autonomous Robots}, vol.~4, no.~1, pp.
-  7--27, 1997.
-
-\bibitem{arai2002advances}
-T.~Arai, E.~Pagello, and L.~E. Parker, ``Editorial: Advances in multi-robot
-  systems,'' \emph{IEEE Transactions on Robotics and Automation}, vol.~18,
-  no.~5, pp. 655--661, 2002.
-
-\bibitem{sebok2024cooperativehetero}
 \BIBentryALTinterwordspacing
-M.~A. Sebok and H.~G. Tanner, ``Cooperative planning for physically interacting
-  heterogeneous robots,'' \emph{Frontiers in Robotics and AI}, vol.~11, p.
-  1172105, 2024. [Online]. Available:
-  \url{https://www.frontiersin.org/articles/10.3389/frobt.2024.1172105/full}
+W.~Huang, F.~Xia, T.~Xiao, H.~Chan, J.~Liang, P.~Florence, A.~Zeng, J.~Tompson,
+  I.~Mordatch, Y.~Chebotar, P.~Sermanet, N.~Brown, T.~Jackson, L.~Luu,
+  S.~Levine, K.~Hausman, and B.~Ichter, ``Inner monologue: Embodied reasoning
+  through planning with language models,'' 2022. [Online]. Available:
+  \url{https://arxiv.org/abs/2207.05608}
 \BIBentrySTDinterwordspacing
 
-\bibitem{zhang2013coordinatingmarl}
+\bibitem{singh2023progprompt}
 \BIBentryALTinterwordspacing
-C.~Zhang and V.~Lesser, ``Coordinating multi-agent reinforcement learning with
-  limited communication,'' in \emph{Proceedings of the 12th International
-  Conference on Autonomous Agents and Multiagent Systems (AAMAS)}, 2013,
-  {accessed} 2026-02-26. [Online]. Available:
-  \url{https://www.ifaamas.org/Proceedings/aamas2013/docs/p1101.pdf}
+I.~Singh, V.~Blukis, A.~Mousavian, A.~Goyal, D.~Xu, J.~Tremblay, D.~Fox,
+  J.~Thomason, and A.~Garg, ``Progprompt: Generating situated robot task plans
+  using large language models,'' 2022. [Online]. Available:
+  \url{https://arxiv.org/abs/2209.11302}
+\BIBentrySTDinterwordspacing
+
+\bibitem{liu2023bolaa}
+\BIBentryALTinterwordspacing
+Z.~Liu, W.~Yao, J.~Zhang, L.~Xue, S.~Heinecke, R.~Murthy, Y.~Feng, Z.~Chen,
+  J.~C. Niebles, D.~Arpit, R.~Xu, P.~Mui, H.~Wang, C.~Xiong, and S.~Savarese,
+  ``{BOLAA}: Benchmarking and orchestrating {LLM}-augmented autonomous
+  agents,'' \emph{arXiv preprint arXiv:2308.05960}, 2023. [Online]. Available:
+  \url{https://arxiv.org/abs/2308.05960}
 \BIBentrySTDinterwordspacing
 
 \bibitem{bhat2025closedloopgrounding}
-V.~Bhat, A.~U. Kaypak, P.~Krishnamurthy, R.~Karri, and F.~Khorrami, ``Grounding
-  large language models for robot task planning using closed-loop state
-  feedback,'' 2025, received: 27 April 2025; revised: 10 October 2025;
-  accepted: 17 October 2025.
-
-\bibitem{huang2025collabmrtp}
 \BIBentryALTinterwordspacing
-Y.~Huang, ``Collaborative multi-robot task planning using large language
-  models,'' Master's thesis, Uppsala University, 2025, {accessed} 2026-02-26.
-  [Online]. Available:
-  \url{https://uu.diva-portal.org/smash/get/diva2:2023514/FULLTEXT01.pdf}
+V.~Bhat, A.~U. Kaypak, P.~Krishnamurthy, R.~Karri, and F.~Khorrami, ``Grounding
+  large language models for robot task planning using closed‐loop state
+  feedback,'' \emph{Advanced Robotics Research}, Nov. 2025. [Online].
+  Available: \url{http://dx.doi.org/10.1002/adrr.202500072}
 \BIBentrySTDinterwordspacing
 
 \bibitem{dawane2026onddeviceslm}
 A.~Dawane, ``On-device small language model inference acceleration for
   real-time robotics: A survey,'' in \emph{2026 IEEE 16th Annual Computing and
-  Communication Workshop and Conference (CCWC)}, 2026.
+  Communication Workshop and Conference (CCWC)}, 2026, pp. 669--675.
 
 \bibitem{xiao2026probingprompt}
+\BIBentryALTinterwordspacing
 L.~Xiao and T.~Yamasaki, ``Probing prompt design for socially compliant robot
-  navigation with vision-language models,'' 2026, {accessed} 2026-02-26.
+  navigation with vision language models,'' 2026. [Online]. Available:
+  \url{https://arxiv.org/abs/2601.14622}
+\BIBentrySTDinterwordspacing
+
+\bibitem{meta2024llama32}
+{Meta AI}, ``{Llama 3.2}: Revolutionizing edge {AI} and vision with open,
+  customizable models,''
+  \url{https://ai.meta.com/blog/llama-3-2-connect-2024-vision-edge-mobile-devices/},
+  2024, {accessed} 2026-07-10.
+
+\bibitem{jiang2023mistral7b}
+\BIBentryALTinterwordspacing
+A.~Q. Jiang, A.~Sablayrolles, A.~Mensch, C.~Bamford, D.~S. Chaplot, D.~de~las
+  Casas, F.~Bressand, G.~Lengyel, G.~Lample, L.~Saulnier, L.~R. Lavaud, M.-A.
+  Lachaux, P.~Stock, T.~Le~Scao, T.~Lavril, T.~Wang, T.~Lacroix, and
+  W.~El~Sayed, ``{Mistral 7B},'' \emph{arXiv preprint arXiv:2310.06825}, 2023.
+  [Online]. Available: \url{https://arxiv.org/abs/2310.06825}
+\BIBentrySTDinterwordspacing
+
+\bibitem{gemmateam2025gemma3}
+\BIBentryALTinterwordspacing
+{Gemma Team}, A.~Kamath, J.~Ferret, S.~Pathak, N.~Vieillard, R.~Merhej,
+  S.~Perrin, T.~Matejovicova, A.~Ram{\'e}, M.~Rivi{\`e}re \emph{et~al.},
+  ``{Gemma 3} technical report,'' \emph{arXiv preprint arXiv:2503.19786}, 2025.
+  [Online]. Available: \url{https://arxiv.org/abs/2503.19786}
+\BIBentrySTDinterwordspacing
+
+\bibitem{abdin2024phi4}
+\BIBentryALTinterwordspacing
+M.~Abdin, J.~Aneja, H.~Behl, S.~Bubeck, R.~Eldan, S.~Gunasekar, M.~Harrison,
+  R.~J. Hewett, M.~Javaheripi, P.~Kauffmann \emph{et~al.}, ``{Phi-4} technical
+  report,'' \emph{arXiv preprint arXiv:2412.08905}, 2024. [Online]. Available:
+  \url{https://arxiv.org/abs/2412.08905}
+\BIBentrySTDinterwordspacing
+
+\bibitem{yang2024qwen25}
+\BIBentryALTinterwordspacing
+A.~Yang, B.~Yang, B.~Zhang, B.~Hui, B.~Zheng, B.~Yu, C.~Li, D.~Liu, F.~Huang,
+  H.~Wei \emph{et~al.}, ``{Qwen2.5} technical report,'' \emph{arXiv preprint
+  arXiv:2412.15115}, 2024. [Online]. Available:
+  \url{https://arxiv.org/abs/2412.15115}
+\BIBentrySTDinterwordspacing
+
+\bibitem{zhao2023explicitplanning}
+\BIBentryALTinterwordspacing
+H.~Zhao, K.~Wang, M.~Yu, and H.~Mei, ``Explicit planning helps language models
+  in logical reasoning,'' in \emph{Proceedings of the 2023 Conference on
+  Empirical Methods in Natural Language Processing}, 2023, pp.
+  11\,155--11\,173. [Online]. Available:
+  \url{https://aclanthology.org/2023.emnlp-main.688/}
+\BIBentrySTDinterwordspacing
+
+\bibitem{valmeekam2023planning}
+\BIBentryALTinterwordspacing
+K.~Valmeekam, M.~Marquez, S.~Sreedharan, and S.~Kambhampati, ``On the planning
+  abilities of large language models: A critical investigation,'' in
+  \emph{Advances in Neural Information Processing Systems}, vol.~36, 2023.
+  [Online]. Available:
+  \url{https://proceedings.neurips.cc/paper_files/paper/2023/hash/efb2072a358cefb75886a315a6fcf880-Abstract-Conference.html}
+\BIBentrySTDinterwordspacing
 
 \end{thebibliography}

@@ -1,0 +1,10 @@
+Although the present work is simulation-based, it raises practical issues that remain relevant for real multi-robot deployments.
+The primary ethical concern is safety and reliability: generated decisions may be infeasible, unstable, or unproductive if they are not constrained by system-side checks.
+The studied control loop executes only grounded action identifiers after candidate shaping, feasibility validation, and fallback handling.
+Unsafe or clearly invalid actions are filtered before execution.
+The logging of prompts, parsed outputs, executed actions, and observed step consequences also improves traceability, which is important when analyzing failures such as long no-delivery tails, stale waiting loops, or battery-related breakdowns.
+
+From a sustainability perspective, the main trade-off is between model capability and computational cost.
+Larger language models generally require more inference time and compute, while smaller models may require stronger prompt structure and validation to remain effective.
+This thesis therefore treats call efficiency, unnecessary replanning, and coordination overhead as experimental outcomes with practical relevance.
+Even with safeguards, limited simulator initializations, limited scenario coverage, and the absence of physical deployment still bound the scope of the reported results.

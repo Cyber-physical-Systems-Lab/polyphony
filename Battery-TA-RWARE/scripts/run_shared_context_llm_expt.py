@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
-from urllib import error, request
+from urllib import error, parse, request
 
 import gymnasium as gym
 import numpy as np
@@ -296,6 +296,58 @@ def safe_valid_action_masks(env) -> np.ndarray:
         return np.ones((env.num_agents, env.action_size), dtype=np.float64)
 
 
+MODEL_MAX_CONTEXT_CACHE: Dict[str, int] = {}
+
+
+def _ollama_show_url(ollama_url: str) -> str:
+    parsed = parse.urlsplit(ollama_url)
+    path = parsed.path or ""
+    prefix = path.split("/api/", 1)[0] if "/api/" in path else path.rstrip("/")
+    show_path = f"{prefix}/api/show" if prefix else "/api/show"
+    return parse.urlunsplit((parsed.scheme, parsed.netloc, show_path, "", ""))
+
+
+def _fetch_model_max_context(model: str, ollama_url: str, timeout_s: int) -> int:
+    cached = MODEL_MAX_CONTEXT_CACHE.get(model)
+    if cached is not None:
+        return cached
+    show_url = _ollama_show_url(ollama_url)
+    req = request.Request(
+        show_url,
+        data=json.dumps({"name": model}).encode("utf-8"),
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    try:
+        with request.urlopen(req, timeout=timeout_s) as resp:
+            body = json.loads(resp.read().decode("utf-8"))
+        model_info = body.get("model_info", {}) if isinstance(body, dict) else {}
+        priority_keys = ("llama.context_length", "general.context_length", "context_length", "n_ctx_train")
+        candidates: List[int] = []
+        for key, value in model_info.items():
+            if key not in priority_keys and not key.endswith(".context_length"):
+                continue
+            try:
+                context_length = int(value)
+            except (TypeError, ValueError):
+                continue
+            if context_length > 0:
+                candidates.append(context_length)
+        if candidates:
+            max_context = max(candidates)
+            MODEL_MAX_CONTEXT_CACHE[model] = max_context
+            return max_context
+    except Exception as exc:
+        raise RuntimeError(
+            f"Could not read the maximum context length for {model!r} from {show_url}; "
+            "refusing to let Ollama fall back to its default context window"
+        ) from exc
+    raise RuntimeError(
+        f"Ollama returned no positive context_length for {model!r} from {show_url}; "
+        "refusing to let Ollama fall back to its default context window"
+    )
+
+
 def query_ollama_text(
     model: str,
     ollama_url: str,
@@ -314,6 +366,7 @@ def query_ollama_text(
         "options": {
             "temperature": temperature,
             "num_predict": num_predict,
+            "num_ctx": _fetch_model_max_context(model, ollama_url, timeout_s),
         },
     }
     if prompt_format == "json":
@@ -964,6 +1017,8 @@ def main() -> int:
         log(f"Pulling model={model} class={model_class}", model_log)
         pull_model(model)
         try:
+            max_context = _fetch_model_max_context(model, args.ollama_url, args.request_timeout_s)
+            log(f"Using explicit Ollama num_ctx={max_context} (model maximum) for model={model}", model_log)
             for scenario_idx, scenario in enumerate(SCENARIOS):
                 if only_scenario_idx is not None and scenario_idx != only_scenario_idx:
                     continue

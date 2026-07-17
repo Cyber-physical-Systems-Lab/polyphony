@@ -8,41 +8,33 @@
 \contentsline {subsection}{\numberline {1.2}Contributions}{10}{subsection.1.2}%
 \contentsline {subsection}{\numberline {1.3}Report Outline}{11}{subsection.1.3}%
 \contentsline {section}{\numberline {2}Background and Related Work}{12}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Multi-Robot Task Planning Approaches}{12}{subsection.2.1}%
-\contentsline {subsection}{\numberline {2.2}Multi-Robot Systems and Coordination}{16}{subsection.2.2}%
-\contentsline {subsection}{\numberline {2.3}Warehouse Task Assignment Environments}{17}{subsection.2.3}%
-\contentsline {subsection}{\numberline {2.4}Language-Model-Based Planning and Grounding}{18}{subsection.2.4}%
-\contentsline {subsection}{\numberline {2.5}Why Study Model Size and Prompt Design?}{18}{subsection.2.5}%
-\contentsline {section}{\numberline {3}Methodology}{20}{section.3}%
-\contentsline {subsection}{\numberline {3.1}Overview}{20}{subsection.3.1}%
-\contentsline {paragraph}{What is fixed and what is varied.}{20}{section*.6}%
-\contentsline {paragraph}{Interpretation and controls.}{20}{section*.7}%
-\contentsline {subsection}{\numberline {3.2}Environment: Battery-TA-RWARE}{21}{subsection.3.2}%
-\contentsline {subsection}{\numberline {3.3}Language-Model Control Loop}{22}{subsection.3.3}%
-\contentsline {subsection}{\numberline {3.4}Experiment Design and Comparison Axes}{24}{subsection.3.4}%
-\contentsline {subsection}{\numberline {3.5}Scenarios, Models, and Metrics}{25}{subsection.3.5}%
-\contentsline {subsection}{\numberline {3.6}Experimental Protocol}{26}{subsection.3.6}%
-\contentsline {subsection}{\numberline {3.7}Delimitations}{27}{subsection.3.7}%
-\contentsline {subsection}{\numberline {3.8}Ethical and Sustainability Considerations}{27}{subsection.3.8}%
-\contentsline {section}{\numberline {4}Preliminary Results and Discussion}{29}{section.4}%
-\contentsline {subsection}{\numberline {4.1}Result Scope and Objective Progression}{29}{subsection.4.1}%
-\contentsline {subsection}{\numberline {4.2}Objective 1: Shelf-Delivery Experiments}{29}{subsection.4.2}%
-\contentsline {subsubsection}{\numberline {4.2.1}Planning architecture}{29}{subsubsection.4.2.1}%
-\contentsline {subsubsection}{\numberline {4.2.2}Prompt representation}{30}{subsubsection.4.2.2}%
-\contentsline {subsection}{\numberline {4.3}Objective 2: Call-Aware Shelf-Delivery Experiments}{30}{subsection.4.3}%
-\contentsline {subsubsection}{\numberline {4.3.1}Prompt representation}{31}{subsubsection.4.3.1}%
-\contentsline {subsubsection}{\numberline {4.3.2}Adaptation to the changed objective}{31}{subsubsection.4.3.2}%
-\contentsline {subsubsection}{\numberline {4.3.3}Model size}{31}{subsubsection.4.3.3}%
-\contentsline {subsubsection}{\numberline {4.3.4}Call-efficiency outcome}{32}{subsubsection.4.3.4}%
-\contentsline {subsection}{\numberline {4.4}Objective 3: Battery-Aware Objective}{32}{subsection.4.4}%
-\contentsline {subsection}{\numberline {4.5}Discussion}{32}{subsection.4.5}%
-\contentsline {subsubsection}{\numberline {4.5.1}RQ1: Model size}{32}{subsubsection.4.5.1}%
-\contentsline {subsubsection}{\numberline {4.5.2}RQ2: Planning architecture}{32}{subsubsection.4.5.2}%
-\contentsline {subsubsection}{\numberline {4.5.3}RQ3: Prompt representation}{32}{subsubsection.4.5.3}%
-\contentsline {paragraph}{}{33}{section*.8}%
-\contentsline {section}{\numberline {5}Conclusions and Future Work}{34}{section.5}%
-\contentsline {subsection}{\numberline {5.1}Future Work}{34}{subsection.5.1}%
-\contentsline {section}{\numberline {A}Appendix}{42}{appendix.A}%
-\contentsline {subsection}{\numberline {A.1}Reproducibility: Running the Controllers}{42}{subsection.A.1}%
-\contentsline {subsection}{\numberline {A.2}Prompt Excerpt (Illustrative)}{43}{subsection.A.2}%
-\contentsline {subsection}{\numberline {A.3}Metric Definitions}{43}{subsection.A.3}%
+\contentsline {section}{\numberline {3}Methodology}{17}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Overview}{17}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Environment: Battery-TA-RWARE}{17}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Language-Model Control Loop}{19}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Prompt Construction and Experiment Design}{22}{subsection.3.4}%
+\contentsline {paragraph}{Simulator-to-language-model interface.}{23}{section*.6}%
+\contentsline {paragraph}{Distance and candidate construction.}{24}{section*.7}%
+\contentsline {paragraph}{Prompt structure.}{24}{section*.8}%
+\contentsline {paragraph}{Natural-language and JSON prompt variants.}{25}{section*.9}%
+\contentsline {paragraph}{Centralized and decentralized shared-context planning.}{25}{section*.10}%
+\contentsline {paragraph}{Output constraints and fallback behavior.}{26}{section*.12}%
+\contentsline {paragraph}{Environment modifications supporting prompting and replanning.}{27}{section*.13}%
+\contentsline {subsection}{\numberline {3.5}Scenarios, Models, and Metrics}{28}{subsection.3.5}%
+\contentsline {subsection}{\numberline {3.6}Experimental Protocol}{31}{subsection.3.6}%
+\contentsline {subsection}{\numberline {3.7}Delimitations}{32}{subsection.3.7}%
+\contentsline {section}{\numberline {4}Results and Discussion}{33}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Experimental Data Overview}{33}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Effect of Prompt Representation}{33}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Effect of Planning Architecture}{35}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Effect of Model Choice and Scenario Complexity}{38}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Model Adaptability to Objectives}{38}{subsection.4.5}%
+\contentsline {subsection}{\numberline {4.6}Summary of Findings}{41}{subsection.4.6}%
+\contentsline {section}{\numberline {5}Ethics and Sustainability}{42}{section.5}%
+\contentsline {section}{\numberline {6}Conclusions and Future Work}{43}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Future Work}{43}{subsection.6.1}%
+\contentsline {section}{\numberline {A}Appendix}{52}{appendix.A}%
+\contentsline {subsection}{\numberline {A.1}Reproducibility: Experiment Runners}{52}{subsection.A.1}%
+\contentsline {subsection}{\numberline {A.2}Result Directories}{53}{subsection.A.2}%
+\contentsline {subsection}{\numberline {A.3}Prompt Excerpt}{54}{subsection.A.3}%
+\contentsline {subsection}{\numberline {A.4}Run Summary Fields}{55}{subsection.A.4}%

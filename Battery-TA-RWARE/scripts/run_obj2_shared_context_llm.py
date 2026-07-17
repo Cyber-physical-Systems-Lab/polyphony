@@ -491,7 +491,7 @@ def _ollama_show_url(ollama_url: str) -> str:
     return parse.urlunsplit((parsed.scheme, parsed.netloc, show_path, "", ""))
 
 
-def _fetch_model_max_context(model: str, ollama_url: str, timeout_s: int) -> Optional[int]:
+def _fetch_model_max_context(model: str, ollama_url: str, timeout_s: int) -> int:
     cached = MODEL_MAX_CONTEXT_CACHE.get(model)
     if cached is not None:
         return cached
@@ -506,22 +506,46 @@ def _fetch_model_max_context(model: str, ollama_url: str, timeout_s: int) -> Opt
         with request.urlopen(req, timeout=timeout_s) as resp:
             body = json.loads(resp.read().decode("utf-8"))
         model_info = body.get("model_info", {}) if isinstance(body, dict) else {}
-        for key in (
+        priority_keys = (
             "llama.context_length",
             "general.context_length",
             "context_length",
             "n_ctx_train",
-        ):
+        )
+        for key in priority_keys:
             value = model_info.get(key)
             if value is None:
                 continue
-            max_ctx = int(value)
+            try:
+                max_ctx = int(value)
+            except (TypeError, ValueError):
+                continue
             if max_ctx > 0:
                 MODEL_MAX_CONTEXT_CACHE[model] = max_ctx
                 return max_ctx
-    except Exception:
-        return None
-    return None
+        family_contexts: List[int] = []
+        for key, value in model_info.items():
+            if key in priority_keys or not key.endswith(".context_length"):
+                continue
+            try:
+                max_ctx = int(value)
+            except (TypeError, ValueError):
+                continue
+            if max_ctx > 0:
+                family_contexts.append(max_ctx)
+        if family_contexts:
+            max_ctx = max(family_contexts)
+            MODEL_MAX_CONTEXT_CACHE[model] = max_ctx
+            return max_ctx
+    except Exception as exc:
+        raise RuntimeError(
+            f"Could not read the maximum context length for {model!r} from {show_url}; "
+            "refusing to let Ollama fall back to its default context window"
+        ) from exc
+    raise RuntimeError(
+        f"Ollama returned no positive context_length for {model!r} from {show_url}; "
+        "refusing to let Ollama fall back to its default context window"
+    )
 
 
 def query_ollama_text(
@@ -540,8 +564,7 @@ def query_ollama_text(
         "num_predict": num_predict,
     }
     max_context = _fetch_model_max_context(model=model, ollama_url=ollama_url, timeout_s=timeout_s)
-    if max_context is not None:
-        options["num_ctx"] = max_context
+    options["num_ctx"] = max_context
     payload = {
         "model": model,
         "prompt": prompt,
@@ -4000,6 +4023,8 @@ def main() -> int:
         log(f"Pulling model={model} class={model_class}", model_log)
         pull_model(model)
         try:
+            max_context = _fetch_model_max_context(model, args.ollama_url, args.request_timeout_s)
+            log(f"Using explicit Ollama num_ctx={max_context} (model maximum) for model={model}", model_log)
             for scenario_idx, scenario in enumerate(SCENARIOS):
                 if only_scenario_idx is not None and scenario_idx != only_scenario_idx:
                     continue

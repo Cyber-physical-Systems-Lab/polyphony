@@ -29,8 +29,7 @@ In this thesis, \emph{coordination} refers to arranging actions, timing, informa
 A particularly important class of multi-agent systems is the multi-robot system (MRS), where the agents are physical robots operating within a shared environment. Multi-robot systems have been studied in domains such as manufacturing, logistics, exploration, transportation, and search-and-rescue operations~\cite{yan2013mrscoordination}. As in human teams, effective performance often depends on the capabilities of individual agents and their ability to coordinate and collaborate with one another.
 
 
-Multi-robot systems appear in many domains, including manufacturing, transportation, agriculture, exploration, and logistics. Among these, warehouse logistics has received particular attention due to the rapid growth of e-commerce and the increasing demand for fast order fulfilment. According to recent estimates, global retail e-commerce sales exceeded USD 6 trillion in 2024 and continue to grow steadily, while e-commerce activity now represents a significant share of global retail transactions~\cite{statista2025ecommerce,unctad2024digital}. This growth places substantial pressure on warehouse operations, fulfilment networks, and inventory management systems. As a result, improving warehouse efficiency has become both an important industrial objective and an active area of research.
-
+Multi-robot systems appear in many domains, including manufacturing, transportation, agriculture, exploration, and logistics. Among these, warehouse logistics has received particular attention due to the rapid growth of e-commerce and the increasing demand for fast order fulfilment. Global e-commerce continues to expand and constitutes an increasingly important component of the digital economy, placing substantial pressure on warehouse operations, fulfilment networks, and inventory management systems~\cite{unctad2024digital}. As a result, improving warehouse efficiency has become both an important industrial objective and an active area of research.
 Warehouse environments are also particularly relevant from a multi-agent systems perspective. Fulfilling customer orders requires the interaction of multiple resources, including storage locations, transportation systems, workstations, inventory-management processes, and, increasingly, autonomous robots. These resources operate under shared constraints and must be coordinated to ensure efficient order fulfilment, making warehouse logistics a practical and representative domain for studying multi-agent and multi-robot decision-making~\cite{bartholdi2019warehouse}.
 
 Consider a customer placing an online order. The requested item may be stored on a shelf among thousands of products distributed throughout a warehouse. To fulfil the order, the item must be located, retrieved from storage, transported to a picking or packing area, prepared for shipment, and eventually dispatched for delivery. Throughout this process, multiple resources must interact efficiently to ensure that the correct item reaches the customer on time~\cite{bartholdi2019warehouse}.
@@ -118,12 +117,11 @@ The thesis is guided by the following main research question:
 To investigate this question systematically, the study examines the influence of three design factors: language-model size, planning architecture, and prompt representation. The following sub-questions are considered:
 
 \begin{enumerate}
-\item \textbf{RQ1 (Model Size):} How does language-model size affect collaborative task performance in a constrained warehouse environment, measured through delivery throughput, language-model call efficiency, and observed failure behaviour?
+\item \textbf{RQ1 (Model Size):} How does language-model size affect collaborative task performance in a constrained warehouse environment?
 
-\item \textbf{RQ2 (Planning Architecture):} How do centralized planning and shared-context per-agent planning differ in their ability to support collaborative task performance, measured through delivery throughput, robustness across scenarios with varying collaboration demands, and the prevalence of non-productive or failed runs?
+\item \textbf{RQ2 (Planning Architecture):} How do centralized planning and shared-context per-agent planning differ in their ability to support collaborative task performance across scenarios with varying collaboration demands?
 
-\item \textbf{RQ3 (Prompt Representation):} How do natural-language and \gls{json}-based environment representations affect collaborative task performance, measured through delivery throughput, language-model call efficiency, and the consistency of valid and productive decisions?
-
+\item \textbf{RQ3 (Prompt Representation):} How do natural-language and \gls{json}-based environment representations affect collaborative task performance?
 \end{enumerate}
 
 The research questions are evaluated in a warehouse-inspired collaborative environment involving heterogeneous agents operating under shared constraints. Performance is assessed using delivery throughput, language-model call efficiency, failure behaviour, and scenario-specific robustness measures.

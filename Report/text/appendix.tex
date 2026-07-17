@@ -1,32 +1,35 @@
 \section{Appendix}
 \label{app:appendix}
 
-\subsection{Reproducibility: Running the Controllers}
+\subsection{Reproducibility: Experiment Runners}
 \label{app:repro}
-The experiments in this thesis are executed from the Battery-TA-RWARE repository in this workspace.
-Example commands:
+The reported experiments are executed from the Battery-TA-RWARE repository using the objective-family runners for centralized and shared-context planning.
+Earlier exploratory scripts are not part of the reported comparison.
+The examples below show the command structure used by the current protocol; the seed, prompt format, model subset, and result directory can be changed for a particular session.
 
-\begin{lstlisting}[caption=Run the basic per-agent language-model controller for one episode., label=listing:run_llm]
-python Battery-TA-RWARE/scripts/run_llm.py \
-  --env_id tarware-tiny-1agvs-1pickers-partialobs-chg-v1 \
-  --seed 0 \
-  --num_episodes 1 \
-  --model llama3.2:3b
-\end{lstlisting}
-
-\begin{lstlisting}[caption=Run the centralized shelf-delivery experiments., label=listing:run_centralized]
-python Battery-TA-RWARE/scripts/run_centralized_llm_experiments.py \
+\begin{lstlisting}[caption=Run Objective 1 with the shared-context planner., label=listing:run_obj1_shared]
+python Battery-TA-RWARE/scripts/run_obj1_shared_context_llm.py \
   --prompt_format language \
+  --max_steps 0 \
+  --max_busy_steps_for_replan 10 \
+  --max_inactivity_steps 500 \
+  --disable_support_needed_soon \
+  --find_path_agent_aware_always \
   --seed 0
 \end{lstlisting}
 
-\begin{lstlisting}[caption=Run the shared-context shelf-delivery experiments., label=listing:run_shared_context]
-python Battery-TA-RWARE/scripts/run_shared_context_llm_expt.py \
+\begin{lstlisting}[caption=Run Objective 1 with the centralized planner., label=listing:run_obj1_centralized]
+python Battery-TA-RWARE/scripts/run_obj1_centralized_llm.py \
   --prompt_format language \
+  --max_steps 0 \
+  --max_busy_steps_for_replan 10 \
+  --max_inactivity_steps 500 \
+  --disable_support_needed_soon \
+  --find_path_agent_aware_always \
   --seed 0
 \end{lstlisting}
 
-\begin{lstlisting}[caption=Run the Objective~2 shared-context call-aware experiments., label=listing:run_obj2]
+\begin{lstlisting}[caption=Run Objective 2 with the shared-context planner., label=listing:run_obj2_shared]
 python Battery-TA-RWARE/scripts/run_obj2_shared_context_llm.py \
   --prompt_format language \
   --max_steps 0 \
@@ -37,47 +40,119 @@ python Battery-TA-RWARE/scripts/run_obj2_shared_context_llm.py \
   --seed 0
 \end{lstlisting}
 
-\begin{lstlisting}[caption=Run the heuristic policy for one episode., label=listing:run_heuristic]
-python Battery-TA-RWARE/scripts/run_heuristic.py \
-  --env_id tarware-tiny-1agvs-1pickers-partialobs-chg-v1 \
-  --seed 0 \
-  --num_episodes 1
+\begin{lstlisting}[caption=Run Objective 2 with the centralized planner., label=listing:run_obj2_centralized]
+python Battery-TA-RWARE/scripts/run_obj2_centralized_llm.py \
+  --prompt_format language \
+  --max_steps 0 \
+  --max_busy_steps_for_replan 10 \
+  --max_inactivity_steps 500 \
+  --disable_support_needed_soon \
+  --find_path_agent_aware_always \
+  --seed 0
 \end{lstlisting}
 
-The main result folders discussed in the thesis are:
-\begin{itemize}
-    \item \nolinkurl{results/shelf/central_llm_experiments}: Objective~1, centralized planning.
-    \item \nolinkurl{results/shelf/shared_context_llm_experiments}: Objective~1, shared-context per-agent planning.
-    \item \nolinkurl{results/calls/shared_context}: Objective~2, shared-context per-agent planning with call-efficiency objective.
-    \item \nolinkurl{results/battery}: planned battery-oriented experiments (not yet populated with completed aggregate sessions at the time of writing).
-\end{itemize}
+\begin{lstlisting}[caption=Run Objective 3 with the shared-context planner., label=listing:run_obj3_shared]
+python Battery-TA-RWARE/scripts/run_obj3_shared_context_llm.py \
+  --prompt_format language \
+  --max_steps 0 \
+  --max_busy_steps_for_replan 10 \
+  --max_inactivity_steps 500 \
+  --disable_support_needed_soon \
+  --find_path_agent_aware_always \
+  --seed 0
+\end{lstlisting}
 
-\subsection{Prompt Excerpt (Illustrative)}
+\begin{lstlisting}[caption=Run Objective 3 with the centralized planner., label=listing:run_obj3_centralized]
+python Battery-TA-RWARE/scripts/run_obj3_centralized_llm.py \
+  --prompt_format language \
+  --max_steps 0 \
+  --max_busy_steps_for_replan 10 \
+  --max_inactivity_steps 500 \
+  --disable_support_needed_soon \
+  --find_path_agent_aware_always \
+  --seed 0
+\end{lstlisting}
+
+The same commands can be run with \nolinkurl{--prompt_format json} to execute the structured prompt variant.
+Objective 1 also supports \nolinkurl{--selected_models}.
+For Objectives 2 and 3, the corresponding single-model filter is \nolinkurl{--only_model}.
+The seed is logged for traceability.
+
+\subsection{Result Directories}
+\label{app:result_dirs}
+The objective-family runners write session outputs under the following default directories:
+\begin{itemize}
+    \item \nolinkurl{results/obj1_shared_context_llm_experiments}
+    \item \nolinkurl{results/obj1_centralized_llm_experiments}
+    \item \nolinkurl{results/obj2_shared_context_llm_experiments}
+    \item \nolinkurl{results/obj2_centralized_llm_experiments}
+    \item \nolinkurl{results/obj3_shared_context_llm_experiments}
+    \item \nolinkurl{results/obj3_centralized_llm_experiments}
+\end{itemize}
+Each session stores aggregate summaries together with per-run JSON summaries and detailed logs.
+The aggregate analysis uses the retained runs from these outputs and follows the protocol described in Section~\ref{sec:method_scenarios_models_metrics}.
+
+\subsection{Prompt Excerpt}
 \label{app:prompt_excerpt}
-The \gls{llm} is prompted with an explicit mapping from relevant state elements to discrete action identifiers.
-The exact prompt depends on the experiment family: centralized prompts describe all agents at once, while shared-context prompts describe one current agent together with selected global context.
-The full prompts are generated programmatically; the excerpt below illustrates the style (line breaks and ordering may vary):
+The full prompts are generated programmatically from the simulator state.
+The excerpt below is illustrative and shows the action-id grounding and output contract used by the natural-language shared-context prompt.
 
-\begin{lstlisting}[caption=Illustrative prompt excerpt., label=listing:prompt_excerpt]
-Current global state:
-- Requested shelves:
-  - Requested shelf 24 is at position (11,5). To go there, choose action id 50.
-  - Requested shelf 39 is at position (6,8). To go there, choose action id 29.
-...
-You are agent_0 (type=AGV).
-Choose exactly one action_id from the candidate list.
-Output format: action_id=<integer>
+\begin{lstlisting}[caption=Illustrative shared-context natural-language prompt excerpt., label=listing:prompt_excerpt]
+Objective:
+Maximize useful warehouse progress under the current objective.
+
+Current agent:
+agent_0, role=AGV, position=(8, 3), battery=72, carrying=None
+
+Shared context:
+- Requested shelf 24 is at position (11, 5), action id 50.
+- Picker support is required at shelf action id 50.
+- Charging station action id 7 is currently unoccupied.
+
+Candidate actions:
+- action=0, type=NOOP, distance=0, instruction=wait only if blocked
+- action=50, type=SHELF, distance=8, instruction=go to requested shelf
+- action=7, type=CHARGING, distance=11, instruction=use if battery is unsafe
+
+Output contract:
+Return only:
+Action: <integer action id>
+Steps: <integer hold duration>
+Reason: <short reason>
 \end{lstlisting}
 
-\subsection{Metric Definitions}
-\label{app:metrics}
-\begin{itemize}
-    \item \textbf{Total shelf deliveries:} number of requested shelves delivered to goal locations during an episode.
-    \item \textbf{Overall pick rate:} deliveries/hour computed as
-    \[
-        \text{pick\_rate} = \frac{\text{deliveries} \cdot 3600}{5 \cdot \text{episode\_steps}},
-    \]
-    where 5 steps/second is the environment's time scale used by the logging script.
-    \item \textbf{Clashes and stuck events:} environment-defined counts related to collision resolution and deadlock-like behaviour.
-    \item \textbf{Global episode return:} sum of environment rewards across all agents and time steps.
-\end{itemize}
+For the centralized planner, the prompt contains the shared warehouse context plus one planning block for each agent being replanned.
+The centralized response must contain one action for each listed agent.
+For the JSON prompt variant, the same information is represented as a structured object and the model is constrained to return a machine-readable action object or action list.
+
+\subsection{Run Summary Fields}
+\label{app:run_summary_fields}
+The aggregate CSV files use the following run-level fields:
+\begin{lstlisting}[caption=Run-summary CSV fields used for aggregation., label=listing:summary_fields]
+Objective
+Arch
+Prompt
+Model
+Scenario
+Seed
+Run
+llm_calls
+json_generation_failures
+llm_missing_or_invalid_actions
+charging_station_utilization_rate
+elapsed_seconds
+steps to first delivery
+total deliveries
+total steps
+deliveries_per_1000_steps
+llm_calls_per_1000_steps
+llm_calls_per_delivery
+invalid_action_rate
+json_failure_rate
+summary_json_path
+\end{lstlisting}
+
+The main analysis uses total deliveries, \gls{llm} calls, deliveries per 1000 \gls{llm} calls, and the descriptive battery-aware productivity score defined in Section~\ref{sec:method_scenarios_models_metrics}.
+The remaining fields are retained for filtering, traceability, and diagnostic interpretation.
+For example, parsing and invalid-action fields help identify whether poor delivery performance is associated with structured-output failures or invalid model actions.
+The \nolinkurl{summary_json_path} field links each aggregate row to the corresponding detailed run summary.

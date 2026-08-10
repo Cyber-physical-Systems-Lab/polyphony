@@ -1,7 +1,7 @@
 \subsection{Overview}
 This chapter describes the methodology used to evaluate language models as high-level planners in the Battery-TA-RWARE warehouse simulator. The evaluation focuses on collaborative decision-making for heterogeneous warehouse robots. The evaluated controller operates at the task-assignment level; low-level robot control, navigation, and motion planning are handled by the simulator.
 
-The study adopts a controlled comparative experimental design. The simulator, warehouse scenarios, action interface, execution pipeline, and evaluation metrics remain unchanged across the reported experiments. Only the factors under investigation are varied, allowing performance differences to be attributed to model size, planning architecture, prompt representation, and objective configuration.
+The study adopts a controlled comparative experimental design. The simulator, warehouse scenarios, action interface, execution pipeline, and evaluation metrics remain unchanged across the reported experiments. The comparisons examine performance differences among the selected model artefacts spanning different nominal parameter scales, planning architectures, prompt configurations, and objective configurations.
 
 The methodology begins with the Battery-TA-RWARE environment, followed by the language-model control pipeline, planning architectures, prompt representations, experimental scenarios, evaluation metrics, and experimental protocol.
 
@@ -34,7 +34,7 @@ Goal cells are placed along the lower part of the warehouse, charging stations a
 The request queue size for the tiny, small, and medium configurations used here is 20 shelves, which also gives the maximum number of deliveries possible in one run when all requested shelves are completed.
 
 Battery state is included in the simulator state and is logged during each run.
-Each agent is initialized with a battery level sampled between 20 and 100.
+Each agent is initialised with a battery level sampled between 20 and 100.
 Forward movement reduces battery by 1, and load or unload interactions reduce battery by 2.
 When an agent executes the charging action at a charging station, its battery increases by 5 per simulation step up to a maximum of 100.
 Battery values are clamped at zero.
@@ -55,11 +55,11 @@ Figure~\ref{fig:overall_component_architecture} shows the main components of the
 
 The \gls{llm} policy is implemented as a text-in / discrete-action-out controller:
 \begin{enumerate}
-    \item \textbf{State summarization:} extract salient features of the global state (requested shelves and their action ids, per-agent position/target/battery/carrying status, charging occupancy).
-    \item \textbf{Candidate action set:} compute a valid-action mask from the environment and derive the prompt-visible candidate set from those feasible actions. These candidates are presented as compact role-relevant action rows with action ids and guidance fields such as distance, tags, and charging-related instructions.
-    \item \textbf{Prompting:} generate either a shared-context prompt for one agent or a centralized prompt containing planning blocks for all agents being replanned. In both architectures, the selected prompt representation is either natural language or \gls{json}. Both representations describe the relevant agent roles, current state, and explicit mappings from requested objects to action ids.
+    \item \textbf{State summarisation:} extract salient features of the global state (requested shelves and their action IDs, per-agent position, target, battery, and carrying status, and charging occupancy).
+    \item \textbf{Candidate action set:} compute a valid-action mask from the environment and derive the prompt-visible candidate set from those feasible actions. These candidates are presented as compact role-relevant action rows with action IDs and guidance fields such as distance, tags, and charging-related instructions.
+    \item \textbf{Prompting:} generate either a shared-context prompt for one agent or a centralized prompt containing planning blocks for all agents being replanned. In both architectures, the selected prompt representation is either natural language or \gls{json}. Both representations describe the relevant agent roles, current state, and explicit mappings from requested objects to action IDs.
     \item \textbf{Querying:} send the constructed natural-language or \gls{json} prompt to a local inference server (Ollama) and obtain a text response. For \gls{json} prompts, the request uses the structured-output configuration described in Section~\ref{sec:method_prompt_construction}.
-    \item \textbf{Parsing:} parse one or more integer action ids, and optionally action hold durations, from the response. Natural-language responses are parsed from constrained text, whereas \gls{json} responses are parsed from the required object structure.
+    \item \textbf{Parsing:} parse one or more integer action IDs, and optionally action hold durations, from the response. Natural-language responses are parsed from constrained text, whereas \gls{json} responses are parsed from the required object structure.
     \item \textbf{Validation:} validate each parsed action id against the current valid-action mask. If a proposed action is missing or invalid, the controller discards it and falls back to an idle action for that agent when available; in the action-persistence setting, an invalid persisted action clears the hold and forces a new query.
     \item \textbf{Execution:} apply the validated action vector in the environment for one step, or hold accepted actions for multiple steps depending on configuration.
 \end{enumerate}
@@ -108,7 +108,7 @@ This matches a supervisory-control pattern in which the fleet is checked at regu
 
 The control loop uses two grounding and validation mechanisms:
 \begin{itemize}
-    \item \textbf{Grounding via action ids:} the \gls{llm} output interface is restricted to discrete action ids that are already defined by the environment.
+    \item \textbf{Grounding via action IDs:} the \gls{llm} output interface is restricted to discrete action IDs that are already defined by the environment.
     \item \textbf{Hard validation:} action masks enforce constraints such as invalid goals for picker agents and busy-state restrictions. Invalid \gls{llm} outputs are rejected before execution.
 \end{itemize}
 
@@ -118,15 +118,15 @@ The reported behaviour reflects the complete control framework: prompt design, m
 \label{sec:method_prompt_construction}
 Prompt construction defines the interface between Battery-TA-RWARE and the language model.
 The evaluated models are used without task-specific fine-tuning, so the prompt specifies the task objective, state abstraction, action vocabulary, role constraints, and response format required for high-level action selection.
-This use of prompting follows the general prompt-engineering view summarized by Sahoo et al.~\cite{sahoo2024promptsurvey}, in which prompts supply task-specific instructions and context while model parameters remain unchanged.
+This use of prompting follows the general prompt-engineering view summarised by Sahoo et al.~\cite{sahoo2024promptsurvey}, in which prompts supply task-specific instructions and context while model parameters remain unchanged.
 The taxonomy in that survey includes basic prompting methods, such as zero-shot and few-shot prompting, and more elaborate reasoning methods, such as chain-of-thought prompting, ReAct, self-refinement, retrieval-augmented generation, tree-of-thoughts, and graph-of-thoughts.
 Within this taxonomy, the implemented planner uses manual zero-shot instruction prompting together with structured output constraints.
 Role-specific \gls{agv} and Picker information is used as task grounding inside the prompt.
-This prompt design supports the comparative focus of the study: model size, coordination architecture, prompt representation, and objective wording are evaluated under a controlled action-selection interface.
+This prompt design supports the comparative focus of the study: selected models spanning different nominal parameter scales, coordination architecture, prompt configuration, and objective wording are evaluated under a controlled action-selection interface.
 
-The experiments are organized as a controlled comparison within the grounded language-model control loop described above.
+The experiments are organised as a controlled comparison within the grounded language-model control loop described above.
 Across the experiment families, the environment, discrete action space, validation layer, six-scenario set, local-inference setup, and metric extraction are kept consistent.
-The main factors that change are the model, coordination architecture, prompt representation, scenario, and objective statement.
+The main factors that change are the model, coordination architecture, prompt configuration, scenario, and objective statement.
 This structure is used to compare how different ways of using the \gls{llm} affect collaborative task performance under comparable conditions.
 
 \paragraph{Simulator-to-language-model interface.}
@@ -136,11 +136,12 @@ The language model selects integer action identifiers defined by the simulator.
 Path following, collision handling, battery updates, and load/unload mechanics are handled inside the environment.
 
 The raw simulator state is translated into a symbolic prompt representation before it is shown to the model.
-Action identifiers are categorized as \texttt{NOOP}, \texttt{GOAL}, \texttt{CHARGING}, or \texttt{SHELF}.
+Action identifiers are categorised as \texttt{NOOP}, \texttt{GOAL}, \texttt{CHARGING}, or \texttt{SHELF}.
 Requested shelves are rendered with shelf id, position, and corresponding action id.
 Agents are represented by role, position, current target, busy state, battery level, battery-need category, and carried-shelf state.
 Charging stations are represented by action id, position, and occupancy.
 For each candidate action, the prompt-visible row can include action id, action class, target position, estimated path distance, suggested hold duration, semantic tag, recommendation flag, and an instruction field indicating whether the action is currently allowed or should be avoided.
+Agent, shelf, and charging-station values are read from the current simulator state. Identifiers and hold durations are integers, positions are integer coordinate pairs, battery values and path distances are numeric, and busy, occupancy, and recommendation fields are Boolean. Battery-need categories, candidate rankings, suggested hold durations, semantic tags, and conflict warnings are derived by the controller from the simulator state, valid-action mask, and path finder.
 This translation has two functions.
 It reduces the context required to describe the full grid state.
 It also exposes the high-level decision variables used by the model while leaving path-planning details to the simulator.
@@ -151,13 +152,13 @@ The same path-based distance is used to rank requested shelves, charging station
 If a path is unavailable, the candidate is either omitted by the valid-action/candidate logic or assigned a conservative fallback distance in the structured candidate representation.
 Candidate actions are not a verbatim copy of the full action space.
 They are selected from the valid-action mask and then shaped according to role and state.
-For an \gls{agv}, requested shelf actions are emphasized when it is not carrying a shelf, goal actions are emphasized when it carries a requested shelf, and empty shelf-return actions are emphasized after delivery when the carried shelf must be returned to storage.
+For an \gls{agv}, requested shelf actions are emphasised when it is not carrying a shelf, goal actions are emphasised when it carries a requested shelf, and empty shelf-return actions are emphasised after delivery when the carried shelf must be returned to storage.
 Charging actions are retained when battery state or control state makes charging relevant.
-For a Picker, the candidate set emphasizes shelf actions that correspond to \gls{agv} support targets and charging actions when battery state makes charging relevant.
+For a Picker, the candidate set emphasises shelf actions that correspond to \gls{agv} support targets and charging actions when battery state makes charging relevant.
 This candidate shaping reduces prompt length, limits the number of infeasible or irrelevant alternatives, and provides the model with an action vocabulary aligned with the current warehouse requirement.
 
 \paragraph{Prompt structure.}
-The shared-context prompt is organized as a bounded action-selection problem.
+The shared-context prompt is organised as a bounded action-selection problem.
 It begins with the objective statement and a concise environment description: the warehouse contains \glspl{agv}, Pickers, requested shelves, goal locations, charging stations, and battery constraints.
 The prompt then describes the normal collaboration flow: an \gls{agv} moves to a requested shelf, a Picker supports the shelf interaction, the \gls{agv} carries the shelf to a goal, and the delivered shelf is returned to an empty shelf location with Picker support.
 The current agent state, last selected action, remaining hold steps, movement warnings, blocking warnings, control state, role-specific context, hard constraints, candidate actions, and output contract are then appended.
@@ -169,6 +170,29 @@ It also states that an \gls{agv} should not leave a shelf interaction when Picke
 The Picker prompt states that a Picker supports \glspl{agv} at shelf cells, that support should occur at the same shelf action id as the \gls{agv} target, and that Picker support is not required at goal cells.
 These role-specific rules are included because heterogeneous coordination errors are otherwise common: an \gls{agv} may abandon a support shelf, or a Picker may move to an unrelated shelf or charge while support is pending.
 
+The following compact example shows representative input fields and the same selected action in the two output configurations.
+
+\begin{lstlisting}[caption=Representative prompt input and corresponding natural-language and JSON outputs., label=listing:representative_prompt_io]
+Representative input:
+Current agent:
+agent_0, role=AGV, position=(8, 3), battery=72, carrying=None
+
+Candidate actions:
+action=0, type=NOOP, distance=0
+action=50, type=SHELF, distance=8
+action=7, type=CHARGING, distance=11
+
+Natural-language output:
+Action: 50
+Steps: 8
+Reason: Move to the requested shelf.
+
+JSON output:
+{"reason":"Move to the requested shelf.","action":50,"steps":8}
+\end{lstlisting}
+
+The complete programmatic prompt templates are retained in the centralized and shared-context experiment runners. The example above exposes the input fields and output forms relevant to the comparison, while Appendix~\ref{app:prompt_excerpt} provides a longer prompt excerpt.
+
 \begin{table}[H]
 \centering
 \small
@@ -177,7 +201,7 @@ These role-specific rules are included because heterogeneous coordination errors
 \hline
 \textbf{Prompt component} & \textbf{Information provided} & \textbf{Purpose} \\
 \hline
-Objective statement & Delivery, call-aware, or battery-aware goal & Defines optimization priority. \\
+Objective statement & Delivery, call-aware, or battery-aware goal & Defines optimisation priority. \\
 \hline
 Environment description & \glspl{agv}, Pickers, shelves, goals, and chargers & Grounds the task domain. \\
 \hline
@@ -187,7 +211,7 @@ Agent state & Role, position, battery, load, and busy state & Describes the curr
 \hline
 Shared context & Requested shelves, charging occupancy, and support demands & Enables coordination across agents. \\
 \hline
-Candidate actions & Valid action ids, action type, distance, and recommendation & Restricts the action space. \\
+Candidate actions & Valid action IDs, action type, distance, and recommendation & Restricts the action space. \\
 \hline
 Conflict warnings & Blocking, cooldown, and unreachable targets & Prevents repeated poor choices. \\
 \hline
@@ -199,7 +223,8 @@ Output contract & Action id, steps, reason, or \gls{json} object & Enables deter
 \end{table}
 
 \paragraph{Natural-language and JSON prompt variants.}
-Two prompt representations are evaluated.
+Two prompt configurations are evaluated.
+Each configuration includes the representation of the simulator state, the required response format, and the associated parsing mechanism.
 The natural-language variant presents the same state information as headings and bullet-like textual sections and requests a compact response containing an action id, a hold duration, and a short reason.
 This representation is readable and close to the ordinary instruction-following format for language models.
 Its response is parsed from text, which makes format deviations possible.
@@ -207,17 +232,18 @@ Its response is parsed from text, which makes format deviations possible.
 The \gls{json} variant presents the planning context as a structured object and requests a machine-readable object.
 For shared-context planning, the required response contains the keys \texttt{reason}, \texttt{action}, and \texttt{steps}.
 For centralized planning, the required response is a top-level object containing an \texttt{actions} list, with one action object for each planned agent.
+The permitted hold duration is 1--10 steps for \glspl{agv} and 1--3 steps for Pickers. Values outside the applicable range are restricted to that range during parsing.
 The Ollama request additionally uses structured-output mode for \gls{json} prompts.
 This variant tests whether an explicit schema changes parseability and consistency while using the same state abstraction and candidate-action grounding as the natural-language prompt.
 
-\paragraph{Centralized and decentralized shared-context planning.}
+\paragraph{Centralized and shared-context per-agent planning.}
 Two coordination architectures are compared.
 In the centralized architecture, one \gls{llm} call receives the global warehouse snapshot, committed actions for agents that are not being replanned, shared rules, role-specific rules, and one planning block for each agent requiring a new decision.
 The output must contain exactly one action for each listed agent and must not include actions for agents outside the planning blocks.
 This formulation exposes joint action selection across agents, including cases where \gls{agv} and Picker choices must be aligned.
 Its prompt size grows with the global context and the number of per-agent planning blocks, and its response is more complex than a single-agent decision.
 
-In the decentralized shared-context architecture, the controller queries the model separately for each agent that requires replanning.
+In the shared-context per-agent architecture, the controller queries the model separately for each agent that requires replanning.
 Each per-agent prompt contains the local decision context for the current agent, including its role, position, load, battery level, busy state, and candidate actions.
 It also includes shared coordination information that can affect the local decision, such as requested shelves, charging occupancy, support demands, and battery-related context for other agents.
 The required output concerns only the current agent.
@@ -232,7 +258,7 @@ This architecture uses a single-agent output contract for each query.
 \captionsetup{type=table,hypcap=false}
 \begin{tabular}{|p{0.23\textwidth}|p{0.32\textwidth}|p{0.32\textwidth}|}
 \hline
-\textbf{Aspect} & \textbf{Centralized planner} & \textbf{Decentralized shared-context planner} \\
+\textbf{Aspect} & \textbf{Centralized planner} & \textbf{Shared-context per-agent planner} \\
 \hline
 \gls{llm} calls & One call for all replanned agents & One call per replanned agent. \\
 \hline
@@ -243,20 +269,32 @@ Output & Joint action list & Single-agent action. \\
 Coordination mechanism & Explicit joint selection & Shared context across local decisions. \\
 \hline
 \end{tabular}
-\caption{Comparison between centralized and decentralized shared-context prompting architectures.}
-\label{tab:centralized-decentralized-prompts}
+\caption{Comparison between centralized and shared-context per-agent planning architectures.}
+\label{tab:centralized-shared-context-prompts}
 \endgroup
 \end{center}
 
-\paragraph{Output constraints and fallback behavior.}
+\paragraph{Shared-context query order and decision timing.}
+In shared-context per-agent planning, eligible agents are processed using a fixed deterministic order based on current coordination and task state.
+\glspl{agv} requiring immediate Picker support are processed first, followed by Pickers when urgent support is pending, \glspl{agv} carrying shelves, agents below the battery threshold, and the remaining \glspl{agv} and Pickers; ties are resolved by agent id.
+This ordering determines the sequence of model queries but does not select the agents' actions.
+The physical environment state and valid-action masks do not change between per-agent queries.
+However, each accepted action is recorded as a current commitment and may be included in the relevant shared information supplied to later prompts from the same simulation step.
+The completed action vector is executed only after all required decisions have been collected.
+The scheduling rule is part of the implemented shared-context configuration and was not evaluated as a separate experimental factor.
+The architecture results therefore compare the complete centralized and shared-context per-agent configurations as implemented.
+
+\paragraph{Output constraints and fallback behaviour.}
 The prompt constrains the response to the current action vocabulary.
-The model is instructed to choose only from the displayed candidate action ids, to return an integer action id, to return an integer \texttt{Steps} value within the allowed hold range, and to provide only a short reason.
+The model is instructed to choose only from the displayed candidate action IDs, to return an integer action ID, to return an integer \texttt{Steps} value within the allowed hold range, and to provide only a short reason.
 The prompt explicitly forbids action descriptions, coordinates, markdown, policy text, revised rules, recommendations, and additional commentary.
 These constraints are required because the simulator can only execute discrete action identifiers.
 
 The runtime validation layer enforces these constraints independently of model compliance.
 If a response is missing, unparsable, outside the action range, or invalid under the current action mask, it is rejected and replaced by a fallback action, normally no-op when available.
 For \gls{json} prompts, failed \gls{json} parsing is logged separately; if possible, the parser recovers an explicit action field from malformed output, otherwise the output is treated as invalid.
+In a centralized response, an omitted planned agent is treated as a missing action for that agent and the fallback is applied. Actions outside the action range or invalid under the current mask are also replaced by the fallback action.
+Model requests use a 60-second HTTP timeout. HTTP 500 responses are retried up to five times with increasing delay. If a request still fails, times out, or returns no parseable valid action, the call is recorded as failed and the controller executes the fallback action, normally no-op, for one step.
 Accepted actions may be persisted for multiple steps through the \texttt{Steps} field.
 This persistence reduces unnecessary model calls, but a persisted action is cleared when it expires, becomes invalid, completes, or is associated with a recent resolution failure.
 
@@ -275,17 +313,22 @@ This keeps the support agent close enough for coordination while reducing premat
 
 Third, additional conflict-resolution state is exposed to the controller.
 Agents can be marked as resolving a conflict, recently failed on an unreachable target, or temporarily forbidden from selecting a target that repeatedly caused resolution failure.
-Blocking relationships are also summarized with reasons such as a Picker blocking an \gls{agv} path or an \gls{agv} waiting for Picker support at a shelf.
+Blocking relationships are also summarised with reasons such as a Picker blocking an \gls{agv} path or an \gls{agv} waiting for Picker support at a shelf.
 These signals are inserted into the prompt as movement, blocking, and execution warnings.
 The prompt uses these signals to prevent repeated selection of the same blocked target and to make coordination-relevant states visible at the task-assignment level.
 
+The underlying simulator retains responsibility for low-level navigation, A* path planning, collision handling, battery updates, and load/unload mechanics.
+The language-model interface, prompt-visible candidate construction, response parsing and validation, action persistence, busy-state replanning, Picker staging, and additional conflict information form the modifications evaluated in this thesis.
+The source implementation is available in the project repository\footnote{\url{https://github.com/Cyber-physical-Systems-Lab/polyphony}} at commit \texttt{361499ed2498}.
+Because the Picker and replanning modifications affect execution dynamics, the reported results describe this version of the environment and are not treated as a direct comparison with previously published TA-RWARE results.
 
-The systematically modified factors are model, prompt representation, coordination architecture, scenario, and objective statement.
+
+The systematically modified factors are model, prompt configuration, coordination architecture, scenario, and objective statement.
 The objective analysis uses three objective prompts: calls, battery plus shelf delivery, and battery.
-The calls objective asks the model to optimize \gls{llm} calls while still increasing shelf delivery.
-The battery plus shelf objective asks the model to maximize shelf deliveries while keeping agents charged enough to avoid critical battery levels.
-The battery objective asks the model to keep agents charged, prioritize safe charging decisions, and avoid critical battery thresholds.
-For objective-adaptation analysis, the architecture and prompt representation are fixed to shared-context natural-language prompting, so that the main changed variable is the stated objective.
+The calls objective asks the model to optimise \gls{llm} calls while still increasing shelf delivery.
+The battery plus shelf objective asks the model to maximise shelf deliveries while keeping agents charged enough to avoid critical battery levels.
+The battery objective asks the model to keep agents charged, prioritise charging before critical battery thresholds, and avoid battery depletion.
+Across these objective families, the controller and grounded action interface remain unchanged.
 
 \subsection{Scenarios, Models, and Metrics}
 \label{sec:method_scenarios_models_metrics}
@@ -312,7 +355,7 @@ The same scenario set is reused across objective families where possible so that
 \hline
 \nolinkurl{medium_agv_heavy_6v2} & Medium layout; 6 \glspl{agv}, 2 Pickers & Stronger \gls{agv}-heavy stress case combining larger layout, longer paths, support bottlenecks, and charging pressure. \\
 \hline
-\nolinkurl{small_picker_heavy_2v4} & Small layout; 2 \glspl{agv}, 4 Pickers & Tests whether surplus Picker capacity causes underutilization, unnecessary motion, or role-confused support decisions. \\
+\nolinkurl{small_picker_heavy_2v4} & Small layout; 2 \glspl{agv}, 4 Pickers & Tests whether surplus Picker capacity causes underutilisation, unnecessary motion, or role-confused support decisions. \\
 \hline
 \end{tabular}
 \caption{Warehouse scenarios used in the objective experiments.}
@@ -328,10 +371,10 @@ The scenario set supports the research questions by separating minimal coordinat
 The language-model set was selected to provide a controlled cross-section of locally deployable, open-weight language models for instruction-following tasks.
 It represents a selected benchmark subset of available \glspl{llm}.
 The evaluated models are \nolinkurl{llama3.2:1b}, \nolinkurl{llama3.2:3b}, \nolinkurl{mistral:7b}, \nolinkurl{gemma3:12b}, \nolinkurl{phi4}, and \nolinkurl{qwen2.5:14b}.
-These models span a range of parameter scales from approximately 1B to 14B parameters, and originate from distinct model families developed by Meta, Mistral AI, Google, Microsoft, and Alibaba.
-This selection supports the research question by varying model scale and family while keeping the simulator, prompt construction, action interface, and evaluation metrics fixed.
-Including models that span a broad range of parameter counts enables evaluation of whether increasing model scale consistently improves grounded planning performance, or whether smaller locally deployable models provide comparable behaviour under the same experimental conditions.
-This supports interpreting observed differences as differences in planning behaviour exhibited by the models under the same planning interface, with limited confounding from task definitions or controller implementations.
+These models span a range of parameter scales from approximately 1B to 14B parameters and originate from distinct model families developed by Meta, Mistral AI, Google, Microsoft, and Alibaba.
+Nominal parameter size was the primary selection criterion. Suitable model variants from a single family were not available across the full evaluated range, so the selected set spans both parameter scales and model families while keeping the simulator, prompt construction, action interface, and evaluation metrics fixed.
+This selection enables evaluation of whether performance increases consistently across the chosen off-the-shelf models as nominal parameter scale increases, or whether smaller locally deployable models provide comparable behaviour under the same experimental conditions.
+Accordingly, the results describe performance differences among the selected model configurations; parameter count is not treated as the sole cause of those differences.
 
 Local execution was used for all selected models. All reported experiments were run on a fixed compute platform equipped with an NVIDIA RTX A4000 GPU. Keeping the hardware platform constant limits hardware-related variation between experimental configurations and makes the execution conditions explicit for reproducibility.
 Each experiment submits the generated prompt to a locally hosted Ollama instance, and the same set of models is used for the shared-context and centralized planners.
@@ -345,8 +388,11 @@ The selected models are instruction-tuned or otherwise post-trained for instruct
 This matches the constrained decision-making prompt used in this study.
 No model-specific prompt modifications are introduced.
 Apart from the selected model identifier, every experiment uses the same prompt templates, simulator state representation, parsing logic, validation layer, and evaluation metrics for a fixed objective, planning architecture, scenario, and prompt format.
-Generation parameters, including temperature and maximum output tokens, are controlled consistently across all experiments, while context length is obtained from the local Ollama model metadata when available.
-The effective context window in this study is the value reported by the locally installed Ollama model artifact.
+The reported experiment runners set the generation temperature to 0.1 and the maximum generated-token budget, \nolinkurl{num_predict}, to 700.
+Top-p, top-k, and stop sequences are not overridden by the runners and therefore follow the locally installed Ollama model artefact.
+No separate language-model sampling seed is configured; the recorded seed controls simulator initialisation.
+Context length is obtained from the local Ollama model metadata when available.
+The effective context window in this study is the value reported by the locally installed Ollama model artefact.
 Context use was measured using first-step prompts from \nolinkurl{medium_balanced_4v4}, which contains eight agents and preserves the balanced \gls{agv}-Picker role ratio.
 The measured prompts cover centralized \gls{json}, centralized natural-language, shared-context natural-language, and shared-context \gls{json} prompting.
 Table~\ref{tab:context-diagnostic} reports the locally configured context window, the prompt tokens used according to Ollama's \nolinkurl{prompt_eval_count}, and the maximum percentage of the available context window used by these prompts.
@@ -381,8 +427,36 @@ Table~\ref{tab:context-diagnostic} reports the locally configured context window
 
 The measured prompts fit within the locally reported context windows for all evaluated models.
 Each run produces a structured summary row containing both experimental identifiers and measured outcomes.
-Reported mean values are arithmetic means over the retained runs in the corresponding group, such as a model group, scenario group, prompt-format group, or architecture group.
+Repeated executions with the same objective, architecture, prompt configuration, model, and scenario were first averaged into one configuration-level observation.
+Comparative analyses then used only observations with an available counterpart matching the remaining experimental factors, so configurations with additional repetitions did not receive greater weight.
 The metrics are reported directly or converted into derived metrics when a direct comparison would otherwise be misleading.
+Table~\ref{tab:metric-rq-mapping} summarises how the reported metrics are used in the analysis.
+
+\begin{table}[H]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{|p{0.22\textwidth}|p{0.48\textwidth}|p{0.22\textwidth}|}
+\hline
+\textbf{Metric} & \textbf{What it measures} & \textbf{Analytical role} \\
+\hline
+Mean shelf deliveries & Measures how much of the common shelf-delivery task is completed before full completion or sustained inactivity. & Primary outcome for the main RQ and RQ1--RQ3. \\
+\hline
+Mean \gls{llm} calls & Measures the number of model requests made during a run. & Secondary planning-overhead measure, especially for RQ2 and RQ3. \\
+\hline
+Deliveries per 1000 \gls{llm} calls & Measures completed deliveries relative to the frequency of model interaction. & Secondary call-normalised measure for RQ1--RQ3. \\
+\hline
+Battery-aware productivity & Describes delivery performance together with charging-station utilisation. & Exploratory objective-sensitivity analysis; not a primary RQ outcome. \\
+\hline
+Minimum battery, below-threshold fraction, and zero-battery fractions & Describe the lowest observed battery level, the fraction of agent-steps below 30, and the fractions of agents and runs reaching zero. & Direct battery-outcome comparison; not a primary RQ outcome. \\
+\hline
+\end{tabular}
+\caption{Mapping between the reported metrics and their roles in the analysis.}
+\label{tab:metric-rq-mapping}
+\end{table}
+
+Invalid-action and generation-failure fields are not treated as research-question outcomes; they are retained for diagnostic run validation as described in the delimitations.
+
 Deliveries per 1000 \gls{llm} calls is computed as:
 
 \begin{equation}
@@ -392,30 +466,47 @@ Deliveries per 1000 \gls{llm} calls is computed as:
 \end{equation}
 
 This metric is used mainly for prompt-format comparisons, where natural-language and \gls{json} prompts can produce different numbers of calls and different run lengths.
-It normalizes delivery output by model-interaction cost.
+It normalises delivery output by the frequency of model interaction; it is not a measure of token use, latency, energy consumption, or computational cost.
 For centralized versus shared-context comparisons, raw mean deliveries are treated as the primary performance measure because shared-context planning structurally makes more \gls{llm} calls by querying per agent.
-In that comparison, call-based metrics describe planning overhead.
+In that comparison, call-based metrics describe model-interaction frequency and are not treated as a common computational-cost unit.
 
 For exploratory battery analysis, a battery-aware productivity score is used:
 
+For each run, charging-station utilisation is the sum of occupied charging stations across recorded steps divided by the sum of available charging stations across those steps. The resulting fraction is reported as a percentage. The score uses this percentage value:
+
 \begin{equation}
     \text{Battery-aware productivity} =
-    \text{Mean deliveries} \times \text{Mean charging-station utilization}
+    \text{Mean deliveries} \times \text{Mean charging-station utilisation (\%)}
     \label{eq:battery-aware-productivity}
 \end{equation}
 
-This score is descriptive.
-It helps identify whether a model combines delivery performance with charging behavior.
+This is a descriptive index expressed in delivery--percentage-point units, not a percentage, and it is therefore not bounded by 100.
+It indicates whether charging-station occupancy occurred together with delivery performance, but it does not distinguish necessary charging from unnecessary charging and is not a measure of battery-management optimality.
+
+The direct battery comparison also reports the mean minimum battery observed, the fraction of agent-steps with battery below 30, the fraction of agents reaching zero, and the fraction of runs in which at least one agent reached zero.
 
 \subsection{Experimental Protocol}
-The experiment sessions were run with fixed environment ids and logged run configurations, creating a controlled set of comparable runs for the reported objective families.
-The simulator seed is recorded for reproducibility and traceability.
-The execution configuration uses no fixed maximum-step cap, using \texttt{--max\_steps 0}.
-Runs terminate through inactivity control, with \texttt{--max\_inactivity\_steps 500}.
-This setting allows a run to continue while agents keep making progress, until the inactivity condition is reached.
-In this simulation setup, a run can achieve at most 20 deliveries, and the results chapter uses that ceiling to contextualize reported scores.
+In this thesis, a \emph{run} is one simulator execution under a specified objective, architecture, prompt configuration, model, and scenario. A \emph{session} is a batch invocation that may execute several such runs. A completed run is retained when it follows the reported protocol; runs affected by technical or configuration failures are excluded as described in the delimitations.
 
-The main standardized controller settings are summarized in Table~\ref{tab:controller-settings}.
+The experiment sessions were run with fixed environment IDs and logged run configurations, creating a controlled set of comparable runs for the reported objective families.
+The simulator seed is recorded for reproducibility and traceability.
+The execution configuration uses \texttt{--max\_steps 0}, which disables the fixed maximum-step cap.
+Runs terminate through inactivity control, with \texttt{--max\_inactivity\_steps 500}.
+This setting allows a run to continue while agents keep making progress until the inactivity condition is reached.
+In this simulation setup, a run can achieve at most 20 deliveries, and the results chapter uses that ceiling to contextualise reported scores.
+
+\paragraph{Run procedure.}
+Each reported run follows the same overall procedure:
+\begin{enumerate}
+    \item Select the objective, scenario, model, planning architecture, prompt configuration, and recorded simulator seed.
+    \item Initialise Battery-TA-RWARE and the locally hosted Ollama model using the corresponding runner configuration.
+    \item Execute the state--candidate--prompt--query--validate--action loop defined earlier in this chapter.
+    \item Continue until all 20 requested shelves are delivered or 500 consecutive steps pass without a delivery.
+    \item Store the step records and run summary, including configuration identifiers, deliveries, executed steps, \gls{llm} calls, invalid or missing model actions, generation failures, and elapsed time.
+    \item Average repeated executions as described above, then use matched configurations for each comparison.
+\end{enumerate}
+
+The main standardised controller settings are summarised in Table~\ref{tab:controller-settings}.
 These settings define the stopping condition, the degree of replanning allowed during long-running assignments, and the path-awareness assumptions used when constructing candidate actions.
 
 \begin{table}[H]
@@ -437,25 +528,27 @@ Proactive support signal & Disabled & Limits Picker-support prompting to cases w
 Agent-aware path finding & Enabled & Computes paths while considering other agents as obstacles. This makes candidate distances and reachability estimates more conservative in congested states. \\
 \hline
 \end{tabular}
-\caption{Standardized controller settings used in the reported experiments.}
+\caption{Standardised controller settings used in the reported experiments.}
 \label{tab:controller-settings}
 \end{table}
 
 The \texttt{--prompt\_format} argument selects either the natural-language or \gls{json} prompt.
-The selected planning architecture determines whether the controller uses centralized or shared-context decision making.
+The selected planning architecture determines whether the controller uses centralized or shared-context decision-making.
 The \texttt{--selected\_models} argument selects the model or models for a session, while the results and session directories store the aggregated outputs and detailed logs.
 
 The protocol defines the analysis structure used in the thesis.
-When comparing prompt formats, the model, scenario, architecture, and objective are held constant where possible.
 When comparing centralized and shared-context planning, the same scenarios and model families are used, and call metrics are interpreted with the per-agent query structure of shared-context planning in mind.
-When comparing objectives, the analysis is restricted to shared-context natural-language runs so that objective wording is the main changed factor.
 
 \subsection{Delimitations}
 To keep the study focused and interpretable, the following delimitations apply:
 \begin{itemize}
     \item The work is evaluated in a simulated warehouse environment.
+    \item The planner receives symbolic simulator state without sensor noise or perception errors. The study therefore does not establish performance on perception-limited physical robots.
+    \item All language-model inference uses Ollama on one NVIDIA RTX A4000 system. Portability across inference servers and hardware platforms was not evaluated.
+    \item The findings apply to the modified Battery-TA-RWARE environment used in this study and are not treated as direct benchmark comparisons with published TA-RWARE results or other simulator families.
     \item The controller is responsible only for high-level target selection; low-level navigation and collision handling are performed by the environment.
     \item The evaluated language models are prompted general-purpose models accessed through a local inference server, with no task-specific fine-tuning applied.
-    \item The reported experiments use a limited number of completed sessions and simulator initializations, so the analysis is descriptive.
+    \item The reported experiments use a limited number of completed sessions and simulator initialisations, so the analysis is descriptive.
     \item Only runs using the protocol described in this chapter are included; outputs from configurations with different stopping or control settings are excluded from the objective-comparison analysis.
+    \item Invalid-action and generation-failure fields are used for diagnostic run validation. Logging these fields helped identify technical and configuration errors, allowing inconsistent runs to be excluded from the analysis.
 \end{itemize}

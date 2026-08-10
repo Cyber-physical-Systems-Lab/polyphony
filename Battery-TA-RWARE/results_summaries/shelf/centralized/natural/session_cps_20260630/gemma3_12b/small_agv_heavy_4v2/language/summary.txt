@@ -1,0 +1,27 @@
+Stated Objective: Maximize total shelf deliveries while keeping agents charged enough to avoid critical battery levels.
+Model: gemma3:12b (MLM)
+Scenario: small_agv_heavy_4v2 [tarware-small-4agvs-2pickers-globalobs-chg-v1]
+Scenario Focus: AGV-heavy: reveal picker-support scheduling weakness and AGV waiting behavior.
+Prompt format: LANGUAGE
+Total Shelf Delivery: 7
+Steps executed: 924
+LLM calls: 473
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 307
+LLM failures: 0
+LLM missing/invalid planned actions: 138
+JSON generation failures: 0
+Charging station utilization rate: 0.0996
+Average charging stations occupied per step: 0.5974
+Minimum battery observed: 1.0
+Below required minimum charge events: 942
+Agents ever below required minimum charge: agent_1, agent_2, agent_3, agent_4, agent_5
+Battery safety success: False
+Shelf delivery timeline:
+- step=96 delivered_this_step=1 total_shelf_deliveries=1
+- step=144 delivered_this_step=1 total_shelf_deliveries=2
+- step=183 delivered_this_step=1 total_shelf_deliveries=3
+- step=338 delivered_this_step=1 total_shelf_deliveries=4
+- step=346 delivered_this_step=1 total_shelf_deliveries=5
+- step=413 delivered_this_step=1 total_shelf_deliveries=6
+- step=424 delivered_this_step=1 total_shelf_deliveries=7

@@ -1,0 +1,99 @@
+{
+  "stated_objective": "Optimize calls to LLM and increase the total shelf delivery.",
+  "model": "qwen2.5:14b",
+  "model_class": "LLM",
+  "scenario": "small_agv_heavy_4v2",
+  "scenario_env_id": "tarware-small-4agvs-2pickers-globalobs-chg-v1",
+  "scenario_focus": "AGV-heavy: reveal picker-support scheduling weakness and AGV waiting behavior.",
+  "prompt_format": "JSON",
+  "total_shelf_deliveries": 14,
+  "delivery_timeline": [
+    {
+      "step": 41,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 1
+    },
+    {
+      "step": 52,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 2
+    },
+    {
+      "step": 110,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 3
+    },
+    {
+      "step": 130,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 4
+    },
+    {
+      "step": 215,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 5
+    },
+    {
+      "step": 375,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 6
+    },
+    {
+      "step": 417,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 7
+    },
+    {
+      "step": 428,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 8
+    },
+    {
+      "step": 486,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 9
+    },
+    {
+      "step": 639,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 10
+    },
+    {
+      "step": 860,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 11
+    },
+    {
+      "step": 1089,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 12
+    },
+    {
+      "step": 1114,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 13
+    },
+    {
+      "step": 1168,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 14
+    }
+  ],
+  "steps_executed": 1668,
+  "max_steps": 0,
+  "max_inactivity_steps": 500,
+  "max_busy_steps_for_replan": 10,
+  "disable_support_needed_soon": true,
+  "find_path_agent_aware_always": true,
+  "seed": 0,
+  "llm_calls": 1030,
+  "llm_calls_skipped_busy_agents": 0,
+  "action_reuse_without_llm_query": 569,
+  "llm_failures": 0,
+  "llm_missing_or_invalid_actions": 1,
+  "json_generation_failures": 0,
+  "charging_station_utilization_rate": 0.10441646682653877,
+  "average_charging_stations_occupied_per_step": 0.6264988009592326,
+  "elapsed_seconds": 11241.639535665512,
+  "step_records_path": "results/Larger-Models/centralized/json/obj2/session_obj2_centralized_json_qwen2_5_14b_seed0_20260731/qwen2.5_14b/small_agv_heavy_4v2/json/step_records.json"
+}

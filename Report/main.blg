@@ -14,61 +14,51 @@ Database file #2: refs.bib
 -- See the "IEEEtran_bst_HOWTO.pdf" manual for usage information.
 ** IEEEtran BST control entry "rapport:BSTcontrol" detected.
 Warning--missing publisher in jurafsky2025speech
-Warning--empty journal in mikolov2013distributed
-Warning--empty journal in huang2022lmp
-Warning--empty journal in yao2022react
 Warning--empty journal in karam2026collaborationmrs
-Warning--empty journal in papoudakis2021benchmarking
 Warning--empty journal in brockman2016gym
-Warning--empty journal in towers2024gymnasium
-Warning--empty journal in ahn2022do
-Warning--empty journal in liang2022code
 Warning--empty journal in sahoo2024promptsurvey
-Warning--empty journal in tam2024letmespeak
-Warning--empty journal in huang2022innermonologue
-Warning--empty booktitle in singh2023progprompt
 Warning--empty journal in xiao2026probingprompt
 
 Done.
 You've used 53 entries,
             4087 wiz_defined-function locations,
-            1107 strings with 23344 characters,
-and the built_in function-call counts, 41148 in all, are:
-= -- 2748
-> -- 1973
-< -- 136
-+ -- 994
-- -- 463
-* -- 2125
-:= -- 5950
-add.period$ -- 104
+            1127 strings with 24549 characters,
+and the built_in function-call counts, 46335 in all, are:
+= -- 3174
+> -- 2050
+< -- 226
++ -- 1054
+- -- 469
+* -- 2400
+:= -- 6535
+add.period$ -- 109
 call.type$ -- 53
-change.case$ -- 52
-chr.to.int$ -- 309
-cite$ -- 68
-duplicate$ -- 2936
-empty$ -- 3283
+change.case$ -- 55
+chr.to.int$ -- 540
+cite$ -- 58
+duplicate$ -- 3210
+empty$ -- 3739
 format.name$ -- 501
-if$ -- 9481
+if$ -- 10771
 int.to.chr$ -- 0
 int.to.str$ -- 52
-missing$ -- 738
+missing$ -- 777
 newline$ -- 247
 num.names$ -- 54
-pop$ -- 2038
+pop$ -- 2077
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 4
-skip$ -- 3001
+skip$ -- 3409
 stack$ -- 0
-substring$ -- 800
-swap$ -- 2215
-text.length$ -- 33
+substring$ -- 1335
+swap$ -- 2549
+text.length$ -- 46
 text.prefix$ -- 0
 top$ -- 6
 type$ -- 53
-warning$ -- 15
-while$ -- 103
+warning$ -- 5
+while$ -- 138
 width$ -- 54
-write$ -- 558
-(There were 15 warnings)
+write$ -- 584
+(There were 5 warnings)

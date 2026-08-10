@@ -1,0 +1,23 @@
+Stated Objective: Optimize Battery Life: keep agents charged, prioritize safe charging decisions, and never let any agent go below the critical battery threshold.
+Model: llama3.2:1b (SLM)
+Scenario: small_picker_heavy_2v4 [tarware-small-2agvs-4pickers-globalobs-chg-v1]
+Scenario Focus: Picker-heavy: reveal underutilization, role confusion, and unnecessary movement.
+Prompt format: LANGUAGE
+Total Shelf Delivery: 0
+Steps executed: 500
+LLM calls: 418
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 92
+LLM failures: 0
+LLM missing/invalid planned actions: 124
+JSON generation failures: 0
+Charging station utilization rate: 0.1573
+Average charging stations occupied per step: 0.9440
+Critical battery threshold: 30.0
+Minimum required charge: 30.0
+Minimum battery observed: 0.0
+Below required minimum charge events: 1595
+Agents ever below required minimum charge: agent_0, agent_1, agent_2, agent_3, agent_5
+Battery objective success: False
+Shelf delivery timeline:
+- none

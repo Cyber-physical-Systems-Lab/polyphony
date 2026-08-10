@@ -1,0 +1,17 @@
+Stated Objective: Optimize calls to LLM and increase the total shelf delivery.
+Model: gemma3:12b (MLM)
+Scenario: small_balanced_2v2 [tarware-small-2agvs-2pickers-globalobs-chg-v1]
+Scenario Focus: Balanced coordination at slightly higher concurrency.
+Prompt format: LANGUAGE
+Total Shelf Delivery: 0
+Steps executed: 500
+LLM calls: 140
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 118
+LLM failures: 0
+LLM missing/invalid planned actions: 0
+JSON generation failures: 0
+Charging station utilization rate: 0.1010
+Average charging stations occupied per step: 0.4040
+Shelf delivery timeline:
+- none

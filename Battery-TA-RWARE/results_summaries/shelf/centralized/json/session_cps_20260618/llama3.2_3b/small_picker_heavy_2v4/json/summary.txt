@@ -1,0 +1,25 @@
+Stated Objective: Maximize total shelf deliveries while keeping agents charged enough to avoid critical battery levels.
+Model: llama3.2:3b (SLM)
+Scenario: small_picker_heavy_2v4 [tarware-small-2agvs-4pickers-globalobs-chg-v1]
+Scenario Focus: Picker-heavy: reveal underutilization, role confusion, and unnecessary movement.
+Prompt format: JSON
+Total Shelf Delivery: 5
+Steps executed: 1500
+LLM calls: 1282
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 691
+LLM failures: 0
+LLM missing/invalid planned actions: 505
+JSON generation failures: 7
+Charging station utilization rate: 0.1816
+Average charging stations occupied per step: 1.0893
+Minimum battery observed: 0.0
+Below required minimum charge events: 977
+Agents ever below required minimum charge: agent_0, agent_1, agent_2, agent_3, agent_4, agent_5
+Battery safety success: False
+Shelf delivery timeline:
+- step=161 delivered_this_step=1 total_shelf_deliveries=1
+- step=321 delivered_this_step=1 total_shelf_deliveries=2
+- step=762 delivered_this_step=1 total_shelf_deliveries=3
+- step=769 delivered_this_step=1 total_shelf_deliveries=4
+- step=1000 delivered_this_step=1 total_shelf_deliveries=5

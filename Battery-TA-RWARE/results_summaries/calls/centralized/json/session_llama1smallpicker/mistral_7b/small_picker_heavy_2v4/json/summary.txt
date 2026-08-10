@@ -1,0 +1,28 @@
+Stated Objective: Optimize calls to LLM and increase the total shelf delivery.
+Model: mistral:7b (MLM)
+Scenario: small_picker_heavy_2v4 [tarware-small-2agvs-4pickers-globalobs-chg-v1]
+Scenario Focus: Picker-heavy: reveal underutilization, role confusion, and unnecessary movement.
+Prompt format: JSON
+Total Shelf Delivery: 12
+Steps executed: 2023
+LLM calls: 1697
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 981
+LLM failures: 0
+LLM missing/invalid planned actions: 33
+JSON generation failures: 2
+Charging station utilization rate: 0.2087
+Average charging stations occupied per step: 1.2521
+Shelf delivery timeline:
+- step=47 delivered_this_step=1 total_shelf_deliveries=1
+- step=69 delivered_this_step=1 total_shelf_deliveries=2
+- step=333 delivered_this_step=1 total_shelf_deliveries=3
+- step=390 delivered_this_step=1 total_shelf_deliveries=4
+- step=596 delivered_this_step=1 total_shelf_deliveries=5
+- step=856 delivered_this_step=1 total_shelf_deliveries=6
+- step=915 delivered_this_step=1 total_shelf_deliveries=7
+- step=1158 delivered_this_step=1 total_shelf_deliveries=8
+- step=1173 delivered_this_step=1 total_shelf_deliveries=9
+- step=1230 delivered_this_step=1 total_shelf_deliveries=10
+- step=1472 delivered_this_step=1 total_shelf_deliveries=11
+- step=1523 delivered_this_step=1 total_shelf_deliveries=12

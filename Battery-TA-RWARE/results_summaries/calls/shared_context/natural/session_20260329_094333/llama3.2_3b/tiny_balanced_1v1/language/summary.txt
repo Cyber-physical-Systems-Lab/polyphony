@@ -1,0 +1,27 @@
+Stated Objective: Optimize calls to LLM and increase the total shelf delivery.
+Model: llama3.2:3b (SLM)
+Scenario: tiny_balanced_1v1 [tarware-tiny-1agvs-1pickers-globalobs-chg-v1]
+Scenario Focus: Balanced baseline: reveal whether the model understands the normal AGV-Picker collaboration loop.
+Prompt format: LANGUAGE
+Total Shelf Delivery: 11
+Steps executed: 1252
+LLM calls: 819
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 112
+LLM failures: 0
+LLM missing/invalid planned actions: 0
+JSON generation failures: 0
+Charging station utilization rate: 0.1094
+Average charging stations occupied per step: 0.2188
+Shelf delivery timeline:
+- step=37 delivered_this_step=1 total_shelf_deliveries=1
+- step=90 delivered_this_step=1 total_shelf_deliveries=2
+- step=223 delivered_this_step=1 total_shelf_deliveries=3
+- step=288 delivered_this_step=1 total_shelf_deliveries=4
+- step=399 delivered_this_step=1 total_shelf_deliveries=5
+- step=453 delivered_this_step=1 total_shelf_deliveries=6
+- step=506 delivered_this_step=1 total_shelf_deliveries=7
+- step=554 delivered_this_step=1 total_shelf_deliveries=8
+- step=661 delivered_this_step=1 total_shelf_deliveries=9
+- step=702 delivered_this_step=1 total_shelf_deliveries=10
+- step=752 delivered_this_step=1 total_shelf_deliveries=11

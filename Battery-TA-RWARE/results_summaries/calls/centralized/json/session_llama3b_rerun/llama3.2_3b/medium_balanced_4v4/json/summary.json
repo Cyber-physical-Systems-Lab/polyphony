@@ -1,0 +1,44 @@
+{
+  "stated_objective": "Optimize calls to LLM and increase the total shelf delivery.",
+  "model": "llama3.2:3b",
+  "model_class": "SLM",
+  "scenario": "medium_balanced_4v4",
+  "scenario_env_id": "tarware-medium-4agvs-4pickers-globalobs-chg-v1",
+  "scenario_focus": "Balanced scaling: larger warehouse and longer-horizon coordination.",
+  "prompt_format": "JSON",
+  "total_shelf_deliveries": 3,
+  "delivery_timeline": [
+    {
+      "step": 83,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 1
+    },
+    {
+      "step": 497,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 2
+    },
+    {
+      "step": 675,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 3
+    }
+  ],
+  "steps_executed": 1175,
+  "max_steps": 0,
+  "max_inactivity_steps": 500,
+  "max_busy_steps_for_replan": 10,
+  "disable_support_needed_soon": true,
+  "find_path_agent_aware_always": true,
+  "seed": 0,
+  "llm_calls": 1097,
+  "llm_calls_skipped_busy_agents": 0,
+  "action_reuse_without_llm_query": 801,
+  "llm_failures": 0,
+  "llm_missing_or_invalid_actions": 179,
+  "json_generation_failures": 13,
+  "charging_station_utilization_rate": 0.1423404255319149,
+  "average_charging_stations_occupied_per_step": 1.1387234042553191,
+  "elapsed_seconds": 14522.087092638016,
+  "step_records_path": "results/calls/centralized/json/session_llama3b_rerun/llama3.2_3b/medium_balanced_4v4/json/step_records.json"
+}

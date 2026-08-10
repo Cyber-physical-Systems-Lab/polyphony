@@ -1,0 +1,39 @@
+Stated Objective: Maximize total shelf deliveries while keeping agents charged enough to avoid critical battery levels.
+Model: mistral:7b (MLM)
+Scenario: small_agv_heavy_4v2 [tarware-small-4agvs-2pickers-globalobs-chg-v1]
+Scenario Focus: AGV-heavy: reveal picker-support scheduling weakness and AGV waiting behavior.
+Prompt format: LANGUAGE
+Total Shelf Delivery: 19
+Steps executed: 1751
+LLM calls: 3185
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 440
+LLM failures: 0
+LLM missing/invalid planned actions: 0
+JSON generation failures: 0
+Charging station utilization rate: 0.1687
+Average charging stations occupied per step: 1.0120
+Minimum battery observed: 0.0
+Below required minimum charge events: 5179
+Agents ever below required minimum charge: agent_0, agent_1, agent_2, agent_3, agent_4, agent_5
+Battery safety success: False
+Shelf delivery timeline:
+- step=41 delivered_this_step=1 total_shelf_deliveries=1
+- step=52 delivered_this_step=1 total_shelf_deliveries=2
+- step=71 delivered_this_step=1 total_shelf_deliveries=3
+- step=92 delivered_this_step=1 total_shelf_deliveries=4
+- step=314 delivered_this_step=1 total_shelf_deliveries=5
+- step=318 delivered_this_step=1 total_shelf_deliveries=6
+- step=334 delivered_this_step=1 total_shelf_deliveries=7
+- step=428 delivered_this_step=1 total_shelf_deliveries=8
+- step=460 delivered_this_step=1 total_shelf_deliveries=9
+- step=481 delivered_this_step=1 total_shelf_deliveries=10
+- step=671 delivered_this_step=1 total_shelf_deliveries=11
+- step=680 delivered_this_step=1 total_shelf_deliveries=12
+- step=815 delivered_this_step=1 total_shelf_deliveries=13
+- step=818 delivered_this_step=1 total_shelf_deliveries=14
+- step=965 delivered_this_step=1 total_shelf_deliveries=15
+- step=972 delivered_this_step=1 total_shelf_deliveries=16
+- step=1031 delivered_this_step=1 total_shelf_deliveries=17
+- step=1066 delivered_this_step=1 total_shelf_deliveries=18
+- step=1251 delivered_this_step=1 total_shelf_deliveries=19

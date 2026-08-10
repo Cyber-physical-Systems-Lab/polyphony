@@ -1,8 +1,7 @@
 \babel@toc {english}{}\relax 
 \babel@toc {swedish}{}\relax 
 \babel@toc {english}{}\relax 
-\contentsline {paragraph}{Acknowledgement}{iii}{section*.2}%
-\contentsline {section}{Acronyms}{vi}{section*.4}%
+\contentsline {section}{Acronyms}{vi}{section*.5}%
 \contentsline {section}{\numberline {1}Introduction}{1}{section.1}%
 \contentsline {subsection}{\numberline {1.1}Research Questions}{10}{subsection.1.1}%
 \contentsline {subsection}{\numberline {1.2}Contributions}{10}{subsection.1.2}%
@@ -13,28 +12,30 @@
 \contentsline {subsection}{\numberline {3.2}Environment: Battery-TA-RWARE}{17}{subsection.3.2}%
 \contentsline {subsection}{\numberline {3.3}Language-Model Control Loop}{19}{subsection.3.3}%
 \contentsline {subsection}{\numberline {3.4}Prompt Construction and Experiment Design}{22}{subsection.3.4}%
-\contentsline {paragraph}{Simulator-to-language-model interface.}{23}{section*.6}%
-\contentsline {paragraph}{Distance and candidate construction.}{24}{section*.7}%
-\contentsline {paragraph}{Prompt structure.}{24}{section*.8}%
-\contentsline {paragraph}{Natural-language and JSON prompt variants.}{25}{section*.9}%
-\contentsline {paragraph}{Centralized and decentralized shared-context planning.}{25}{section*.10}%
-\contentsline {paragraph}{Output constraints and fallback behavior.}{26}{section*.12}%
-\contentsline {paragraph}{Environment modifications supporting prompting and replanning.}{27}{section*.13}%
-\contentsline {subsection}{\numberline {3.5}Scenarios, Models, and Metrics}{28}{subsection.3.5}%
-\contentsline {subsection}{\numberline {3.6}Experimental Protocol}{31}{subsection.3.6}%
-\contentsline {subsection}{\numberline {3.7}Delimitations}{32}{subsection.3.7}%
-\contentsline {section}{\numberline {4}Results and Discussion}{33}{section.4}%
-\contentsline {subsection}{\numberline {4.1}Experimental Data Overview}{33}{subsection.4.1}%
-\contentsline {subsection}{\numberline {4.2}Effect of Prompt Representation}{33}{subsection.4.2}%
-\contentsline {subsection}{\numberline {4.3}Effect of Planning Architecture}{35}{subsection.4.3}%
-\contentsline {subsection}{\numberline {4.4}Effect of Model Choice and Scenario Complexity}{38}{subsection.4.4}%
-\contentsline {subsection}{\numberline {4.5}Model Adaptability to Objectives}{38}{subsection.4.5}%
-\contentsline {subsection}{\numberline {4.6}Summary of Findings}{41}{subsection.4.6}%
-\contentsline {section}{\numberline {5}Ethics and Sustainability}{42}{section.5}%
-\contentsline {section}{\numberline {6}Conclusions and Future Work}{43}{section.6}%
-\contentsline {subsection}{\numberline {6.1}Future Work}{43}{subsection.6.1}%
-\contentsline {section}{\numberline {A}Appendix}{52}{appendix.A}%
-\contentsline {subsection}{\numberline {A.1}Reproducibility: Experiment Runners}{52}{subsection.A.1}%
-\contentsline {subsection}{\numberline {A.2}Result Directories}{53}{subsection.A.2}%
-\contentsline {subsection}{\numberline {A.3}Prompt Excerpt}{54}{subsection.A.3}%
-\contentsline {subsection}{\numberline {A.4}Run Summary Fields}{55}{subsection.A.4}%
+\contentsline {paragraph}{Simulator-to-language-model interface.}{23}{section*.7}%
+\contentsline {paragraph}{Distance and candidate construction.}{24}{section*.8}%
+\contentsline {paragraph}{Prompt structure.}{24}{section*.9}%
+\contentsline {paragraph}{Natural-language and JSON prompt variants.}{26}{section*.10}%
+\contentsline {paragraph}{Centralized and shared-context per-agent planning.}{27}{section*.11}%
+\contentsline {paragraph}{Shared-context query order and decision timing.}{27}{section*.13}%
+\contentsline {paragraph}{Output constraints and fallback behaviour.}{28}{section*.14}%
+\contentsline {paragraph}{Environment modifications supporting prompting and replanning.}{28}{section*.15}%
+\contentsline {subsection}{\numberline {3.5}Scenarios, Models, and Metrics}{30}{subsection.3.5}%
+\contentsline {subsection}{\numberline {3.6}Experimental Protocol}{34}{subsection.3.6}%
+\contentsline {paragraph}{Run procedure.}{34}{section*.18}%
+\contentsline {subsection}{\numberline {3.7}Delimitations}{36}{subsection.3.7}%
+\contentsline {section}{\numberline {4}Results and Discussion}{37}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Experimental Data Overview}{37}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}RQ3: Prompt-Configuration Comparison}{37}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}RQ2: Planning-Architecture Comparison}{42}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}RQ1: Model Choice and Scenario Complexity}{45}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Model Adaptability to Objectives}{47}{subsection.4.5}%
+\contentsline {subsection}{\numberline {4.6}Summary of Findings}{52}{subsection.4.6}%
+\contentsline {section}{\numberline {5}Ethics and Sustainability}{54}{section.5}%
+\contentsline {section}{\numberline {6}Conclusions and Future Work}{55}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Future Work}{55}{subsection.6.1}%
+\contentsline {section}{\numberline {A}Appendix}{65}{appendix.A}%
+\contentsline {subsection}{\numberline {A.1}Reproducibility: Experiment Runners}{65}{subsection.A.1}%
+\contentsline {subsection}{\numberline {A.2}Result Directories}{66}{subsection.A.2}%
+\contentsline {subsection}{\numberline {A.3}Prompt Excerpt}{67}{subsection.A.3}%
+\contentsline {subsection}{\numberline {A.4}Run Summary Fields}{68}{subsection.A.4}%

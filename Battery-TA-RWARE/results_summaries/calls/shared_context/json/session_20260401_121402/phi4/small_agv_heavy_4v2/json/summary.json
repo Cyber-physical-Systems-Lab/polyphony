@@ -1,0 +1,79 @@
+{
+  "stated_objective": "Optimize calls to LLM and increase the total shelf delivery.",
+  "model": "phi4",
+  "model_class": "LLM",
+  "scenario": "small_agv_heavy_4v2",
+  "scenario_env_id": "tarware-small-4agvs-2pickers-globalobs-chg-v1",
+  "scenario_focus": "AGV-heavy: reveal picker-support scheduling weakness and AGV waiting behavior.",
+  "prompt_format": "JSON",
+  "total_shelf_deliveries": 10,
+  "delivery_timeline": [
+    {
+      "step": 41,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 1
+    },
+    {
+      "step": 52,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 2
+    },
+    {
+      "step": 63,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 3
+    },
+    {
+      "step": 97,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 4
+    },
+    {
+      "step": 152,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 5
+    },
+    {
+      "step": 338,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 6
+    },
+    {
+      "step": 349,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 7
+    },
+    {
+      "step": 370,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 8
+    },
+    {
+      "step": 524,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 9
+    },
+    {
+      "step": 692,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 10
+    }
+  ],
+  "steps_executed": 1192,
+  "max_steps": 0,
+  "max_inactivity_steps": 500,
+  "max_busy_steps_for_replan": 10,
+  "disable_support_needed_soon": true,
+  "find_path_agent_aware_always": true,
+  "seed": 0,
+  "llm_calls": 1007,
+  "llm_calls_skipped_busy_agents": 0,
+  "action_reuse_without_llm_query": 365,
+  "llm_failures": 0,
+  "llm_missing_or_invalid_actions": 0,
+  "json_generation_failures": 0,
+  "charging_station_utilization_rate": 0.08612975391498881,
+  "average_charging_stations_occupied_per_step": 0.5167785234899329,
+  "elapsed_seconds": 5443.630611419678,
+  "step_records_path": "results/calls/shared_context/json/session_20260401_121402/phi4/small_agv_heavy_4v2/json/step_records.json"
+}

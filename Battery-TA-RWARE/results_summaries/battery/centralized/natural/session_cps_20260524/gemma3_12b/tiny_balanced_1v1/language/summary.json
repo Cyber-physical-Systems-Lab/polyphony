@@ -1,0 +1,126 @@
+{
+  "stated_objective": "Optimize Battery Life: keep agents charged, prioritize safe charging decisions, and never let any agent go below the critical battery threshold.",
+  "model": "gemma3:12b",
+  "model_class": "MLM",
+  "scenario": "tiny_balanced_1v1",
+  "scenario_env_id": "tarware-tiny-1agvs-1pickers-globalobs-chg-v1",
+  "scenario_focus": "Balanced baseline: reveal whether the model understands the normal AGV-Picker collaboration loop.",
+  "prompt_format": "LANGUAGE",
+  "total_shelf_deliveries": 16,
+  "delivery_timeline": [
+    {
+      "step": 105,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 1
+    },
+    {
+      "step": 198,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 2
+    },
+    {
+      "step": 257,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 3
+    },
+    {
+      "step": 404,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 4
+    },
+    {
+      "step": 464,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 5
+    },
+    {
+      "step": 726,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 6
+    },
+    {
+      "step": 1141,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 7
+    },
+    {
+      "step": 1267,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 8
+    },
+    {
+      "step": 1407,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 9
+    },
+    {
+      "step": 1589,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 10
+    },
+    {
+      "step": 1801,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 11
+    },
+    {
+      "step": 1851,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 12
+    },
+    {
+      "step": 2031,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 13
+    },
+    {
+      "step": 2126,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 14
+    },
+    {
+      "step": 2284,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 15
+    },
+    {
+      "step": 2384,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 16
+    }
+  ],
+  "steps_executed": 2884,
+  "max_steps": 0,
+  "max_inactivity_steps": 500,
+  "max_busy_steps_for_replan": 10,
+  "disable_support_needed_soon": true,
+  "find_path_agent_aware_always": true,
+  "seed": 0,
+  "llm_calls": 1649,
+  "llm_calls_skipped_busy_agents": 0,
+  "action_reuse_without_llm_query": 357,
+  "llm_failures": 0,
+  "llm_missing_or_invalid_actions": 0,
+  "json_generation_failures": 0,
+  "charging_station_utilization_rate": 0.18429264909847434,
+  "average_charging_stations_occupied_per_step": 0.3685852981969487,
+  "critical_battery_threshold": 30.0,
+  "minimum_required_charge": 30.0,
+  "min_battery_observed": 9.0,
+  "per_agent_min_battery": {
+    "agent_0": 10.0,
+    "agent_1": 9.0
+  },
+  "below_required_min_charge_events": 754,
+  "per_agent_below_required_min_charge_steps": {
+    "agent_0": 436,
+    "agent_1": 318
+  },
+  "agents_ever_below_required_min_charge": [
+    "agent_0",
+    "agent_1"
+  ],
+  "battery_objective_success": false,
+  "elapsed_seconds": 5674.667230844498,
+  "step_records_path": "results/battery/centralized/natural/session_cps_20260524/gemma3_12b/tiny_balanced_1v1/language/step_records.json"
+}

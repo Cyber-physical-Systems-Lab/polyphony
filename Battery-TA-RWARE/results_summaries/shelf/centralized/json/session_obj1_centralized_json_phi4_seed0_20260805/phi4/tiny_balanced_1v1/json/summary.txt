@@ -1,0 +1,21 @@
+Stated Objective: Maximize total shelf deliveries while keeping agents charged enough to avoid critical battery levels.
+Model: phi4 (LLM)
+Scenario: tiny_balanced_1v1 [tarware-tiny-1agvs-1pickers-globalobs-chg-v1]
+Scenario Focus: Balanced baseline: reveal whether the model understands the normal AGV-Picker collaboration loop.
+Prompt format: JSON
+Total Shelf Delivery: 1
+Steps executed: 545
+LLM calls: 175
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 71
+LLM failures: 0
+LLM missing/invalid planned actions: 0
+JSON generation failures: 0
+Charging station utilization rate: 0.0972
+Average charging stations occupied per step: 0.1945
+Minimum battery observed: 14.0
+Below required minimum charge events: 257
+Agents ever below required minimum charge: agent_1
+Battery safety success: False
+Shelf delivery timeline:
+- step=45 delivered_this_step=1 total_shelf_deliveries=1

@@ -1,0 +1,20 @@
+Stated Objective: Optimize calls to LLM and increase the total shelf delivery.
+Model: llama3.2:3b (SLM)
+Scenario: small_picker_heavy_2v4 [tarware-small-2agvs-4pickers-globalobs-chg-v1]
+Scenario Focus: Picker-heavy: reveal underutilization, role confusion, and unnecessary movement.
+Prompt format: LANGUAGE
+Total Shelf Delivery: 4
+Steps executed: 1570
+LLM calls: 1358
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 505
+LLM failures: 1
+LLM missing/invalid planned actions: 651
+JSON generation failures: 0
+Charging station utilization rate: 0.2352
+Average charging stations occupied per step: 1.4115
+Shelf delivery timeline:
+- step=67 delivered_this_step=1 total_shelf_deliveries=1
+- step=283 delivered_this_step=1 total_shelf_deliveries=2
+- step=755 delivered_this_step=1 total_shelf_deliveries=3
+- step=1070 delivered_this_step=1 total_shelf_deliveries=4

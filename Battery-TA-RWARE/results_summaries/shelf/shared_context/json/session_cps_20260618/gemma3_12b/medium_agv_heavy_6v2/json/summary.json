@@ -1,0 +1,67 @@
+{
+  "stated_objective": "Maximize total shelf deliveries while keeping agents charged enough to avoid critical battery levels.",
+  "model": "gemma3:12b",
+  "model_class": "MLM",
+  "scenario": "medium_agv_heavy_6v2",
+  "scenario_env_id": "tarware-medium-6agvs-2pickers-globalobs-chg-v1",
+  "scenario_focus": "Strongly AGV-heavy: stress-test support prioritization, waiting, and charging decisions.",
+  "prompt_format": "JSON",
+  "total_shelf_deliveries": 1,
+  "delivery_timeline": [
+    {
+      "step": 278,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 1
+    }
+  ],
+  "steps_executed": 778,
+  "max_steps": 0,
+  "max_inactivity_steps": 500,
+  "max_busy_steps_for_replan": 10,
+  "disable_support_needed_soon": true,
+  "find_path_agent_aware_always": true,
+  "seed": 0,
+  "llm_calls": 2812,
+  "llm_calls_skipped_busy_agents": 0,
+  "action_reuse_without_llm_query": 252,
+  "llm_failures": 0,
+  "llm_missing_or_invalid_actions": 0,
+  "json_generation_failures": 0,
+  "charging_station_utilization_rate": 0.1622750642673522,
+  "average_charging_stations_occupied_per_step": 1.2982005141388175,
+  "critical_battery_threshold": 30.0,
+  "minimum_required_charge": 30.0,
+  "min_battery_observed": 0.0,
+  "per_agent_min_battery": {
+    "agent_0": 0.0,
+    "agent_1": 12.0,
+    "agent_2": 0.0,
+    "agent_3": 13.0,
+    "agent_4": 0.0,
+    "agent_5": 25.0,
+    "agent_6": 44.0,
+    "agent_7": 36.0
+  },
+  "below_required_min_charge_events": 409,
+  "per_agent_below_required_min_charge_steps": {
+    "agent_0": 113,
+    "agent_1": 56,
+    "agent_2": 96,
+    "agent_3": 27,
+    "agent_4": 112,
+    "agent_5": 5,
+    "agent_6": 0,
+    "agent_7": 0
+  },
+  "agents_ever_below_required_min_charge": [
+    "agent_0",
+    "agent_1",
+    "agent_2",
+    "agent_3",
+    "agent_4",
+    "agent_5"
+  ],
+  "battery_safety_success": false,
+  "elapsed_seconds": 10330.537786245346,
+  "step_records_path": "results/shelf/shared_context/json/session_cps_20260618/gemma3_12b/medium_agv_heavy_6v2/json/step_records.json"
+}

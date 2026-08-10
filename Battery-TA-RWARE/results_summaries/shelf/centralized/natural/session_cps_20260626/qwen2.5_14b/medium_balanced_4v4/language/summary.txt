@@ -1,0 +1,36 @@
+Stated Objective: Maximize total shelf deliveries while keeping agents charged enough to avoid critical battery levels.
+Model: qwen2.5:14b (LLM)
+Scenario: medium_balanced_4v4 [tarware-medium-4agvs-4pickers-globalobs-chg-v1]
+Scenario Focus: Balanced scaling: larger warehouse and longer-horizon coordination.
+Prompt format: LANGUAGE
+Total Shelf Delivery: 16
+Steps executed: 2564
+LLM calls: 2217
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 1268
+LLM failures: 0
+LLM missing/invalid planned actions: 1253
+JSON generation failures: 0
+Charging station utilization rate: 0.1885
+Average charging stations occupied per step: 1.5082
+Minimum battery observed: 0.0
+Below required minimum charge events: 4779
+Agents ever below required minimum charge: agent_0, agent_1, agent_2, agent_3, agent_4, agent_5, agent_6, agent_7
+Battery safety success: False
+Shelf delivery timeline:
+- step=425 delivered_this_step=1 total_shelf_deliveries=1
+- step=671 delivered_this_step=1 total_shelf_deliveries=2
+- step=866 delivered_this_step=1 total_shelf_deliveries=3
+- step=867 delivered_this_step=1 total_shelf_deliveries=4
+- step=919 delivered_this_step=1 total_shelf_deliveries=5
+- step=940 delivered_this_step=1 total_shelf_deliveries=6
+- step=1047 delivered_this_step=1 total_shelf_deliveries=7
+- step=1175 delivered_this_step=1 total_shelf_deliveries=8
+- step=1208 delivered_this_step=1 total_shelf_deliveries=9
+- step=1285 delivered_this_step=1 total_shelf_deliveries=10
+- step=1364 delivered_this_step=1 total_shelf_deliveries=11
+- step=1548 delivered_this_step=1 total_shelf_deliveries=12
+- step=1759 delivered_this_step=1 total_shelf_deliveries=13
+- step=1779 delivered_this_step=1 total_shelf_deliveries=14
+- step=1898 delivered_this_step=1 total_shelf_deliveries=15
+- step=2064 delivered_this_step=1 total_shelf_deliveries=16

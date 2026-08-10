@@ -1,0 +1,27 @@
+Stated Objective: Maximize total shelf deliveries while keeping agents charged enough to avoid critical battery levels.
+Model: mistral:7b (MLM)
+Scenario: small_picker_heavy_2v4 [tarware-small-2agvs-4pickers-globalobs-chg-v1]
+Scenario Focus: Picker-heavy: reveal underutilization, role confusion, and unnecessary movement.
+Prompt format: LANGUAGE
+Total Shelf Delivery: 7
+Steps executed: 1890
+LLM calls: 1652
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 588
+LLM failures: 0
+LLM missing/invalid planned actions: 1229
+JSON generation failures: 0
+Charging station utilization rate: 0.2759
+Average charging stations occupied per step: 1.6556
+Minimum battery observed: 0.0
+Below required minimum charge events: 1942
+Agents ever below required minimum charge: agent_0, agent_1, agent_2, agent_3, agent_4, agent_5
+Battery safety success: False
+Shelf delivery timeline:
+- step=84 delivered_this_step=1 total_shelf_deliveries=1
+- step=268 delivered_this_step=1 total_shelf_deliveries=2
+- step=492 delivered_this_step=1 total_shelf_deliveries=3
+- step=661 delivered_this_step=1 total_shelf_deliveries=4
+- step=1158 delivered_this_step=1 total_shelf_deliveries=5
+- step=1300 delivered_this_step=1 total_shelf_deliveries=6
+- step=1390 delivered_this_step=1 total_shelf_deliveries=7

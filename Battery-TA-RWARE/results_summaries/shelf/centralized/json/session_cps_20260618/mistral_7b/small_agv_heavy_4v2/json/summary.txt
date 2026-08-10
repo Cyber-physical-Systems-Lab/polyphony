@@ -1,0 +1,36 @@
+Stated Objective: Maximize total shelf deliveries while keeping agents charged enough to avoid critical battery levels.
+Model: mistral:7b (MLM)
+Scenario: small_agv_heavy_4v2 [tarware-small-4agvs-2pickers-globalobs-chg-v1]
+Scenario Focus: AGV-heavy: reveal picker-support scheduling weakness and AGV waiting behavior.
+Prompt format: JSON
+Total Shelf Delivery: 16
+Steps executed: 2254
+LLM calls: 1463
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 798
+LLM failures: 0
+LLM missing/invalid planned actions: 5
+JSON generation failures: 0
+Charging station utilization rate: 0.1037
+Average charging stations occupied per step: 0.6224
+Minimum battery observed: 0.0
+Below required minimum charge events: 3045
+Agents ever below required minimum charge: agent_0, agent_1, agent_2, agent_3, agent_4, agent_5
+Battery safety success: False
+Shelf delivery timeline:
+- step=38 delivered_this_step=1 total_shelf_deliveries=1
+- step=46 delivered_this_step=1 total_shelf_deliveries=2
+- step=72 delivered_this_step=1 total_shelf_deliveries=3
+- step=186 delivered_this_step=1 total_shelf_deliveries=4
+- step=213 delivered_this_step=1 total_shelf_deliveries=5
+- step=304 delivered_this_step=1 total_shelf_deliveries=6
+- step=344 delivered_this_step=1 total_shelf_deliveries=7
+- step=377 delivered_this_step=1 total_shelf_deliveries=8
+- step=473 delivered_this_step=1 total_shelf_deliveries=9
+- step=496 delivered_this_step=1 total_shelf_deliveries=10
+- step=738 delivered_this_step=1 total_shelf_deliveries=11
+- step=777 delivered_this_step=1 total_shelf_deliveries=12
+- step=1256 delivered_this_step=1 total_shelf_deliveries=13
+- step=1580 delivered_this_step=1 total_shelf_deliveries=14
+- step=1665 delivered_this_step=1 total_shelf_deliveries=15
+- step=1754 delivered_this_step=1 total_shelf_deliveries=16

@@ -1,0 +1,40 @@
+Stated Objective: Maximize total shelf deliveries while keeping agents charged enough to avoid critical battery levels.
+Model: llama3.2:3b (SLM)
+Scenario: medium_balanced_4v4 [tarware-medium-4agvs-4pickers-globalobs-chg-v1]
+Scenario Focus: Balanced scaling: larger warehouse and longer-horizon coordination.
+Prompt format: LANGUAGE
+Total Shelf Delivery: 20
+Steps executed: 1526
+LLM calls: 4317
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 642
+LLM failures: 0
+LLM missing/invalid planned actions: 0
+JSON generation failures: 0
+Charging station utilization rate: 0.1445
+Average charging stations occupied per step: 1.1560
+Minimum battery observed: 0.0
+Below required minimum charge events: 4838
+Agents ever below required minimum charge: agent_0, agent_1, agent_2, agent_3, agent_4, agent_5, agent_6, agent_7
+Battery safety success: False
+Shelf delivery timeline:
+- step=113 delivered_this_step=1 total_shelf_deliveries=1
+- step=135 delivered_this_step=1 total_shelf_deliveries=2
+- step=165 delivered_this_step=1 total_shelf_deliveries=3
+- step=239 delivered_this_step=1 total_shelf_deliveries=4
+- step=241 delivered_this_step=1 total_shelf_deliveries=5
+- step=379 delivered_this_step=1 total_shelf_deliveries=6
+- step=449 delivered_this_step=1 total_shelf_deliveries=7
+- step=453 delivered_this_step=1 total_shelf_deliveries=8
+- step=509 delivered_this_step=1 total_shelf_deliveries=9
+- step=514 delivered_this_step=1 total_shelf_deliveries=10
+- step=673 delivered_this_step=1 total_shelf_deliveries=11
+- step=723 delivered_this_step=1 total_shelf_deliveries=12
+- step=815 delivered_this_step=1 total_shelf_deliveries=13
+- step=828 delivered_this_step=1 total_shelf_deliveries=14
+- step=1148 delivered_this_step=1 total_shelf_deliveries=15
+- step=1209 delivered_this_step=1 total_shelf_deliveries=16
+- step=1232 delivered_this_step=1 total_shelf_deliveries=17
+- step=1236 delivered_this_step=1 total_shelf_deliveries=18
+- step=1487 delivered_this_step=1 total_shelf_deliveries=19
+- step=1526 delivered_this_step=1 total_shelf_deliveries=20

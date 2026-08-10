@@ -1,0 +1,29 @@
+Stated Objective: Maximize total shelf deliveries while keeping agents charged enough to avoid critical battery levels.
+Model: phi4 (LLM)
+Scenario: medium_balanced_4v4 [tarware-medium-4agvs-4pickers-globalobs-chg-v1]
+Scenario Focus: Balanced scaling: larger warehouse and longer-horizon coordination.
+Prompt format: JSON
+Total Shelf Delivery: 9
+Steps executed: 1354
+LLM calls: 1016
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 1073
+LLM failures: 0
+LLM missing/invalid planned actions: 0
+JSON generation failures: 0
+Charging station utilization rate: 0.1073
+Average charging stations occupied per step: 0.8582
+Minimum battery observed: 0.0
+Below required minimum charge events: 3626
+Agents ever below required minimum charge: agent_0, agent_1, agent_2, agent_3, agent_4, agent_5, agent_6, agent_7
+Battery safety success: False
+Shelf delivery timeline:
+- step=51 delivered_this_step=1 total_shelf_deliveries=1
+- step=65 delivered_this_step=1 total_shelf_deliveries=2
+- step=85 delivered_this_step=1 total_shelf_deliveries=3
+- step=116 delivered_this_step=1 total_shelf_deliveries=4
+- step=302 delivered_this_step=1 total_shelf_deliveries=5
+- step=573 delivered_this_step=1 total_shelf_deliveries=6
+- step=584 delivered_this_step=1 total_shelf_deliveries=7
+- step=780 delivered_this_step=1 total_shelf_deliveries=8
+- step=854 delivered_this_step=1 total_shelf_deliveries=9

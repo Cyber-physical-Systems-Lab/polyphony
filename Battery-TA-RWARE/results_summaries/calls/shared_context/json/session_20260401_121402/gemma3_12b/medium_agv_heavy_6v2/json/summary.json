@@ -1,0 +1,74 @@
+{
+  "stated_objective": "Optimize calls to LLM and increase the total shelf delivery.",
+  "model": "gemma3:12b",
+  "model_class": "MLM",
+  "scenario": "medium_agv_heavy_6v2",
+  "scenario_env_id": "tarware-medium-6agvs-2pickers-globalobs-chg-v1",
+  "scenario_focus": "Strongly AGV-heavy: stress-test support prioritization, waiting, and charging decisions.",
+  "prompt_format": "JSON",
+  "total_shelf_deliveries": 9,
+  "delivery_timeline": [
+    {
+      "step": 125,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 1
+    },
+    {
+      "step": 495,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 2
+    },
+    {
+      "step": 753,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 3
+    },
+    {
+      "step": 1250,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 4
+    },
+    {
+      "step": 1626,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 5
+    },
+    {
+      "step": 1692,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 6
+    },
+    {
+      "step": 1929,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 7
+    },
+    {
+      "step": 1983,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 8
+    },
+    {
+      "step": 2387,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 9
+    }
+  ],
+  "steps_executed": 2887,
+  "max_steps": 0,
+  "max_inactivity_steps": 500,
+  "max_busy_steps_for_replan": 10,
+  "disable_support_needed_soon": true,
+  "find_path_agent_aware_always": true,
+  "seed": 0,
+  "llm_calls": 7974,
+  "llm_calls_skipped_busy_agents": 0,
+  "action_reuse_without_llm_query": 963,
+  "llm_failures": 0,
+  "llm_missing_or_invalid_actions": 1,
+  "json_generation_failures": 0,
+  "charging_station_utilization_rate": 0.15656390717007274,
+  "average_charging_stations_occupied_per_step": 1.2525112573605819,
+  "elapsed_seconds": 28404.27799987793,
+  "step_records_path": "results/calls/shared_context/json/session_20260401_121402/gemma3_12b/medium_agv_heavy_6v2/json/step_records.json"
+}

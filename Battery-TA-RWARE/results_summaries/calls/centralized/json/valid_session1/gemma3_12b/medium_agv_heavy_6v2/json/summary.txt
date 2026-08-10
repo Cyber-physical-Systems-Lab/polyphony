@@ -1,0 +1,19 @@
+Stated Objective: Optimize calls to LLM and increase the total shelf delivery.
+Model: gemma3:12b (MLM)
+Scenario: medium_agv_heavy_6v2 [tarware-medium-6agvs-2pickers-globalobs-chg-v1]
+Scenario Focus: Strongly AGV-heavy: stress-test support prioritization, waiting, and charging decisions.
+Prompt format: JSON
+Total Shelf Delivery: 3
+Steps executed: 1175
+LLM calls: 1035
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 666
+LLM failures: 3
+LLM missing/invalid planned actions: 45
+JSON generation failures: 1
+Charging station utilization rate: 0.1360
+Average charging stations occupied per step: 1.0877
+Shelf delivery timeline:
+- step=190 delivered_this_step=1 total_shelf_deliveries=1
+- step=621 delivered_this_step=1 total_shelf_deliveries=2
+- step=675 delivered_this_step=1 total_shelf_deliveries=3

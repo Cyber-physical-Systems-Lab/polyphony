@@ -1,0 +1,54 @@
+{
+  "stated_objective": "Optimize calls to LLM and increase the total shelf delivery.",
+  "model": "mistral:7b",
+  "model_class": "MLM",
+  "scenario": "tiny_balanced_1v1",
+  "scenario_env_id": "tarware-tiny-1agvs-1pickers-globalobs-chg-v1",
+  "scenario_focus": "Balanced baseline: reveal whether the model understands the normal AGV-Picker collaboration loop.",
+  "prompt_format": "LANGUAGE",
+  "total_shelf_deliveries": 5,
+  "delivery_timeline": [
+    {
+      "step": 375,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 1
+    },
+    {
+      "step": 699,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 2
+    },
+    {
+      "step": 893,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 3
+    },
+    {
+      "step": 1221,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 4
+    },
+    {
+      "step": 1563,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 5
+    }
+  ],
+  "steps_executed": 2063,
+  "max_steps": 0,
+  "max_inactivity_steps": 500,
+  "max_busy_steps_for_replan": 10,
+  "disable_support_needed_soon": true,
+  "find_path_agent_aware_always": true,
+  "seed": 0,
+  "llm_calls": 1220,
+  "llm_calls_skipped_busy_agents": 0,
+  "action_reuse_without_llm_query": 343,
+  "llm_failures": 164,
+  "llm_missing_or_invalid_actions": 803,
+  "json_generation_failures": 0,
+  "charging_station_utilization_rate": 0.23606398448860882,
+  "average_charging_stations_occupied_per_step": 0.47212796897721765,
+  "elapsed_seconds": 38112.21188211441,
+  "step_records_path": "results/calls/centralized/natural/session_20260423_193725/mistral_7b/tiny_balanced_1v1/language/step_records.json"
+}

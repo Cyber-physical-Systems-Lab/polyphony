@@ -1,0 +1,59 @@
+{
+  "stated_objective": "Optimize calls to LLM and increase the total shelf delivery.",
+  "model": "gemma3:12b",
+  "model_class": "MLM",
+  "scenario": "medium_balanced_4v4",
+  "scenario_env_id": "tarware-medium-4agvs-4pickers-globalobs-chg-v1",
+  "scenario_focus": "Balanced scaling: larger warehouse and longer-horizon coordination.",
+  "prompt_format": "LANGUAGE",
+  "total_shelf_deliveries": 6,
+  "delivery_timeline": [
+    {
+      "step": 46,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 1
+    },
+    {
+      "step": 64,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 2
+    },
+    {
+      "step": 79,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 3
+    },
+    {
+      "step": 101,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 4
+    },
+    {
+      "step": 370,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 5
+    },
+    {
+      "step": 626,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 6
+    }
+  ],
+  "steps_executed": 1126,
+  "max_steps": 0,
+  "max_inactivity_steps": 500,
+  "max_busy_steps_for_replan": 10,
+  "disable_support_needed_soon": true,
+  "find_path_agent_aware_always": true,
+  "seed": 0,
+  "llm_calls": 1456,
+  "llm_calls_skipped_busy_agents": 0,
+  "action_reuse_without_llm_query": 606,
+  "llm_failures": 0,
+  "llm_missing_or_invalid_actions": 0,
+  "json_generation_failures": 0,
+  "charging_station_utilization_rate": 0.11922735346358793,
+  "average_charging_stations_occupied_per_step": 0.9538188277087034,
+  "elapsed_seconds": 5759.304492473602,
+  "step_records_path": "results/calls/shared_context/natural/session_20260329_094333/gemma3_12b/medium_balanced_4v4/language/step_records.json"
+}

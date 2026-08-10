@@ -1,0 +1,38 @@
+Stated Objective: Maximize total shelf deliveries while keeping agents charged enough to avoid critical battery levels.
+Model: llama3.2:3b (SLM)
+Scenario: small_balanced_2v2 [tarware-small-2agvs-2pickers-globalobs-chg-v1]
+Scenario Focus: Balanced coordination at slightly higher concurrency.
+Prompt format: LANGUAGE
+Total Shelf Delivery: 18
+Steps executed: 2691
+LLM calls: 3149
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 672
+LLM failures: 0
+LLM missing/invalid planned actions: 0
+JSON generation failures: 0
+Charging station utilization rate: 0.1831
+Average charging stations occupied per step: 0.7324
+Minimum battery observed: 0.0
+Below required minimum charge events: 1580
+Agents ever below required minimum charge: agent_0, agent_1, agent_2, agent_3
+Battery safety success: False
+Shelf delivery timeline:
+- step=70 delivered_this_step=1 total_shelf_deliveries=1
+- step=84 delivered_this_step=1 total_shelf_deliveries=2
+- step=286 delivered_this_step=1 total_shelf_deliveries=3
+- step=310 delivered_this_step=1 total_shelf_deliveries=4
+- step=404 delivered_this_step=1 total_shelf_deliveries=5
+- step=492 delivered_this_step=1 total_shelf_deliveries=6
+- step=520 delivered_this_step=1 total_shelf_deliveries=7
+- step=606 delivered_this_step=1 total_shelf_deliveries=8
+- step=750 delivered_this_step=1 total_shelf_deliveries=9
+- step=925 delivered_this_step=1 total_shelf_deliveries=10
+- step=1143 delivered_this_step=1 total_shelf_deliveries=11
+- step=1399 delivered_this_step=1 total_shelf_deliveries=12
+- step=1452 delivered_this_step=1 total_shelf_deliveries=13
+- step=1702 delivered_this_step=1 total_shelf_deliveries=14
+- step=1758 delivered_this_step=1 total_shelf_deliveries=15
+- step=1976 delivered_this_step=1 total_shelf_deliveries=16
+- step=2092 delivered_this_step=1 total_shelf_deliveries=17
+- step=2191 delivered_this_step=1 total_shelf_deliveries=18

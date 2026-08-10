@@ -1,0 +1,69 @@
+{
+  "stated_objective": "Optimize calls to LLM and increase the total shelf delivery.",
+  "model": "gemma3:12b",
+  "model_class": "MLM",
+  "scenario": "small_balanced_2v2",
+  "scenario_env_id": "tarware-small-2agvs-2pickers-globalobs-chg-v1",
+  "scenario_focus": "Balanced coordination at slightly higher concurrency.",
+  "prompt_format": "LANGUAGE",
+  "total_shelf_deliveries": 8,
+  "delivery_timeline": [
+    {
+      "step": 152,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 1
+    },
+    {
+      "step": 509,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 2
+    },
+    {
+      "step": 807,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 3
+    },
+    {
+      "step": 829,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 4
+    },
+    {
+      "step": 1040,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 5
+    },
+    {
+      "step": 1246,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 6
+    },
+    {
+      "step": 1631,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 7
+    },
+    {
+      "step": 1769,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 8
+    }
+  ],
+  "steps_executed": 2269,
+  "max_steps": 0,
+  "max_inactivity_steps": 500,
+  "max_busy_steps_for_replan": 10,
+  "disable_support_needed_soon": true,
+  "find_path_agent_aware_always": true,
+  "seed": 0,
+  "llm_calls": 957,
+  "llm_calls_skipped_busy_agents": 0,
+  "action_reuse_without_llm_query": 581,
+  "llm_failures": 0,
+  "llm_missing_or_invalid_actions": 0,
+  "json_generation_failures": 0,
+  "charging_station_utilization_rate": 0.10885852798589687,
+  "average_charging_stations_occupied_per_step": 0.4354341119435875,
+  "elapsed_seconds": 4987.982495546341,
+  "step_records_path": "results/Larger-Models/centralized/natural/obj2/session_obj2_centralized_natural_gemma3_12b_seed0_20260719/gemma3_12b/small_balanced_2v2/language/step_records.json"
+}

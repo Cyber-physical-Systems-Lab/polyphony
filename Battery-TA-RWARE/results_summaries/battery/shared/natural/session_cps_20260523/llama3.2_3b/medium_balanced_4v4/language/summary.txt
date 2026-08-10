@@ -1,0 +1,39 @@
+Stated Objective: Optimize Battery Life: keep agents charged, prioritize safe charging decisions, and never let any agent go below the critical battery threshold.
+Model: llama3.2:3b (SLM)
+Scenario: medium_balanced_4v4 [tarware-medium-4agvs-4pickers-globalobs-chg-v1]
+Scenario Focus: Balanced scaling: larger warehouse and longer-horizon coordination.
+Prompt format: LANGUAGE
+Total Shelf Delivery: 17
+Steps executed: 1243
+LLM calls: 3509
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 293
+LLM failures: 0
+LLM missing/invalid planned actions: 0
+JSON generation failures: 0
+Charging station utilization rate: 0.0729
+Average charging stations occupied per step: 0.5833
+Critical battery threshold: 30.0
+Minimum required charge: 30.0
+Minimum battery observed: 0.0
+Below required minimum charge events: 4950
+Agents ever below required minimum charge: agent_0, agent_1, agent_2, agent_3, agent_4, agent_5, agent_6, agent_7
+Battery objective success: False
+Shelf delivery timeline:
+- step=28 delivered_this_step=1 total_shelf_deliveries=1
+- step=40 delivered_this_step=1 total_shelf_deliveries=2
+- step=156 delivered_this_step=1 total_shelf_deliveries=3
+- step=185 delivered_this_step=1 total_shelf_deliveries=4
+- step=229 delivered_this_step=1 total_shelf_deliveries=5
+- step=271 delivered_this_step=1 total_shelf_deliveries=6
+- step=343 delivered_this_step=1 total_shelf_deliveries=7
+- step=354 delivered_this_step=1 total_shelf_deliveries=8
+- step=387 delivered_this_step=1 total_shelf_deliveries=9
+- step=464 delivered_this_step=1 total_shelf_deliveries=10
+- step=541 delivered_this_step=1 total_shelf_deliveries=11
+- step=571 delivered_this_step=1 total_shelf_deliveries=12
+- step=579 delivered_this_step=1 total_shelf_deliveries=13
+- step=651 delivered_this_step=1 total_shelf_deliveries=14
+- step=656 delivered_this_step=1 total_shelf_deliveries=15
+- step=731 delivered_this_step=1 total_shelf_deliveries=16
+- step=743 delivered_this_step=1 total_shelf_deliveries=17

@@ -1,0 +1,164 @@
+{
+  "stated_objective": "Optimize Battery Life: keep agents charged, prioritize safe charging decisions, and never let any agent go below the critical battery threshold.",
+  "model": "llama3.2:3b",
+  "model_class": "SLM",
+  "scenario": "medium_agv_heavy_6v2",
+  "scenario_env_id": "tarware-medium-6agvs-2pickers-globalobs-chg-v1",
+  "scenario_focus": "Strongly AGV-heavy: stress-test support prioritization, waiting, and charging decisions.",
+  "prompt_format": "LANGUAGE",
+  "total_shelf_deliveries": 20,
+  "delivery_timeline": [
+    {
+      "step": 60,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 1
+    },
+    {
+      "step": 68,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 2
+    },
+    {
+      "step": 80,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 3
+    },
+    {
+      "step": 140,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 4
+    },
+    {
+      "step": 154,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 5
+    },
+    {
+      "step": 212,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 6
+    },
+    {
+      "step": 218,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 7
+    },
+    {
+      "step": 301,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 8
+    },
+    {
+      "step": 321,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 9
+    },
+    {
+      "step": 339,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 10
+    },
+    {
+      "step": 436,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 11
+    },
+    {
+      "step": 439,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 12
+    },
+    {
+      "step": 459,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 13
+    },
+    {
+      "step": 596,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 14
+    },
+    {
+      "step": 682,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 15
+    },
+    {
+      "step": 684,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 16
+    },
+    {
+      "step": 692,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 17
+    },
+    {
+      "step": 749,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 18
+    },
+    {
+      "step": 802,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 19
+    },
+    {
+      "step": 958,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 20
+    }
+  ],
+  "steps_executed": 958,
+  "max_steps": 0,
+  "max_inactivity_steps": 500,
+  "max_busy_steps_for_replan": 10,
+  "disable_support_needed_soon": true,
+  "find_path_agent_aware_always": true,
+  "seed": 100,
+  "llm_calls": 2948,
+  "llm_calls_skipped_busy_agents": 0,
+  "action_reuse_without_llm_query": 534,
+  "llm_failures": 0,
+  "llm_missing_or_invalid_actions": 0,
+  "json_generation_failures": 0,
+  "charging_station_utilization_rate": 0.13034968684759918,
+  "average_charging_stations_occupied_per_step": 1.0427974947807934,
+  "critical_battery_threshold": 30.0,
+  "minimum_required_charge": 30.0,
+  "min_battery_observed": 0.0,
+  "per_agent_min_battery": {
+    "agent_0": 7.0,
+    "agent_1": 0.0,
+    "agent_2": 0.0,
+    "agent_3": 0.0,
+    "agent_4": 0.0,
+    "agent_5": 0.0,
+    "agent_6": 0.0,
+    "agent_7": 0.0
+  },
+  "below_required_min_charge_events": 3024,
+  "per_agent_below_required_min_charge_steps": {
+    "agent_0": 99,
+    "agent_1": 80,
+    "agent_2": 319,
+    "agent_3": 160,
+    "agent_4": 623,
+    "agent_5": 167,
+    "agent_6": 769,
+    "agent_7": 807
+  },
+  "agents_ever_below_required_min_charge": [
+    "agent_0",
+    "agent_1",
+    "agent_2",
+    "agent_3",
+    "agent_4",
+    "agent_5",
+    "agent_6",
+    "agent_7"
+  ],
+  "battery_objective_success": false,
+  "elapsed_seconds": 7851.5137984752655,
+  "step_records_path": "results/battery/shared/natural/session_cps_20260533/llama3.2_3b/medium_agv_heavy_6v2/language/step_records.json"
+}

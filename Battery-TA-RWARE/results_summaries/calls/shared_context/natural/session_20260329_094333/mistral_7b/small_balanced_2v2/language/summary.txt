@@ -1,0 +1,28 @@
+Stated Objective: Optimize calls to LLM and increase the total shelf delivery.
+Model: mistral:7b (MLM)
+Scenario: small_balanced_2v2 [tarware-small-2agvs-2pickers-globalobs-chg-v1]
+Scenario Focus: Balanced coordination at slightly higher concurrency.
+Prompt format: LANGUAGE
+Total Shelf Delivery: 12
+Steps executed: 1907
+LLM calls: 3664
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 325
+LLM failures: 0
+LLM missing/invalid planned actions: 0
+JSON generation failures: 0
+Charging station utilization rate: 0.2670
+Average charging stations occupied per step: 1.0682
+Shelf delivery timeline:
+- step=39 delivered_this_step=1 total_shelf_deliveries=1
+- step=75 delivered_this_step=1 total_shelf_deliveries=2
+- step=152 delivered_this_step=1 total_shelf_deliveries=3
+- step=221 delivered_this_step=1 total_shelf_deliveries=4
+- step=360 delivered_this_step=1 total_shelf_deliveries=5
+- step=431 delivered_this_step=1 total_shelf_deliveries=6
+- step=551 delivered_this_step=1 total_shelf_deliveries=7
+- step=940 delivered_this_step=1 total_shelf_deliveries=8
+- step=1079 delivered_this_step=1 total_shelf_deliveries=9
+- step=1174 delivered_this_step=1 total_shelf_deliveries=10
+- step=1302 delivered_this_step=1 total_shelf_deliveries=11
+- step=1407 delivered_this_step=1 total_shelf_deliveries=12

@@ -1,0 +1,21 @@
+Stated Objective: Optimize calls to LLM and increase the total shelf delivery.
+Model: mistral:7b (MLM)
+Scenario: tiny_balanced_1v1 [tarware-tiny-1agvs-1pickers-globalobs-chg-v1]
+Scenario Focus: Balanced baseline: reveal whether the model understands the normal AGV-Picker collaboration loop.
+Prompt format: LANGUAGE
+Total Shelf Delivery: 5
+Steps executed: 2063
+LLM calls: 1220
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 343
+LLM failures: 164
+LLM missing/invalid planned actions: 803
+JSON generation failures: 0
+Charging station utilization rate: 0.2361
+Average charging stations occupied per step: 0.4721
+Shelf delivery timeline:
+- step=375 delivered_this_step=1 total_shelf_deliveries=1
+- step=699 delivered_this_step=1 total_shelf_deliveries=2
+- step=893 delivered_this_step=1 total_shelf_deliveries=3
+- step=1221 delivered_this_step=1 total_shelf_deliveries=4
+- step=1563 delivered_this_step=1 total_shelf_deliveries=5

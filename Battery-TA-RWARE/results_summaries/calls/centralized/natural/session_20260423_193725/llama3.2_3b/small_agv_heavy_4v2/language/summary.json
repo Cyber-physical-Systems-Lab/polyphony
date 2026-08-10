@@ -1,0 +1,119 @@
+{
+  "stated_objective": "Optimize calls to LLM and increase the total shelf delivery.",
+  "model": "llama3.2:3b",
+  "model_class": "SLM",
+  "scenario": "small_agv_heavy_4v2",
+  "scenario_env_id": "tarware-small-4agvs-2pickers-globalobs-chg-v1",
+  "scenario_focus": "AGV-heavy: reveal picker-support scheduling weakness and AGV waiting behavior.",
+  "prompt_format": "LANGUAGE",
+  "total_shelf_deliveries": 18,
+  "delivery_timeline": [
+    {
+      "step": 411,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 1
+    },
+    {
+      "step": 417,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 2
+    },
+    {
+      "step": 607,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 3
+    },
+    {
+      "step": 719,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 4
+    },
+    {
+      "step": 758,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 5
+    },
+    {
+      "step": 1061,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 6
+    },
+    {
+      "step": 1169,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 7
+    },
+    {
+      "step": 1213,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 8
+    },
+    {
+      "step": 1533,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 9
+    },
+    {
+      "step": 1554,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 10
+    },
+    {
+      "step": 1855,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 11
+    },
+    {
+      "step": 2004,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 12
+    },
+    {
+      "step": 2422,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 13
+    },
+    {
+      "step": 2455,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 14
+    },
+    {
+      "step": 2529,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 15
+    },
+    {
+      "step": 2658,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 16
+    },
+    {
+      "step": 2679,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 17
+    },
+    {
+      "step": 2687,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 18
+    }
+  ],
+  "steps_executed": 3187,
+  "max_steps": 0,
+  "max_inactivity_steps": 500,
+  "max_busy_steps_for_replan": 10,
+  "disable_support_needed_soon": true,
+  "find_path_agent_aware_always": true,
+  "seed": 0,
+  "llm_calls": 2457,
+  "llm_calls_skipped_busy_agents": 0,
+  "action_reuse_without_llm_query": 1425,
+  "llm_failures": 0,
+  "llm_missing_or_invalid_actions": 580,
+  "json_generation_failures": 0,
+  "charging_station_utilization_rate": 0.15704424223407593,
+  "average_charging_stations_occupied_per_step": 0.9422654534044556,
+  "elapsed_seconds": 27384.29538321495,
+  "step_records_path": "results/calls/centralized/natural/session_20260423_193725/llama3.2_3b/small_agv_heavy_4v2/language/step_records.json"
+}

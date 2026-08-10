@@ -1,0 +1,40 @@
+Stated Objective: Maximize total shelf deliveries while keeping agents charged enough to avoid critical battery levels.
+Model: phi4 (LLM)
+Scenario: small_picker_heavy_2v4 [tarware-small-2agvs-4pickers-globalobs-chg-v1]
+Scenario Focus: Picker-heavy: reveal underutilization, role confusion, and unnecessary movement.
+Prompt format: JSON
+Total Shelf Delivery: 20
+Steps executed: 2003
+LLM calls: 1626
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 936
+LLM failures: 0
+LLM missing/invalid planned actions: 5
+JSON generation failures: 1
+Charging station utilization rate: 0.1619
+Average charging stations occupied per step: 0.9715
+Minimum battery observed: 0.0
+Below required minimum charge events: 3494
+Agents ever below required minimum charge: agent_0, agent_1, agent_2, agent_3, agent_4, agent_5
+Battery safety success: False
+Shelf delivery timeline:
+- step=23 delivered_this_step=1 total_shelf_deliveries=1
+- step=50 delivered_this_step=1 total_shelf_deliveries=2
+- step=71 delivered_this_step=1 total_shelf_deliveries=3
+- step=117 delivered_this_step=1 total_shelf_deliveries=4
+- step=336 delivered_this_step=1 total_shelf_deliveries=5
+- step=356 delivered_this_step=1 total_shelf_deliveries=6
+- step=436 delivered_this_step=1 total_shelf_deliveries=7
+- step=494 delivered_this_step=1 total_shelf_deliveries=8
+- step=681 delivered_this_step=1 total_shelf_deliveries=9
+- step=921 delivered_this_step=1 total_shelf_deliveries=10
+- step=1067 delivered_this_step=1 total_shelf_deliveries=11
+- step=1157 delivered_this_step=1 total_shelf_deliveries=12
+- step=1275 delivered_this_step=1 total_shelf_deliveries=13
+- step=1398 delivered_this_step=1 total_shelf_deliveries=14
+- step=1524 delivered_this_step=1 total_shelf_deliveries=15
+- step=1698 delivered_this_step=1 total_shelf_deliveries=16
+- step=1703 delivered_this_step=1 total_shelf_deliveries=17
+- step=1863 delivered_this_step=1 total_shelf_deliveries=18
+- step=1996 delivered_this_step=1 total_shelf_deliveries=19
+- step=2003 delivered_this_step=1 total_shelf_deliveries=20

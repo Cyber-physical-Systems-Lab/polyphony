@@ -1,0 +1,118 @@
+{
+  "stated_objective": "Optimize Battery Life: keep agents charged, prioritize safe charging decisions, and never let any agent go below the critical battery threshold.",
+  "model": "mistral:7b",
+  "model_class": "MLM",
+  "scenario": "small_agv_heavy_4v2",
+  "scenario_env_id": "tarware-small-4agvs-2pickers-globalobs-chg-v1",
+  "scenario_focus": "AGV-heavy: reveal picker-support scheduling weakness and AGV waiting behavior.",
+  "prompt_format": "LANGUAGE",
+  "total_shelf_deliveries": 12,
+  "delivery_timeline": [
+    {
+      "step": 48,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 1
+    },
+    {
+      "step": 66,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 2
+    },
+    {
+      "step": 233,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 3
+    },
+    {
+      "step": 314,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 4
+    },
+    {
+      "step": 424,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 5
+    },
+    {
+      "step": 430,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 6
+    },
+    {
+      "step": 602,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 7
+    },
+    {
+      "step": 730,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 8
+    },
+    {
+      "step": 804,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 9
+    },
+    {
+      "step": 858,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 10
+    },
+    {
+      "step": 912,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 11
+    },
+    {
+      "step": 929,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 12
+    }
+  ],
+  "steps_executed": 1429,
+  "max_steps": 0,
+  "max_inactivity_steps": 500,
+  "max_busy_steps_for_replan": 10,
+  "disable_support_needed_soon": true,
+  "find_path_agent_aware_always": true,
+  "seed": 100,
+  "llm_calls": 2620,
+  "llm_calls_skipped_busy_agents": 0,
+  "action_reuse_without_llm_query": 472,
+  "llm_failures": 0,
+  "llm_missing_or_invalid_actions": 0,
+  "json_generation_failures": 0,
+  "charging_station_utilization_rate": 0.13610916724982505,
+  "average_charging_stations_occupied_per_step": 0.8166550034989503,
+  "critical_battery_threshold": 30.0,
+  "minimum_required_charge": 30.0,
+  "min_battery_observed": 0.0,
+  "per_agent_min_battery": {
+    "agent_0": 3.0,
+    "agent_1": 0.0,
+    "agent_2": 0.0,
+    "agent_3": 0.0,
+    "agent_4": 0.0,
+    "agent_5": 11.0
+  },
+  "below_required_min_charge_events": 3935,
+  "per_agent_below_required_min_charge_steps": {
+    "agent_0": 1071,
+    "agent_1": 846,
+    "agent_2": 892,
+    "agent_3": 808,
+    "agent_4": 203,
+    "agent_5": 115
+  },
+  "agents_ever_below_required_min_charge": [
+    "agent_0",
+    "agent_1",
+    "agent_2",
+    "agent_3",
+    "agent_4",
+    "agent_5"
+  ],
+  "battery_objective_success": false,
+  "elapsed_seconds": 4968.600163936615,
+  "step_records_path": "results/battery/shared/natural/session_cps_20260523/mistral_7b/small_agv_heavy_4v2/language/step_records.json"
+}

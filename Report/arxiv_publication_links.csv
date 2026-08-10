@@ -1,0 +1,24 @@
+citation_key,title,arxiv_link,publication_link
+karam2026collaborationmrs,Collaboration in Multi-Robot Systems: Taxonomy and Survey over Frameworks for Collaboration,https://arxiv.org/abs/2603.23898,
+liu2023bolaa,BOLAA: Benchmarking and Orchestrating LLM-Augmented Autonomous Agents,https://arxiv.org/abs/2308.05960,
+xiao2026probingprompt,Probing Prompt Design for Socially Compliant Robot Navigation with Vision Language Models,https://arxiv.org/abs/2601.14622,
+brockman2016gym,OpenAI Gym,https://arxiv.org/abs/1606.01540,
+towers2024gymnasium,Gymnasium: A Standard Interface for Reinforcement Learning Environments,https://arxiv.org/abs/2407.17032,https://papers.nips.cc/paper_files/paper/2025/hash/d7ff1795e8527f6443371c3933bdb52b-Abstract-Datasets_and_Benchmarks_Track.html
+mikolov2013distributed,Efficient Estimation of Word Representations in Vector Space,https://arxiv.org/abs/1301.3781,https://iclr.cc/archive/2013/workshop-proceedings.html
+bommasani2021foundation,On the Opportunities and Risks of Foundation Models,https://arxiv.org/abs/2108.07258,
+sahoo2024promptsurvey,A Systematic Survey of Prompt Engineering in Large Language Models: Techniques and Applications,https://arxiv.org/abs/2402.07927,
+tam2024letmespeak,Let Me Speak Freely? A Study on the Impact of Format Restrictions on Performance of Large Language Models,https://arxiv.org/abs/2408.02442,https://aclanthology.org/2024.emnlp-industry.91/
+huang2022lmp,Language Models as Zero-Shot Planners: Extracting Actionable Knowledge for Embodied Agents,https://arxiv.org/abs/2201.07207,https://proceedings.mlr.press/v162/huang22a.html
+yao2022react,ReAct: Synergizing Reasoning and Acting in Language Models,https://arxiv.org/abs/2210.03629,https://openreview.net/forum?id=WE_vluYUL-X
+ahn2022do,"Do As I Can, Not As I Say: Grounding Language in Robotic Affordances",https://arxiv.org/abs/2204.01691,https://proceedings.mlr.press/v205/ichter23a.html
+huang2022innermonologue,Inner Monologue: Embodied Reasoning through Planning with Language Models,https://arxiv.org/abs/2207.05608,https://proceedings.mlr.press/v205/huang23c.html
+liang2022code,Code as Policies: Language Model Programs for Embodied Control,https://arxiv.org/abs/2209.07753,https://doi.org/10.1109/ICRA48891.2023.10160591
+singh2023progprompt,ProgPrompt: Generating Situated Robot Task Plans using Large Language Models,https://arxiv.org/abs/2209.11302,https://ieeexplore.ieee.org/document/10161317
+li2026largelanguagemodelsmultirobot,Large Language Models for Multi-Robot Systems: A Survey,https://arxiv.org/abs/2502.03814,https://doi.org/10.1007/s10514-026-10257-4
+papoudakis2021benchmarking,Benchmarking Multi-Agent Deep Reinforcement Learning Algorithms in Cooperative Tasks,https://arxiv.org/abs/2006.07869,https://datasets-benchmarks-proceedings.neurips.cc/paper_files/paper/2021/hash/a8baa56554f96369ab93e4f3bb068c22-Abstract-round1.html
+jiang2023mistral7b,Mistral 7B,https://arxiv.org/abs/2310.06825,
+gemmateam2025gemma3,Gemma 3 Technical Report,https://arxiv.org/abs/2503.19786,
+abdin2024phi4,Phi-4 Technical Report,https://arxiv.org/abs/2412.08905,
+yang2024qwen25,Qwen2.5 Technical Report,https://arxiv.org/abs/2412.15115,
+zeng2023largelanguagerobotics,Large Language Models for Robotics: A Survey,https://arxiv.org/abs/2311.07226,
+kawaharazuka2024realworldfoundationrobotics,Real-World Robot Applications of Foundation Models: A Review,https://arxiv.org/abs/2402.05741,https://doi.org/10.1080/01691864.2024.2408593

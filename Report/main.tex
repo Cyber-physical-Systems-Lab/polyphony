@@ -17,7 +17,10 @@
 \usepackage{varioref}
 \usepackage{csquotes}
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning,shapes.geometric}
+\usepackage{pgfplots}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,patterns}
+\pgfplotsset{compat=1.18}
+\input{figures/charts/latex/report_charts.tex}
 
 % Om ni skriver på svenska, använd denna rad:
 % \usepackage[english,swedish]{babel}
@@ -62,7 +65,7 @@ December\fi, \number \year}
 % Use this if you have a subtitle
 \subtitle{Exploring different sizes and architectures}
 
-% Serial number UPTEC XX XXXXX
+% TODO: Request the assigned UPTEC serial number from the university before final submission.
 \serialnumber{UPTEC XX XXXXX}
 
 %Number of credits
@@ -104,8 +107,11 @@ December\fi, \number \year}
 \input{text/summary}
 \end{sammanfattning}
 
-\paragraph{Acknowledgement}
+\section*{Acknowledgements}
 \input{text/acknowledgement}
+
+\section*{Declaration of Generative AI Use}
+OpenAI Codex was used to support code development, LaTeX editing, report structuring, and review of drafts for clarity, consistency, and possible omissions. OpenAI ChatGPT was used occasionally for rephrasing and suggestions concerning sections of the report. All research decisions, implementation choices, experimental work, data analysis, interpretation, and final content remain the responsibility of the author. Suggestions produced by these tools were critically reviewed and revised before inclusion. Neither tool was treated as a source of scientific evidence or used to generate experimental measurements.
 \newpage
 
 % Innehållsförteckningen här.

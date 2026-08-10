@@ -1,0 +1,385 @@
+% Native vector charts for the Results chapter.
+% Requires: \usepackage{pgfplots}
+%           \usetikzlibrary{patterns}
+%           \pgfplotsset{compat=1.18}
+
+\definecolor{chartblue}{RGB}{52,112,186}
+\definecolor{chartorange}{RGB}{224,112,42}
+\definecolor{chartgreen}{RGB}{71,140,92}
+
+\pgfplotsset{
+    thesis chart/.style={
+        width=0.96\textwidth,
+        height=0.54\textheight,
+        axis line style={black!70},
+        tick style={black!70},
+        ymajorgrids=true,
+        grid style={black!15},
+        legend style={
+            draw=black!20,
+            fill=white,
+            fill opacity=0.88,
+            text opacity=1,
+            font=\small,
+            at={(0.98,0.98)},
+            anchor=north east,
+            legend columns=-1
+        },
+        title style={font=\large},
+        label style={font=\small},
+        tick label style={font=\small},
+        enlarge x limits=0.08,
+        scaled y ticks=false
+    },
+    paired bars/.style={
+        thesis chart,
+        ybar,
+        bar width=13pt,
+        ymin=0
+    }
+}
+
+\newcommand{\ChartPromptScenarios}{%
+\begin{tikzpicture}
+\begin{axis}[
+    paired bars,
+    title={Call-normalised deliveries by prompt configuration and scenario},
+    ylabel={Deliveries per 1000 LLM calls},
+    symbolic x coords={
+        Tiny balanced,
+        Small balanced,
+        Small AGV-heavy,
+        Small Picker-heavy,
+        Medium balanced,
+        Medium AGV-heavy
+    },
+    xtick=data,
+    x tick label style={rotate=24,anchor=east,font=\footnotesize},
+    ymax=8.2
+]
+\addplot[
+    fill=chartblue!75,
+    draw=chartblue!90!black
+] coordinates {
+    (Tiny balanced,3.5363)
+    (Small balanced,1.3297)
+    (Small AGV-heavy,4.8523)
+    (Small Picker-heavy,2.8485)
+    (Medium balanced,2.9946)
+    (Medium AGV-heavy,2.8982)
+};
+\addplot[
+    fill=chartorange!45,
+    draw=chartorange!90!black,
+    postaction={pattern=north east lines,pattern color=chartorange!90!black}
+] coordinates {
+    (Tiny balanced,7.4527)
+    (Small balanced,4.2260)
+    (Small AGV-heavy,7.4129)
+    (Small Picker-heavy,3.8772)
+    (Medium balanced,4.7240)
+    (Medium AGV-heavy,7.1484)
+};
+\legend{JSON,Natural language}
+\end{axis}
+\end{tikzpicture}%
+}
+
+\newcommand{\ChartPromptModels}{%
+\begin{tikzpicture}
+\begin{axis}[
+    paired bars,
+    title={Call-normalised deliveries by prompt configuration and model},
+    ylabel={Deliveries per 1000 LLM calls},
+    symbolic x coords={Llama 1B,Llama 3B,Mistral 7B,Gemma 12B,Phi4,Qwen 14B},
+    xtick={Llama 1B,Llama 3B,Mistral 7B,Gemma 12B,Phi4,Qwen 14B},
+    x tick label style={rotate=22,anchor=east,font=\footnotesize},
+    ymax=9
+]
+\addplot[
+    fill=chartblue!75,
+    draw=chartblue!90!black
+] coordinates {
+    (Llama 1B,0.7572)
+    (Llama 3B,1.8964)
+    (Mistral 7B,3.7570)
+    (Gemma 12B,2.5958)
+    (Phi4,8.0276)
+    (Qwen 14B,4.0910)
+};
+\addplot[
+    fill=chartorange!45,
+    draw=chartorange!90!black,
+    postaction={pattern=north east lines,pattern color=chartorange!90!black}
+] coordinates {
+    (Llama 1B,2.7236)
+    (Llama 3B,6.1682)
+    (Mistral 7B,4.3561)
+    (Gemma 12B,7.1555)
+    (Phi4,7.6991)
+    (Qwen 14B,6.5235)
+};
+\legend{JSON,Natural language}
+\end{axis}
+\end{tikzpicture}%
+}
+
+\newcommand{\ChartPromptArchitecture}{%
+\begin{tikzpicture}
+\begin{axis}[
+    paired bars,
+    width=0.78\textwidth,
+    title={Prompt configuration within each planning architecture},
+    ylabel={Deliveries per 1000 LLM calls},
+    symbolic x coords={Centralized,Shared context},
+    xtick=data,
+    ymax=8,
+    enlarge x limits=0.25
+]
+\addplot[
+    fill=chartblue!75,
+    draw=chartblue!90!black
+] coordinates {
+    (Centralized,6.4161)
+    (Shared context,1.8614)
+};
+\addplot[
+    fill=chartorange!45,
+    draw=chartorange!90!black,
+    postaction={pattern=north east lines,pattern color=chartorange!90!black}
+] coordinates {
+    (Centralized,7.1544)
+    (Shared context,4.8907)
+};
+\legend{JSON,Natural language}
+\end{axis}
+\end{tikzpicture}%
+}
+
+\newcommand{\ChartArchitectureScenarios}{%
+\begin{tikzpicture}
+\begin{axis}[
+    paired bars,
+    title={Mean delivery count by planning architecture and scenario},
+    ylabel={Mean shelf deliveries},
+    symbolic x coords={
+        Tiny balanced,
+        Small balanced,
+        Small AGV-heavy,
+        Small Picker-heavy,
+        Medium balanced,
+        Medium AGV-heavy
+    },
+    xtick=data,
+    x tick label style={rotate=24,anchor=east,font=\footnotesize},
+    ymax=15
+]
+\addplot[
+    fill=chartblue!75,
+    draw=chartblue!90!black
+] coordinates {
+    (Tiny balanced,3.0833)
+    (Small balanced,2.6667)
+    (Small AGV-heavy,8.6667)
+    (Small Picker-heavy,3.8611)
+    (Medium balanced,7.8333)
+    (Medium AGV-heavy,7.6944)
+};
+\addplot[
+    fill=chartorange!45,
+    draw=chartorange!90!black,
+    postaction={pattern=north east lines,pattern color=chartorange!90!black}
+] coordinates {
+    (Tiny balanced,6.0463)
+    (Small balanced,4.5417)
+    (Small AGV-heavy,13.1481)
+    (Small Picker-heavy,8.9259)
+    (Medium balanced,8.1759)
+    (Medium AGV-heavy,10.5880)
+};
+\legend{Centralized,Shared context}
+\end{axis}
+\end{tikzpicture}%
+}
+
+\newcommand{\ChartArchitectureModels}{%
+\begin{tikzpicture}
+\begin{axis}[
+    paired bars,
+    title={Mean delivery count by planning architecture and model},
+    ylabel={Mean shelf deliveries},
+    symbolic x coords={Llama 1B,Llama 3B,Mistral 7B,Gemma 12B,Phi4,Qwen 14B},
+    xtick=data,
+    x tick label style={rotate=22,anchor=east,font=\footnotesize},
+    ymax=17
+]
+\addplot[
+    fill=chartblue!75,
+    draw=chartblue!90!black
+] coordinates {
+    (Llama 1B,0.4167)
+    (Llama 3B,10.8750)
+    (Mistral 7B,7.6667)
+    (Gemma 12B,5.0000)
+    (Phi4,4.5000)
+    (Qwen 14B,7.0000)
+};
+\addplot[
+    fill=chartorange!45,
+    draw=chartorange!90!black,
+    postaction={pattern=north east lines,pattern color=chartorange!90!black}
+] coordinates {
+    (Llama 1B,6.2083)
+    (Llama 3B,15.0625)
+    (Mistral 7B,9.9653)
+    (Gemma 12B,6.5694)
+    (Phi4,5.0000)
+    (Qwen 14B,5.6667)
+};
+\legend{Centralized,Shared context}
+\end{axis}
+\end{tikzpicture}%
+}
+
+\newcommand{\ChartMatchedModels}{%
+\begin{tikzpicture}
+\begin{axis}[
+    paired bars,
+    title={Matched delivery performance by model},
+    ylabel={Deliveries},
+    symbolic x coords={Llama 1B,Llama 3B,Mistral 7B,Gemma 12B,Phi4,Qwen 14B},
+    xtick=data,
+    x tick label style={rotate=22,anchor=east,font=\footnotesize},
+    ymax=8.5
+]
+\addplot[
+    fill=chartblue!75,
+    draw=chartblue!90!black
+] coordinates {
+    (Llama 1B,1.78)
+    (Llama 3B,7.21)
+    (Mistral 7B,5.98)
+    (Gemma 12B,5.95)
+    (Phi4,5.80)
+    (Qwen 14B,5.83)
+};
+\addplot[
+    fill=chartorange!45,
+    draw=chartorange!90!black,
+    postaction={pattern=north east lines,pattern color=chartorange!90!black}
+] coordinates {
+    (Llama 1B,1.76)
+    (Llama 3B,4.52)
+    (Mistral 7B,4.11)
+    (Gemma 12B,4.41)
+    (Phi4,7.86)
+    (Qwen 14B,5.27)
+};
+\legend{Mean deliveries,Deliveries per 1000 calls}
+\end{axis}
+\end{tikzpicture}%
+}
+
+\newcommand{\ChartCallAdaptability}{%
+\begin{tikzpicture}
+\begin{axis}[
+    thesis chart,
+    ybar,
+    bar width=18pt,
+    title={Change in LLM calls under the call-reduction objective},
+    ylabel={Mean-call difference (Calls $-$ Battery + Shelf)},
+    symbolic x coords={Llama 1B,Llama 3B,Mistral 7B,Gemma 12B,Phi4,Qwen 14B},
+    xtick={Llama 1B,Llama 3B,Mistral 7B,Gemma 12B,Phi4,Qwen 14B},
+    x tick label style={rotate=22,anchor=east,font=\footnotesize},
+    ymin=-360,
+    ymax=470,
+    axis x line*=bottom,
+    extra y ticks={0},
+    extra y tick labels={},
+    extra y tick style={grid=major,grid style={black!70,line width=0.8pt}},
+    legend style={
+        draw=black!20,
+        fill=white,
+        fill opacity=0.88,
+        text opacity=1,
+        font=\small,
+        at={(0.02,0.98)},
+        anchor=north west,
+        legend columns=-1
+    }
+]
+\addplot[
+    fill=chartblue!75,
+    draw=chartblue!90!black
+] coordinates {
+    (Llama 1B,-16.1882)
+    (Llama 3B,-292.6458)
+    (Phi4,-268.3958)
+    (Qwen 14B,-8.0833)
+};
+\addplot[
+    fill=chartorange!55,
+    draw=chartorange!90!black,
+    postaction={pattern=north east lines,pattern color=chartorange!90!black}
+] coordinates {
+    (Mistral 7B,142.7083)
+    (Gemma 12B,409.6875)
+};
+\legend{Fewer calls,More calls}
+\end{axis}
+\end{tikzpicture}%
+}
+
+\newcommand{\ChartBatteryProductivity}{%
+\begin{tikzpicture}
+\begin{axis}[
+    thesis chart,
+    ybar,
+    bar width=8pt,
+    ymin=0,
+    ymax=235,
+    title={Battery-aware productivity by objective and model},
+    ylabel={Battery-aware productivity score},
+    symbolic x coords={Llama 1B,Llama 3B,Mistral 7B,Gemma 12B,Phi4,Qwen 14B},
+    xtick=data,
+    x tick label style={rotate=22,anchor=east,font=\footnotesize}
+]
+\addplot[
+    fill=chartblue!75,
+    draw=chartblue!90!black
+] coordinates {
+    (Llama 1B,41.4370)
+    (Llama 3B,135.3601)
+    (Mistral 7B,98.6522)
+    (Gemma 12B,106.9222)
+    (Phi4,50.1363)
+    (Qwen 14B,95.1878)
+};
+\addplot[
+    fill=chartorange!45,
+    draw=chartorange!90!black,
+    postaction={pattern=north east lines,pattern color=chartorange!90!black}
+] coordinates {
+    (Llama 1B,48.7572)
+    (Llama 3B,214.3479)
+    (Mistral 7B,153.4330)
+    (Gemma 12B,84.9821)
+    (Phi4,76.9906)
+    (Qwen 14B,104.7944)
+};
+\addplot[
+    fill=chartgreen!45,
+    draw=chartgreen!80!black,
+    postaction={pattern=crosshatch,pattern color=chartgreen!80!black}
+] coordinates {
+    (Llama 1B,51.5427)
+    (Llama 3B,207.9358)
+    (Mistral 7B,166.2479)
+    (Gemma 12B,58.0532)
+    (Phi4,15.8299)
+    (Qwen 14B,100.2427)
+};
+\legend{Calls,Battery + Shelf,Battery}
+\end{axis}
+\end{tikzpicture}%
+}

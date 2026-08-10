@@ -1,0 +1,47 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,landscape,margin=14mm]{geometry}
+\usepackage{times}
+\usepackage{pgfplots}
+\usetikzlibrary{patterns}
+\pgfplotsset{compat=1.18}
+\pagestyle{empty}
+
+\input{report_charts.tex}
+
+\newcommand{\previewchart}[2]{%
+    \begin{center}
+        #1
+
+        \vspace{2mm}
+        \parbox{0.92\textwidth}{\centering\small #2}
+    \end{center}
+    \newpage
+}
+
+\begin{document}
+
+\previewchart{\ChartPromptScenarios}
+{Six discrete scenario groups; 24 matched configuration-level observations per prompt configuration within each scenario.}
+
+\previewchart{\ChartPromptModels}
+{Models are ordered by nominal parameter size. Bars show discrete model means, with no interpolation between model families.}
+
+\previewchart{\ChartPromptArchitecture}
+{The centralized and shared-context groups each show the JSON and natural-language configuration side by side.}
+
+\previewchart{\ChartArchitectureScenarios}
+{Grouped bars retain the ordered scenario presentation while treating every scenario as a discrete category. Each bar summarizes 16 matched configuration-level observations.}
+
+\previewchart{\ChartArchitectureModels}
+{Models are ordered by nominal parameter size and remain discrete categories. Each bar summarizes 12 matched configuration-level observations.}
+
+\previewchart{\ChartMatchedModels}
+{Mean delivery count and deliveries per 1000 LLM calls across the same 48 matched configurations for every model.}
+
+\previewchart{\ChartCallAdaptability}
+{Difference is Calls minus Battery + Shelf. Negative bars indicate fewer calls under the call-reduction objective; positive bars indicate more calls.}
+
+\previewchart{\ChartBatteryProductivity}
+{Descriptive battery-aware productivity score for the three matched objective configurations.}
+
+\end{document}

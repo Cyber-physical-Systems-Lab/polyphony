@@ -49,20 +49,21 @@ S.~R. Fischer, \emph{A History of Writing}.\hskip 1em plus 0.5em minus
 D.~Jurafsky and J.~H. Martin, \emph{Speech and Language Processing: An
   Introduction to Natural Language Processing, Computational Linguistics, and
   Speech Recognition with Language Models}, 3rd~ed., 2026, online manuscript
-  released January 6, 2026. [Online]. Available:
+  released 6 January 2026. [Online]. Available:
   \url{https://web.stanford.edu/~jurafsky/slp3/}
 \BIBentrySTDinterwordspacing
 
 \bibitem{bengio2003neural}
 Y.~Bengio, R.~Ducharme, P.~Vincent, and C.~Janvin, ``A neural probabilistic
-  language model,'' \emph{J. Mach. Learn. Res.}, vol.~3, no. null, p.
-  1137–1155, Mar. 2003.
+  language model,'' \emph{J. Mach. Learn. Res.}, vol.~3, pp. 1137--1155, Mar.
+  2003.
 
 \bibitem{mikolov2013distributed}
 \BIBentryALTinterwordspacing
 T.~Mikolov, K.~Chen, G.~Corrado, and J.~Dean, ``Efficient estimation of word
-  representations in vector space,'' 2013. [Online]. Available:
-  \url{https://arxiv.org/abs/1301.3781}
+  representations in vector space,'' in \emph{Proceedings of the International
+  Conference on Learning Representations Workshop}, 2013. [Online]. Available:
+  \url{https://iclr.cc/archive/2013/workshop-proceedings.html}
 \BIBentrySTDinterwordspacing
 
 \bibitem{vaswani2017attention}
@@ -114,8 +115,11 @@ T.~B. Brown, B.~Mann, N.~Ryder, M.~Subbiah, J.~D. Kaplan, P.~Dhariwal,
 \bibitem{huang2022lmp}
 \BIBentryALTinterwordspacing
 W.~Huang, P.~Abbeel, D.~Pathak, and I.~Mordatch, ``Language models as zero-shot
-  planners: Extracting actionable knowledge for embodied agents,'' 2022.
-  [Online]. Available: \url{https://arxiv.org/abs/2201.07207}
+  planners: Extracting actionable knowledge for embodied agents,'' in
+  \emph{Proceedings of the 39th International Conference on Machine Learning},
+  ser. Proceedings of Machine Learning Research, vol. 162.\hskip 1em plus 0.5em
+  minus 0.4em\relax PMLR, 2022, pp. 9118--9147. [Online]. Available:
+  \url{https://proceedings.mlr.press/v162/huang22a.html}
 \BIBentrySTDinterwordspacing
 
 \bibitem{wang2023planandsolve}
@@ -129,9 +133,10 @@ L.~Wang, W.~Xu, Y.~Lan, Z.~Hu, Y.~Lan, R.~K.-W. Lee, and E.-P. Lim,
 
 \bibitem{yao2022react}
 \BIBentryALTinterwordspacing
-S.~Yao, J.~Zhao, D.~Yu, N.~Du, I.~Shafran, K.~Narasimhan, and Y.~Cao, ``React:
-  Synergizing reasoning and acting in language models,'' 2023. [Online].
-  Available: \url{https://arxiv.org/abs/2210.03629}
+S.~Yao, J.~Zhao, D.~Yu, N.~Du, I.~Shafran, K.~R. Narasimhan, and Y.~Cao,
+  ``{ReAct}: Synergizing reasoning and acting in language models,'' in
+  \emph{The Eleventh International Conference on Learning Representations},
+  2023. [Online]. Available: \url{https://openreview.net/forum?id=WE_vluYUL-X}
 \BIBentrySTDinterwordspacing
 
 \bibitem{yao2023tree}
@@ -155,14 +160,14 @@ M.~Wooldridge, \emph{An Introduction to MultiAgent Systems}, 2nd~ed.\hskip 1em
 \BIBentryALTinterwordspacing
 Z.~Yan, N.~Jouandeau, and A.~A. Cherif, ``A survey and analysis of multi-robot
   coordination,'' \emph{International Journal of Advanced Robotic Systems},
-  vol.~10, no.~12, 2013, {accessed} 2026-02-26. [Online]. Available:
+  vol.~10, no.~12, 2013, accessed: 26 February 2026. [Online]. Available:
   \url{https://journals.sagepub.com/doi/full/10.5772/57313}
 \BIBentrySTDinterwordspacing
 
 \bibitem{unctad2024digital}
 {United Nations Conference on Trade and Development}, ``Digital economy report
   2024,'' \url{https://unctad.org/publication/digital-economy-report-2024},
-  2024, accessed: Jul. 10, 2026.
+  2024, accessed: 10 July 2026.
 
 \bibitem{bartholdi2019warehouse}
 \BIBentryALTinterwordspacing
@@ -215,8 +220,10 @@ R.~Karam, A.~A. Nguyen, R.~Lin, D.~R. Martin, D.~Morales, B.~A. Butler, and
 \BIBentryALTinterwordspacing
 G.~Papoudakis, F.~Christianos, L.~Sch{\"a}fer, and S.~V. Albrecht,
   ``Benchmarking multi-agent deep reinforcement learning algorithms in
-  cooperative tasks,'' 2021, {accessed} 2026-02-26. [Online]. Available:
-  \url{https://arxiv.org/abs/2006.07869}
+  cooperative tasks,'' in \emph{Proceedings of the Neural Information
+  Processing Systems Track on Datasets and Benchmarks}, vol.~1, 2021. [Online].
+  Available:
+  \url{https://datasets-benchmarks-proceedings.neurips.cc/paper_files/paper/2021/hash/a8baa56554f96369ab93e4f3bb068c22-Abstract-round1.html}
 \BIBentrySTDinterwordspacing
 
 \bibitem{krnjaic2024warehouse}
@@ -236,11 +243,13 @@ G.~Brockman, V.~Cheung, L.~Pettersson, J.~Schneider, J.~Schulman, J.~Tang, and
 
 \bibitem{towers2024gymnasium}
 \BIBentryALTinterwordspacing
-M.~Towers, A.~Kwiatkowski, J.~Terry, J.~U. Balis, G.~D. Cola, T.~Deleu,
-  M.~Goulão, A.~Kallinteris, M.~Krimmel, A.~KG, R.~Perez-Vicente, A.~Pierré,
+M.~Towers, A.~Kwiatkowski, J.~U. Balis, G.~De~Cola, T.~Deleu, M.~Goulão,
+  A.~Kallinteris, M.~Krimmel, A.~KG, R.~Perez-Vicente, J.~Terry, A.~Pierré,
   S.~Schulhoff, J.~J. Tai, H.~Tan, and O.~G. Younis, ``Gymnasium: A standard
-  interface for reinforcement learning environments,'' 2025. [Online].
-  Available: \url{https://arxiv.org/abs/2407.17032}
+  interface for reinforcement learning environments,'' in \emph{Advances in
+  Neural Information Processing Systems}, vol.~38.\hskip 1em plus 0.5em minus
+  0.4em\relax Curran Associates, Inc., 2025. [Online]. Available:
+  \url{https://proceedings.neurips.cc/paper_files/paper/2025/hash/d7ff1795e8527f6443371c3933bdb52b-Abstract-Datasets_and_Benchmarks_Track.html}
 \BIBentrySTDinterwordspacing
 
 \bibitem{gerkey2004formal}
@@ -255,30 +264,36 @@ G.~Sharon, R.~Stern, A.~Felner, and N.~R. Sturtevant, ``Conflict-based search
 
 \bibitem{ahn2022do}
 \BIBentryALTinterwordspacing
-M.~Ahn, A.~Brohan, N.~Brown, Y.~Chebotar, O.~Cortes, B.~David, C.~Finn, C.~Fu,
-  K.~Gopalakrishnan, K.~Hausman, A.~Herzog, D.~Ho, J.~Hsu, J.~Ibarz, B.~Ichter,
-  A.~Irpan, E.~Jang, R.~J. Ruano, K.~Jeffrey, S.~Jesmonth, N.~J. Joshi,
-  R.~Julian, D.~Kalashnikov, Y.~Kuang, K.-H. Lee, S.~Levine, Y.~Lu, L.~Luu,
-  C.~Parada, P.~Pastor, J.~Quiambao, K.~Rao, J.~Rettinghouse, D.~Reyes,
-  P.~Sermanet, N.~Sievers, C.~Tan, A.~Toshev, V.~Vanhoucke, F.~Xia, T.~Xiao,
-  P.~Xu, S.~Xu, M.~Yan, and A.~Zeng, ``Do as i can, not as i say: Grounding
-  language in robotic affordances,'' 2022. [Online]. Available:
-  \url{https://arxiv.org/abs/2204.01691}
+B.~Ichter, A.~Brohan, Y.~Chebotar, C.~Finn, K.~Hausman, A.~Herzog, D.~Ho,
+  J.~Ibarz, A.~Irpan, E.~Jang, R.~Julian, D.~Kalashnikov, S.~Levine, Y.~Lu,
+  C.~Parada, K.~Rao, P.~Sermanet, A.~T. Toshev, V.~Vanhoucke, F.~Xia, T.~Xiao,
+  P.~Xu, M.~Yan, N.~Brown, M.~Ahn, O.~Cortes, N.~Sievers, C.~Tan, S.~Xu,
+  D.~Reyes, J.~Rettinghouse, J.~Quiambao, P.~Pastor, L.~Luu, K.-H. Lee,
+  Y.~Kuang, S.~Jesmonth, N.~J. Joshi, K.~Jeffrey, R.~J. Ruano, J.~Hsu,
+  K.~Gopalakrishnan, B.~David, A.~Zeng, and C.~K. Fu, ``Do as i can, not as i
+  say: Grounding language in robotic affordances,'' in \emph{Proceedings of the
+  6th Conference on Robot Learning}, ser. Proceedings of Machine Learning
+  Research, vol. 205.\hskip 1em plus 0.5em minus 0.4em\relax PMLR, 2023, pp.
+  287--318. [Online]. Available:
+  \url{https://proceedings.mlr.press/v205/ichter23a.html}
 \BIBentrySTDinterwordspacing
 
 \bibitem{liang2022code}
 \BIBentryALTinterwordspacing
 J.~Liang, W.~Huang, F.~Xia, P.~Xu, K.~Hausman, B.~Ichter, P.~Florence, and
   A.~Zeng, ``Code as policies: Language model programs for embodied control,''
-  2023. [Online]. Available: \url{https://arxiv.org/abs/2209.07753}
+  in \emph{2023 IEEE International Conference on Robotics and Automation
+  (ICRA)}, 2023, pp. 9493--9500. [Online]. Available:
+  \url{https://doi.org/10.1109/ICRA48891.2023.10160591}
 \BIBentrySTDinterwordspacing
 
 \bibitem{mandi2024roco}
 \BIBentryALTinterwordspacing
 Z.~Mandi, S.~Jain, and S.~Song, ``Roco: Dialectic multi-robot collaboration
   with large language models,'' in \emph{2024 IEEE International Conference on
-  Robotics and Automation (ICRA)}, 2024, pp. 286--299, {accessed} 2026-02-26.
-  [Online]. Available: \url{https://ieeexplore.ieee.org/document/10610855}
+  Robotics and Automation (ICRA)}, 2024, pp. 286--299, accessed: 26 February
+  2026. [Online]. Available:
+  \url{https://ieeexplore.ieee.org/document/10610855}
 \BIBentrySTDinterwordspacing
 
 \bibitem{sahoo2024promptsurvey}
@@ -291,10 +306,13 @@ P.~Sahoo, A.~K. Singh, S.~Saha, V.~Jain, S.~Mondal, and A.~Chadha, ``A
 
 \bibitem{tam2024letmespeak}
 \BIBentryALTinterwordspacing
-Z.~R. Tam, C.-K. Wu, Y.-L. Tsai, C.-Y. Lin, H.~yi~Lee, and Y.-N. Chen, ``Let me
-  speak freely? a study on the impact of format restrictions on performance of
-  large language models,'' 2024. [Online]. Available:
-  \url{https://arxiv.org/abs/2408.02442}
+Z.~R. Tam, C.-K. Wu, Y.-L. Tsai, C.-Y. Lin, H.-y. Lee, and Y.-N. Chen, ``Let me
+  speak freely? a study on the impact of format restrictions on large language
+  model performance,'' in \emph{Proceedings of the 2024 Conference on Empirical
+  Methods in Natural Language Processing: Industry Track}.\hskip 1em plus 0.5em
+  minus 0.4em\relax Miami, Florida, USA: Association for Computational
+  Linguistics, 2024, pp. 1218--1236. [Online]. Available:
+  \url{https://aclanthology.org/2024.emnlp-industry.91/}
 \BIBentrySTDinterwordspacing
 
 \bibitem{niu2025rewardshaping}
@@ -312,34 +330,37 @@ X.~Niu, N.~C. Barajas, and D.~G. Broo, ``Enabling symbiosis in multi-robot
 \bibitem{li2026largelanguagemodelsmultirobot}
 \BIBentryALTinterwordspacing
 P.~Li, Z.~An, S.~Abrar, and L.~Zhou, ``Large language models for multi-robot
-  systems: A survey,'' 2026. [Online]. Available:
-  \url{https://arxiv.org/abs/2502.03814}
+  systems: A survey,'' \emph{Autonomous Robots}, vol.~50, no.~3, p.~30, 2026.
+  [Online]. Available: \url{https://doi.org/10.1007/s10514-026-10257-4}
 \BIBentrySTDinterwordspacing
 
 \bibitem{huang2022innermonologue}
 \BIBentryALTinterwordspacing
 W.~Huang, F.~Xia, T.~Xiao, H.~Chan, J.~Liang, P.~Florence, A.~Zeng, J.~Tompson,
-  I.~Mordatch, Y.~Chebotar, P.~Sermanet, N.~Brown, T.~Jackson, L.~Luu,
+  I.~Mordatch, Y.~Chebotar, P.~Sermanet, T.~Jackson, N.~Brown, L.~Luu,
   S.~Levine, K.~Hausman, and B.~Ichter, ``Inner monologue: Embodied reasoning
-  through planning with language models,'' 2022. [Online]. Available:
-  \url{https://arxiv.org/abs/2207.05608}
+  through planning with language models,'' in \emph{Proceedings of the 6th
+  Conference on Robot Learning}, ser. Proceedings of Machine Learning Research,
+  vol. 205.\hskip 1em plus 0.5em minus 0.4em\relax PMLR, 2023, pp. 1769--1782.
+  [Online]. Available: \url{https://proceedings.mlr.press/v205/huang23c.html}
 \BIBentrySTDinterwordspacing
 
 \bibitem{singh2023progprompt}
 \BIBentryALTinterwordspacing
 I.~Singh, V.~Blukis, A.~Mousavian, A.~Goyal, D.~Xu, J.~Tremblay, D.~Fox,
   J.~Thomason, and A.~Garg, ``Progprompt: Generating situated robot task plans
-  using large language models,'' 2022. [Online]. Available:
-  \url{https://arxiv.org/abs/2209.11302}
+  using large language models,'' in \emph{2023 IEEE International Conference on
+  Robotics and Automation (ICRA)}, 2023, pp. 11\,523--11\,530. [Online].
+  Available: \url{https://doi.org/10.1109/ICRA48891.2023.10161317}
 \BIBentrySTDinterwordspacing
 
 \bibitem{liu2023bolaa}
 \BIBentryALTinterwordspacing
-Z.~Liu, W.~Yao, J.~Zhang, L.~Xue, S.~Heinecke, R.~Murthy, Y.~Feng, Z.~Chen,
-  J.~C. Niebles, D.~Arpit, R.~Xu, P.~Mui, H.~Wang, C.~Xiong, and S.~Savarese,
-  ``{BOLAA}: Benchmarking and orchestrating {LLM}-augmented autonomous
-  agents,'' \emph{arXiv preprint arXiv:2308.05960}, 2023. [Online]. Available:
-  \url{https://arxiv.org/abs/2308.05960}
+Z.~Liu, W.~Yao, J.~Zhang, L.~Xue, S.~Heinecke, R.~R.~N. Murthy, Y.~Feng,
+  Z.~Chen, J.~C. Niebles, D.~Arpit, R.~Xu, P.~L. Mui, H.~Wang, C.~Xiong, and
+  S.~Savarese, ``{BOLAA}: Benchmarking and orchestrating {LLM} autonomous
+  agents,'' in \emph{{ICLR} 2024 Workshop on Large Language Model Agents},
+  2024. [Online]. Available: \url{https://openreview.net/forum?id=BUa5ekiHlQ}
 \BIBentrySTDinterwordspacing
 
 \bibitem{bhat2025closedloopgrounding}
@@ -366,7 +387,7 @@ L.~Xiao and T.~Yamasaki, ``Probing prompt design for socially compliant robot
 {Meta AI}, ``{Llama 3.2}: Revolutionizing edge {AI} and vision with open,
   customizable models,''
   \url{https://ai.meta.com/blog/llama-3-2-connect-2024-vision-edge-mobile-devices/},
-  2024, {accessed} 2026-07-10.
+  2024, accessed: 10 July 2026.
 
 \bibitem{jiang2023mistral7b}
 \BIBentryALTinterwordspacing

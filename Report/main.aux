@@ -34,8 +34,7 @@
 \pgfsyspdfmark {pgfid3}{13425688}{52729879}
 \babel@aux{swedish}{}
 \babel@aux{english}{}
-\@writefile{toc}{\contentsline {paragraph}{Acknowledgement}{iii}{section*.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{Acronyms}{vi}{section*.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Acronyms}{vi}{section*.5}\protected@file@percent }
 \citation{tomasello2008origins}
 \citation{dunbar1996grooming}
 \citation{clark1996usinglanguage}
@@ -80,9 +79,9 @@
 \citation{bartholdi2019warehouse}
 \citation{bartholdi2019warehouse}
 \citation{dekoster2007design}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Overview of the warehouse goods flow\relax }}{4}{figure.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Overview of the warehouse goods flow.\relax }}{4}{figure.1}\protected@file@percent }
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{fig:warehouse_order_fulfilment}{{1}{4}{Overview of the warehouse goods flow\relax }{figure.1}{}}
+\newlabel{fig:warehouse_order_fulfilment}{{1}{4}{Overview of the warehouse goods flow.\relax }{figure.1}{}}
 \citation{dekoster2007design}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Example warehouse storage hierarchy showing a rack composed of multiple shelves and storage bins.\relax }}{5}{figure.2}\protected@file@percent }
 \newlabel{fig:warehouse_storage_hierarchy}{{2}{5}{Example warehouse storage hierarchy showing a rack composed of multiple shelves and storage bins.\relax }{figure.2}{}}
@@ -169,80 +168,90 @@
 \citation{sahoo2024promptsurvey}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Prompt Construction and Experiment Design}{22}{subsection.3.4}\protected@file@percent }
 \newlabel{sec:method_prompt_construction}{{3.4}{22}{Prompt Construction and Experiment Design}{subsection.3.4}{}}
-\@writefile{toc}{\contentsline {paragraph}{Simulator-to-language-model interface.}{23}{section*.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Distance and candidate construction.}{24}{section*.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Prompt structure.}{24}{section*.8}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Prompt components and their methodological purpose.\relax }}{25}{table.1}\protected@file@percent }
-\newlabel{tab:prompt-components-purpose}{{1}{25}{Prompt components and their methodological purpose.\relax }{table.1}{}}
-\@writefile{toc}{\contentsline {paragraph}{Natural-language and JSON prompt variants.}{25}{section*.9}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Centralized and decentralized shared-context planning.}{25}{section*.10}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Comparison between centralized and decentralized shared-context prompting architectures.\relax }}{26}{table.caption.11}\protected@file@percent }
-\newlabel{tab:centralized-decentralized-prompts}{{2}{26}{Comparison between centralized and decentralized shared-context prompting architectures.\relax }{table.caption.11}{}}
-\@writefile{toc}{\contentsline {paragraph}{Output constraints and fallback behavior.}{26}{section*.12}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Environment modifications supporting prompting and replanning.}{27}{section*.13}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.5}Scenarios, Models, and Metrics}{28}{subsection.3.5}\protected@file@percent }
-\newlabel{sec:method_scenarios_models_metrics}{{3.5}{28}{Scenarios, Models, and Metrics}{subsection.3.5}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Warehouse scenarios used in the objective experiments.\relax }}{28}{table.caption.14}\protected@file@percent }
-\newlabel{tab:warehouse-scenarios}{{3}{28}{Warehouse scenarios used in the objective experiments.\relax }{table.caption.14}{}}
+\@writefile{toc}{\contentsline {paragraph}{Simulator-to-language-model interface.}{23}{section*.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Distance and candidate construction.}{24}{section*.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Prompt structure.}{24}{section*.9}\protected@file@percent }
+\newlabel{listing:representative_prompt_io}{{1}{25}{Representative prompt input and corresponding natural-language and JSON outputs}{lstlisting.1}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1}Representative prompt input and corresponding natural-language and JSON outputs.}{25}{lstlisting.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Prompt components and their methodological purpose.\relax }}{26}{table.1}\protected@file@percent }
+\newlabel{tab:prompt-components-purpose}{{1}{26}{Prompt components and their methodological purpose.\relax }{table.1}{}}
+\@writefile{toc}{\contentsline {paragraph}{Natural-language and JSON prompt variants.}{26}{section*.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Centralized and shared-context per-agent planning.}{27}{section*.11}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Comparison between centralized and shared-context per-agent planning architectures.\relax }}{27}{table.caption.12}\protected@file@percent }
+\newlabel{tab:centralized-shared-context-prompts}{{2}{27}{Comparison between centralized and shared-context per-agent planning architectures.\relax }{table.caption.12}{}}
+\@writefile{toc}{\contentsline {paragraph}{Shared-context query order and decision timing.}{27}{section*.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Output constraints and fallback behaviour.}{28}{section*.14}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Environment modifications supporting prompting and replanning.}{28}{section*.15}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5}Scenarios, Models, and Metrics}{30}{subsection.3.5}\protected@file@percent }
+\newlabel{sec:method_scenarios_models_metrics}{{3.5}{30}{Scenarios, Models, and Metrics}{subsection.3.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Warehouse scenarios used in the objective experiments.\relax }}{30}{table.caption.16}\protected@file@percent }
+\newlabel{tab:warehouse-scenarios}{{3}{30}{Warehouse scenarios used in the objective experiments.\relax }{table.caption.16}{}}
 \citation{meta2024llama32}
 \citation{jiang2023mistral7b}
 \citation{gemmateam2025gemma3}
 \citation{abdin2024phi4}
 \citation{yang2024qwen25}
-\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Locally reported Ollama context windows and prompt-token usage for representative prompts from \nolinkurl  {medium_balanced_4v4}.\relax }}{30}{table.caption.15}\protected@file@percent }
-\newlabel{tab:context-diagnostic}{{4}{30}{Locally reported Ollama context windows and prompt-token usage for representative prompts from \nolinkurl {medium_balanced_4v4}.\relax }{table.caption.15}{}}
-\newlabel{eq:deliveries-per-1000-calls}{{1}{30}{Scenarios, Models, and Metrics}{equation.3.1}{}}
-\newlabel{eq:battery-aware-productivity}{{2}{30}{Scenarios, Models, and Metrics}{equation.3.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.6}Experimental Protocol}{31}{subsection.3.6}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Standardized controller settings used in the reported experiments.\relax }}{31}{table.5}\protected@file@percent }
-\newlabel{tab:controller-settings}{{5}{31}{Standardized controller settings used in the reported experiments.\relax }{table.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.7}Delimitations}{32}{subsection.3.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4}Results and Discussion}{33}{section.4}\protected@file@percent }
-\newlabel{sec:result_discussion}{{4}{33}{Results and Discussion}{section.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Experimental Data Overview}{33}{subsection.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Effect of Prompt Representation}{33}{subsection.4.2}\protected@file@percent }
-\newlabel{sec:results_prompt_representation}{{4.2}{33}{Effect of Prompt Representation}{subsection.4.2}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Prompt representation comparison by scenario. Natural-language prompts produced higher delivery throughput and higher delivery efficiency across all scenario groups.\relax }}{33}{table.6}\protected@file@percent }
-\newlabel{tab:json_natural_scenario}{{6}{33}{Prompt representation comparison by scenario. Natural-language prompts produced higher delivery throughput and higher delivery efficiency across all scenario groups.\relax }{table.6}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Locally reported Ollama context windows and prompt-token usage for representative prompts from \nolinkurl  {medium_balanced_4v4}.\relax }}{32}{table.caption.17}\protected@file@percent }
+\newlabel{tab:context-diagnostic}{{4}{32}{Locally reported Ollama context windows and prompt-token usage for representative prompts from \nolinkurl {medium_balanced_4v4}.\relax }{table.caption.17}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Mapping between the reported metrics and their roles in the analysis.\relax }}{33}{table.5}\protected@file@percent }
+\newlabel{tab:metric-rq-mapping}{{5}{33}{Mapping between the reported metrics and their roles in the analysis.\relax }{table.5}{}}
+\newlabel{eq:deliveries-per-1000-calls}{{1}{33}{Scenarios, Models, and Metrics}{equation.3.1}{}}
+\newlabel{eq:battery-aware-productivity}{{2}{34}{Scenarios, Models, and Metrics}{equation.3.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.6}Experimental Protocol}{34}{subsection.3.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Run procedure.}{34}{section*.18}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Standardised controller settings used in the reported experiments.\relax }}{35}{table.6}\protected@file@percent }
+\newlabel{tab:controller-settings}{{6}{35}{Standardised controller settings used in the reported experiments.\relax }{table.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.7}Delimitations}{36}{subsection.3.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}Results and Discussion}{37}{section.4}\protected@file@percent }
+\newlabel{sec:result_discussion}{{4}{37}{Results and Discussion}{section.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Experimental Data Overview}{37}{subsection.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}RQ3: Prompt-Configuration Comparison}{37}{subsection.4.2}\protected@file@percent }
+\newlabel{sec:results_prompt_representation}{{4.2}{37}{RQ3: Prompt-Configuration Comparison}{subsection.4.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Prompt-configuration comparison by scenario. Each cell summarises 24 configuration-level observations per prompt, matched by objective, planning architecture, model, and scenario.\relax }}{37}{table.7}\protected@file@percent }
+\newlabel{tab:json_natural_scenario}{{7}{37}{Prompt-configuration comparison by scenario. Each cell summarises 24 configuration-level observations per prompt, matched by objective, planning architecture, model, and scenario.\relax }{table.7}{}}
 \citation{tam2024letmespeak}
-\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Prompt representation comparison by model. Natural-language prompts improved delivery efficiency for every model in the combined analysis.\relax }}{34}{table.7}\protected@file@percent }
-\newlabel{tab:json_natural_model}{{7}{34}{Prompt representation comparison by model. Natural-language prompts improved delivery efficiency for every model in the combined analysis.\relax }{table.7}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Delivery efficiency by prompt format across scenarios.\relax }}{34}{figure.7}\protected@file@percent }
-\newlabel{fig:prompt_efficiency_scenarios}{{7}{34}{Delivery efficiency by prompt format across scenarios.\relax }{figure.7}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Delivery efficiency by prompt format across models.\relax }}{35}{figure.8}\protected@file@percent }
-\newlabel{fig:prompt_efficiency_models}{{8}{35}{Delivery efficiency by prompt format across models.\relax }{figure.8}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Prompt efficiency by coordination architecture.\relax }}{35}{figure.9}\protected@file@percent }
-\newlabel{fig:prompt_efficiency_coordination_architecture}{{9}{35}{Prompt efficiency by coordination architecture.\relax }{figure.9}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Effect of Planning Architecture}{35}{subsection.4.3}\protected@file@percent }
-\newlabel{sec:results_architecture}{{4.3}{35}{Effect of Planning Architecture}{subsection.4.3}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces Prompt-configuration comparison by model. Each model and prompt configuration uses $n=24$ configurations matched by objective, planning architecture, and scenario.\relax }}{38}{table.8}\protected@file@percent }
+\newlabel{tab:json_natural_model}{{8}{38}{Prompt-configuration comparison by model. Each model and prompt configuration uses $n=24$ configurations matched by objective, planning architecture, and scenario.\relax }{table.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Call-normalised deliveries by prompt format across scenarios. Each bar is calculated from 24 matched configuration-level observations. Higher bars indicate more deliveries per 1000 model calls.\relax }}{39}{figure.7}\protected@file@percent }
+\newlabel{fig:prompt_efficiency_scenarios}{{7}{39}{Call-normalised deliveries by prompt format across scenarios. Each bar is calculated from 24 matched configuration-level observations. Higher bars indicate more deliveries per 1000 model calls.\relax }{figure.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Call-normalised deliveries by prompt format across models. Each model and prompt configuration uses $n=24$ matched configuration-level observations. Higher bars indicate more deliveries per 1000 model calls.\relax }}{40}{figure.8}\protected@file@percent }
+\newlabel{fig:prompt_efficiency_models}{{8}{40}{Call-normalised deliveries by prompt format across models. Each model and prompt configuration uses $n=24$ matched configuration-level observations. Higher bars indicate more deliveries per 1000 model calls.\relax }{figure.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Call-normalised deliveries by prompt format within each planning architecture. Each bar is calculated from 72 matched configuration-level observations. Higher bars indicate more deliveries per 1000 model calls; the measure describes interaction frequency rather than computational cost.\relax }}{41}{figure.9}\protected@file@percent }
+\newlabel{fig:prompt_efficiency_coordination_architecture}{{9}{41}{Call-normalised deliveries by prompt format within each planning architecture. Each bar is calculated from 72 matched configuration-level observations. Higher bars indicate more deliveries per 1000 model calls; the measure describes interaction frequency rather than computational cost.\relax }{figure.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}RQ2: Planning-Architecture Comparison}{42}{subsection.4.3}\protected@file@percent }
+\newlabel{sec:results_architecture}{{4.3}{42}{RQ2: Planning-Architecture Comparison}{subsection.4.3}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces Planning architecture comparison by scenario. Each architecture--scenario cell summarises 16 configuration-level observations matched by objective, prompt configuration, model, and scenario.\relax }}{42}{table.9}\protected@file@percent }
+\newlabel{tab:central_shared_scenario}{{9}{42}{Planning architecture comparison by scenario. Each architecture--scenario cell summarises 16 configuration-level observations matched by objective, prompt configuration, model, and scenario.\relax }{table.9}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Centralized and shared-context mean deliveries by scenario. Each bar is the mean of 16 matched configuration-level observations per architecture and scenario.\relax }}{43}{figure.10}\protected@file@percent }
+\newlabel{fig:centralized_shared_deliveries_scenario}{{10}{43}{Centralized and shared-context mean deliveries by scenario. Each bar is the mean of 16 matched configuration-level observations per architecture and scenario.\relax }{figure.10}{}}
 \citation{zhao2023explicitplanning}
 \citation{valmeekam2023planning}
-\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces Planning architecture comparison by scenario. Shared-context planning achieved higher mean deliveries in all scenarios but also required more \gls {llm} calls.\relax }}{36}{table.8}\protected@file@percent }
-\newlabel{tab:central_shared_scenario}{{8}{36}{Planning architecture comparison by scenario. Shared-context planning achieved higher mean deliveries in all scenarios but also required more \gls {llm} calls.\relax }{table.8}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Centralized and shared-context mean deliveries by scenario.\relax }}{37}{figure.10}\protected@file@percent }
-\newlabel{fig:centralized_shared_deliveries_scenario}{{10}{37}{Centralized and shared-context mean deliveries by scenario.\relax }{figure.10}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Centralized and shared-context mean deliveries by model.\relax }}{37}{figure.11}\protected@file@percent }
-\newlabel{fig:centralized_shared_deliveries_model}{{11}{37}{Centralized and shared-context mean deliveries by model.\relax }{figure.11}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Centralized and shared-context mean deliveries by model. Each bar is the mean of 12 matched configuration-level observations per architecture and model.\relax }}{44}{figure.11}\protected@file@percent }
+\newlabel{fig:centralized_shared_deliveries_model}{{11}{44}{Centralized and shared-context mean deliveries by model. Each bar is the mean of 12 matched configuration-level observations per architecture and model.\relax }{figure.11}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}RQ1: Model Choice and Scenario Complexity}{45}{subsection.4.4}\protected@file@percent }
+\newlabel{sec:results_model_choice}{{4.4}{45}{RQ1: Model Choice and Scenario Complexity}{subsection.4.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Delivery performance across the matched model comparison. Each model uses the same 48 objective--architecture--prompt--scenario configurations, comprising 24 natural-language and 24 \gls {json} configurations. The second measure reports deliveries per 1000 model calls.\relax }}{46}{figure.12}\protected@file@percent }
+\newlabel{fig:model_matched_performance}{{12}{46}{Delivery performance across the matched model comparison. Each model uses the same 48 objective--architecture--prompt--scenario configurations, comprising 24 natural-language and 24 \gls {json} configurations. The second measure reports deliveries per 1000 model calls.\relax }{figure.12}{}}
 \citation{dawane2026onddeviceslm}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Effect of Model Choice and Scenario Complexity}{38}{subsection.4.4}\protected@file@percent }
-\newlabel{sec:results_model_choice}{{4.4}{38}{Effect of Model Choice and Scenario Complexity}{subsection.4.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Model Adaptability to Objectives}{38}{subsection.4.5}\protected@file@percent }
-\newlabel{sec:results_objective_sensitivity}{{4.5}{38}{Model Adaptability to Objectives}{subsection.4.5}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces Objective-level comparison in the shared-context natural-language setting. The Calls objective did not clearly reduce \gls {llm} usage relative to Battery + Shelf.\relax }}{39}{table.9}\protected@file@percent }
-\newlabel{tab:objective_shared_natural}{{9}{39}{Objective-level comparison in the shared-context natural-language setting. The Calls objective did not clearly reduce \gls {llm} usage relative to Battery + Shelf.\relax }{table.9}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {10}{\ignorespaces Battery-aware productivity by model and objective, using the descriptive score defined in Eq.~\ref  {eq:battery-aware-productivity}.\relax }}{40}{table.10}\protected@file@percent }
-\newlabel{tab:battery_aware_productivity}{{10}{40}{Battery-aware productivity by model and objective, using the descriptive score defined in Eq.~\ref {eq:battery-aware-productivity}.\relax }{table.10}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Model adaptability to the \gls {llm} call reduction objective. Difference is computed between Battery + Shelf and Calls.\relax }}{40}{figure.12}\protected@file@percent }
-\newlabel{fig:model_call_reduction_adaptability}{{12}{40}{Model adaptability to the \gls {llm} call reduction objective. Difference is computed between Battery + Shelf and Calls.\relax }{figure.12}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Battery-aware productivity across objective prompts.\relax }}{41}{figure.13}\protected@file@percent }
-\newlabel{fig:battery_aware_productivity}{{13}{41}{Battery-aware productivity across objective prompts.\relax }{figure.13}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.6}Summary of Findings}{41}{subsection.4.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5}Ethics and Sustainability}{42}{section.5}\protected@file@percent }
-\newlabel{sec:ethics_sustainability}{{5}{42}{Ethics and Sustainability}{section.5}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusions and Future Work}{43}{section.6}\protected@file@percent }
-\newlabel{sec:conclusions}{{6}{43}{Conclusions and Future Work}{section.6}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Future Work}{43}{subsection.6.1}\protected@file@percent }
-\newlabel{sec:futurework}{{6.1}{43}{Future Work}{subsection.6.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Model Adaptability to Objectives}{47}{subsection.4.5}\protected@file@percent }
+\newlabel{sec:results_objective_sensitivity}{{4.5}{47}{Model Adaptability to Objectives}{subsection.4.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {10}{\ignorespaces Objective-level calls and deliveries across configurations matched among the Calls, Battery + Shelf, and Battery objectives.\relax }}{48}{table.10}\protected@file@percent }
+\newlabel{tab:objective_shared_natural}{{10}{48}{Objective-level calls and deliveries across configurations matched among the Calls, Battery + Shelf, and Battery objectives.\relax }{table.10}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {11}{\ignorespaces Battery-aware productivity by model and objective, using the descriptive score defined in Eq.~\ref  {eq:battery-aware-productivity}. Each model--objective cell uses $n=12$ matched configuration-level observations.\relax }}{48}{table.11}\protected@file@percent }
+\newlabel{tab:battery_aware_productivity}{{11}{48}{Battery-aware productivity by model and objective, using the descriptive score defined in Eq.~\ref {eq:battery-aware-productivity}. Each model--objective cell uses $n=12$ matched configuration-level observations.\relax }{table.11}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {12}{\ignorespaces Direct battery outcomes across matched Battery and Battery + Shelf configurations. Repeated runs are averaged before each configuration receives equal weight.\relax }}{49}{table.12}\protected@file@percent }
+\newlabel{tab:direct_battery_outcomes}{{12}{49}{Direct battery outcomes across matched Battery and Battery + Shelf configurations. Repeated runs are averaged before each configuration receives equal weight.\relax }{table.12}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Model response to the \gls {llm} call-reduction objective. Mean-call difference is computed as Calls minus Battery + Shelf; negative values indicate fewer calls under Calls. Each model--objective mean uses $n=24$ matched configuration-level observations.\relax }}{50}{figure.13}\protected@file@percent }
+\newlabel{fig:model_call_reduction_adaptability}{{13}{50}{Model response to the \gls {llm} call-reduction objective. Mean-call difference is computed as Calls minus Battery + Shelf; negative values indicate fewer calls under Calls. Each model--objective mean uses $n=24$ matched configuration-level observations.\relax }{figure.13}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces Battery-aware productivity across objective prompts. Higher bars indicate that charging utilisation occurred together with more deliveries; the score is descriptive rather than an optimality measure. Each bar uses $n=12$ matched configuration-level observations.\relax }}{51}{figure.14}\protected@file@percent }
+\newlabel{fig:battery_aware_productivity}{{14}{51}{Battery-aware productivity across objective prompts. Higher bars indicate that charging utilisation occurred together with more deliveries; the score is descriptive rather than an optimality measure. Each bar uses $n=12$ matched configuration-level observations.\relax }{figure.14}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6}Summary of Findings}{52}{subsection.4.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Ethics and Sustainability}{54}{section.5}\protected@file@percent }
+\newlabel{sec:ethics_sustainability}{{5}{54}{Ethics and Sustainability}{section.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusions and Future Work}{55}{section.6}\protected@file@percent }
+\newlabel{sec:conclusions}{{6}{55}{Conclusions and Future Work}{section.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Future Work}{55}{subsection.6.1}\protected@file@percent }
+\newlabel{sec:futurework}{{6.1}{55}{Future Work}{subsection.6.1}{}}
 \citation{dawane2026onddeviceslm}
 \bibstyle{./IEEEtran/bibtex/IEEEtran}
 \bibdata{./dependencies/bibconfig,refs.bib}
@@ -298,31 +307,31 @@
 \bibcite{yang2024qwen25}{50}
 \bibcite{zhao2023explicitplanning}{51}
 \bibcite{valmeekam2023planning}{52}
-\@writefile{toc}{\contentsline {section}{\numberline {A}Appendix}{52}{appendix.A}\protected@file@percent }
-\newlabel{app:appendix}{{A}{52}{Appendix}{appendix.A}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {A.1}Reproducibility: Experiment Runners}{52}{subsection.A.1}\protected@file@percent }
-\newlabel{app:repro}{{A.1}{52}{Reproducibility: Experiment Runners}{subsection.A.1}{}}
-\newlabel{listing:run_obj1_shared}{{1}{52}{Run Objective 1 with the shared-context planner}{lstlisting.1}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {1}Run Objective 1 with the shared-context planner.}{52}{lstlisting.1}\protected@file@percent }
-\newlabel{listing:run_obj1_centralized}{{2}{52}{Run Objective 1 with the centralized planner}{lstlisting.2}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {2}Run Objective 1 with the centralized planner.}{52}{lstlisting.2}\protected@file@percent }
-\newlabel{listing:run_obj2_shared}{{3}{52}{Run Objective 2 with the shared-context planner}{lstlisting.3}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3}Run Objective 2 with the shared-context planner.}{52}{lstlisting.3}\protected@file@percent }
-\newlabel{listing:run_obj2_centralized}{{4}{52}{Run Objective 2 with the centralized planner}{lstlisting.4}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {4}Run Objective 2 with the centralized planner.}{52}{lstlisting.4}\protected@file@percent }
-\newlabel{listing:run_obj3_shared}{{5}{53}{Run Objective 3 with the shared-context planner}{lstlisting.5}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {5}Run Objective 3 with the shared-context planner.}{53}{lstlisting.5}\protected@file@percent }
-\newlabel{listing:run_obj3_centralized}{{6}{53}{Run Objective 3 with the centralized planner}{lstlisting.6}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {6}Run Objective 3 with the centralized planner.}{53}{lstlisting.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {A.2}Result Directories}{53}{subsection.A.2}\protected@file@percent }
-\newlabel{app:result_dirs}{{A.2}{53}{Result Directories}{subsection.A.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {A.3}Prompt Excerpt}{54}{subsection.A.3}\protected@file@percent }
-\newlabel{app:prompt_excerpt}{{A.3}{54}{Prompt Excerpt}{subsection.A.3}{}}
-\newlabel{listing:prompt_excerpt}{{7}{54}{Illustrative shared-context natural-language prompt excerpt}{lstlisting.7}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {7}Illustrative shared-context natural-language prompt excerpt.}{54}{lstlisting.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {A.4}Run Summary Fields}{55}{subsection.A.4}\protected@file@percent }
-\newlabel{app:run_summary_fields}{{A.4}{55}{Run Summary Fields}{subsection.A.4}{}}
-\newlabel{listing:summary_fields}{{8}{55}{Run-summary CSV fields used for aggregation}{lstlisting.8}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {8}Run-summary CSV fields used for aggregation.}{55}{lstlisting.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A}Appendix}{65}{appendix.A}\protected@file@percent }
+\newlabel{app:appendix}{{A}{65}{Appendix}{appendix.A}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.1}Reproducibility: Experiment Runners}{65}{subsection.A.1}\protected@file@percent }
+\newlabel{app:repro}{{A.1}{65}{Reproducibility: Experiment Runners}{subsection.A.1}{}}
+\newlabel{listing:run_obj1_shared}{{2}{65}{Run Objective 1 with the shared-context planner}{lstlisting.2}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {2}Run Objective 1 with the shared-context planner.}{65}{lstlisting.2}\protected@file@percent }
+\newlabel{listing:run_obj1_centralized}{{3}{65}{Run Objective 1 with the centralized planner}{lstlisting.3}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3}Run Objective 1 with the centralized planner.}{65}{lstlisting.3}\protected@file@percent }
+\newlabel{listing:run_obj2_shared}{{4}{65}{Run Objective 2 with the shared-context planner}{lstlisting.4}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {4}Run Objective 2 with the shared-context planner.}{65}{lstlisting.4}\protected@file@percent }
+\newlabel{listing:run_obj2_centralized}{{5}{65}{Run Objective 2 with the centralized planner}{lstlisting.5}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {5}Run Objective 2 with the centralized planner.}{65}{lstlisting.5}\protected@file@percent }
+\newlabel{listing:run_obj3_shared}{{6}{66}{Run Objective 3 with the shared-context planner}{lstlisting.6}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {6}Run Objective 3 with the shared-context planner.}{66}{lstlisting.6}\protected@file@percent }
+\newlabel{listing:run_obj3_centralized}{{7}{66}{Run Objective 3 with the centralized planner}{lstlisting.7}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {7}Run Objective 3 with the centralized planner.}{66}{lstlisting.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.2}Result Directories}{66}{subsection.A.2}\protected@file@percent }
+\newlabel{app:result_dirs}{{A.2}{66}{Result Directories}{subsection.A.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.3}Prompt Excerpt}{67}{subsection.A.3}\protected@file@percent }
+\newlabel{app:prompt_excerpt}{{A.3}{67}{Prompt Excerpt}{subsection.A.3}{}}
+\newlabel{listing:prompt_excerpt}{{8}{67}{Illustrative shared-context natural-language prompt excerpt}{lstlisting.8}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {8}Illustrative shared-context natural-language prompt excerpt.}{67}{lstlisting.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.4}Run Summary Fields}{68}{subsection.A.4}\protected@file@percent }
+\newlabel{app:run_summary_fields}{{A.4}{68}{Run Summary Fields}{subsection.A.4}{}}
+\newlabel{listing:summary_fields}{{9}{68}{Run-summary CSV fields used for aggregation}{lstlisting.9}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {9}Run-summary CSV fields used for aggregation.}{68}{lstlisting.9}\protected@file@percent }
 \gdef\svg@ink@ver@settings{{\m@ne }{inkscape}{\m@ne }}
-\gdef \@abspage@last{64}
+\gdef \@abspage@last{77}

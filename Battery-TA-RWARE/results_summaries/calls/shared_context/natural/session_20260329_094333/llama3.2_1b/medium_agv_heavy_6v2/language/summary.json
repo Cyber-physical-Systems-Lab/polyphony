@@ -1,0 +1,49 @@
+{
+  "stated_objective": "Optimize calls to LLM and increase the total shelf delivery.",
+  "model": "llama3.2:1b",
+  "model_class": "SLM",
+  "scenario": "medium_agv_heavy_6v2",
+  "scenario_env_id": "tarware-medium-6agvs-2pickers-globalobs-chg-v1",
+  "scenario_focus": "Strongly AGV-heavy: stress-test support prioritization, waiting, and charging decisions.",
+  "prompt_format": "LANGUAGE",
+  "total_shelf_deliveries": 4,
+  "delivery_timeline": [
+    {
+      "step": 43,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 1
+    },
+    {
+      "step": 74,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 2
+    },
+    {
+      "step": 95,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 3
+    },
+    {
+      "step": 187,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 4
+    }
+  ],
+  "steps_executed": 687,
+  "max_steps": 0,
+  "max_inactivity_steps": 500,
+  "max_busy_steps_for_replan": 10,
+  "disable_support_needed_soon": true,
+  "find_path_agent_aware_always": true,
+  "seed": 0,
+  "llm_calls": 1875,
+  "llm_calls_skipped_busy_agents": 0,
+  "action_reuse_without_llm_query": 48,
+  "llm_failures": 0,
+  "llm_missing_or_invalid_actions": 0,
+  "json_generation_failures": 0,
+  "charging_station_utilization_rate": 0.002911208151382824,
+  "average_charging_stations_occupied_per_step": 0.023289665211062592,
+  "elapsed_seconds": 4219.12916135788,
+  "step_records_path": "results/calls/shared_context/natural/session_20260329_094333/llama3.2_1b/medium_agv_heavy_6v2/language/step_records.json"
+}

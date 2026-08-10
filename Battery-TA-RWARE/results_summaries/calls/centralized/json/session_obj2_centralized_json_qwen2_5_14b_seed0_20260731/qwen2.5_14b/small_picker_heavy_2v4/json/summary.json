@@ -1,0 +1,39 @@
+{
+  "stated_objective": "Optimize calls to LLM and increase the total shelf delivery.",
+  "model": "qwen2.5:14b",
+  "model_class": "LLM",
+  "scenario": "small_picker_heavy_2v4",
+  "scenario_env_id": "tarware-small-2agvs-4pickers-globalobs-chg-v1",
+  "scenario_focus": "Picker-heavy: reveal underutilization, role confusion, and unnecessary movement.",
+  "prompt_format": "JSON",
+  "total_shelf_deliveries": 2,
+  "delivery_timeline": [
+    {
+      "step": 37,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 1
+    },
+    {
+      "step": 47,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 2
+    }
+  ],
+  "steps_executed": 547,
+  "max_steps": 0,
+  "max_inactivity_steps": 500,
+  "max_busy_steps_for_replan": 10,
+  "disable_support_needed_soon": true,
+  "find_path_agent_aware_always": true,
+  "seed": 0,
+  "llm_calls": 486,
+  "llm_calls_skipped_busy_agents": 0,
+  "action_reuse_without_llm_query": 140,
+  "llm_failures": 0,
+  "llm_missing_or_invalid_actions": 1,
+  "json_generation_failures": 0,
+  "charging_station_utilization_rate": 0.418951858622791,
+  "average_charging_stations_occupied_per_step": 2.513711151736746,
+  "elapsed_seconds": 7284.021661043167,
+  "step_records_path": "results/Larger-Models/centralized/json/obj2/session_obj2_centralized_json_qwen2_5_14b_seed0_20260731/qwen2.5_14b/small_picker_heavy_2v4/json/step_records.json"
+}

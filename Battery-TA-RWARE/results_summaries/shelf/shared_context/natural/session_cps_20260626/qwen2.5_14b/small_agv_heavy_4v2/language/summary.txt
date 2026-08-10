@@ -1,0 +1,29 @@
+Stated Objective: Maximize total shelf deliveries while keeping agents charged enough to avoid critical battery levels.
+Model: qwen2.5:14b (LLM)
+Scenario: small_agv_heavy_4v2 [tarware-small-4agvs-2pickers-globalobs-chg-v1]
+Scenario Focus: AGV-heavy: reveal picker-support scheduling weakness and AGV waiting behavior.
+Prompt format: LANGUAGE
+Total Shelf Delivery: 9
+Steps executed: 1336
+LLM calls: 1159
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 403
+LLM failures: 0
+LLM missing/invalid planned actions: 0
+JSON generation failures: 0
+Charging station utilization rate: 0.0942
+Average charging stations occupied per step: 0.5651
+Minimum battery observed: 5.0
+Below required minimum charge events: 1886
+Agents ever below required minimum charge: agent_0, agent_1, agent_2, agent_3, agent_4, agent_5
+Battery safety success: False
+Shelf delivery timeline:
+- step=41 delivered_this_step=1 total_shelf_deliveries=1
+- step=52 delivered_this_step=1 total_shelf_deliveries=2
+- step=63 delivered_this_step=1 total_shelf_deliveries=3
+- step=97 delivered_this_step=1 total_shelf_deliveries=4
+- step=256 delivered_this_step=1 total_shelf_deliveries=5
+- step=272 delivered_this_step=1 total_shelf_deliveries=6
+- step=422 delivered_this_step=1 total_shelf_deliveries=7
+- step=524 delivered_this_step=1 total_shelf_deliveries=8
+- step=836 delivered_this_step=1 total_shelf_deliveries=9

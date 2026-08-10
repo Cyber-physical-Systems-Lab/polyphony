@@ -1,0 +1,32 @@
+Stated Objective: Optimize calls to LLM and increase the total shelf delivery.
+Model: llama3.2:3b (SLM)
+Scenario: medium_balanced_4v4 [tarware-medium-4agvs-4pickers-globalobs-chg-v1]
+Scenario Focus: Balanced scaling: larger warehouse and longer-horizon coordination.
+Prompt format: LANGUAGE
+Total Shelf Delivery: 16
+Steps executed: 3892
+LLM calls: 3292
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 1889
+LLM failures: 6
+LLM missing/invalid planned actions: 1193
+JSON generation failures: 0
+Charging station utilization rate: 0.1809
+Average charging stations occupied per step: 1.4476
+Shelf delivery timeline:
+- step=261 delivered_this_step=1 total_shelf_deliveries=1
+- step=475 delivered_this_step=1 total_shelf_deliveries=2
+- step=755 delivered_this_step=1 total_shelf_deliveries=3
+- step=862 delivered_this_step=1 total_shelf_deliveries=4
+- step=904 delivered_this_step=1 total_shelf_deliveries=5
+- step=1076 delivered_this_step=1 total_shelf_deliveries=6
+- step=1490 delivered_this_step=1 total_shelf_deliveries=7
+- step=1933 delivered_this_step=1 total_shelf_deliveries=8
+- step=2165 delivered_this_step=1 total_shelf_deliveries=9
+- step=2243 delivered_this_step=1 total_shelf_deliveries=10
+- step=2252 delivered_this_step=1 total_shelf_deliveries=11
+- step=2407 delivered_this_step=1 total_shelf_deliveries=12
+- step=2612 delivered_this_step=1 total_shelf_deliveries=13
+- step=2700 delivered_this_step=1 total_shelf_deliveries=14
+- step=3165 delivered_this_step=1 total_shelf_deliveries=15
+- step=3392 delivered_this_step=1 total_shelf_deliveries=16

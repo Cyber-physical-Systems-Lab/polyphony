@@ -1,0 +1,28 @@
+Stated Objective: Optimize Battery Life: keep agents charged, prioritize safe charging decisions, and never let any agent go below the critical battery threshold.
+Model: mistral:7b (MLM)
+Scenario: tiny_balanced_1v1 [tarware-tiny-1agvs-1pickers-globalobs-chg-v1]
+Scenario Focus: Balanced baseline: reveal whether the model understands the normal AGV-Picker collaboration loop.
+Prompt format: LANGUAGE
+Total Shelf Delivery: 6
+Steps executed: 1180
+LLM calls: 1278
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 63
+LLM failures: 622
+LLM missing/invalid planned actions: 622
+JSON generation failures: 0
+Charging station utilization rate: 0.2619
+Average charging stations occupied per step: 0.5237
+Critical battery threshold: 30.0
+Minimum required charge: 30.0
+Minimum battery observed: 0.0
+Below required minimum charge events: 685
+Agents ever below required minimum charge: agent_0
+Battery objective success: False
+Shelf delivery timeline:
+- step=90 delivered_this_step=1 total_shelf_deliveries=1
+- step=228 delivered_this_step=1 total_shelf_deliveries=2
+- step=340 delivered_this_step=1 total_shelf_deliveries=3
+- step=489 delivered_this_step=1 total_shelf_deliveries=4
+- step=561 delivered_this_step=1 total_shelf_deliveries=5
+- step=680 delivered_this_step=1 total_shelf_deliveries=6

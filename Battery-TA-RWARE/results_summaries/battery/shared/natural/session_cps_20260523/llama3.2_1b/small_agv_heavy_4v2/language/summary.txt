@@ -1,0 +1,32 @@
+Stated Objective: Optimize Battery Life: keep agents charged, prioritize safe charging decisions, and never let any agent go below the critical battery threshold.
+Model: llama3.2:1b (SLM)
+Scenario: small_agv_heavy_4v2 [tarware-small-4agvs-2pickers-globalobs-chg-v1]
+Scenario Focus: AGV-heavy: reveal picker-support scheduling weakness and AGV waiting behavior.
+Prompt format: LANGUAGE
+Total Shelf Delivery: 10
+Steps executed: 1028
+LLM calls: 1640
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 270
+LLM failures: 0
+LLM missing/invalid planned actions: 0
+JSON generation failures: 0
+Charging station utilization rate: 0.1274
+Average charging stations occupied per step: 0.7646
+Critical battery threshold: 30.0
+Minimum required charge: 30.0
+Minimum battery observed: 0.0
+Below required minimum charge events: 2430
+Agents ever below required minimum charge: agent_0, agent_1, agent_2, agent_3, agent_4, agent_5
+Battery objective success: False
+Shelf delivery timeline:
+- step=38 delivered_this_step=1 total_shelf_deliveries=1
+- step=69 delivered_this_step=1 total_shelf_deliveries=2
+- step=135 delivered_this_step=1 total_shelf_deliveries=3
+- step=185 delivered_this_step=1 total_shelf_deliveries=4
+- step=223 delivered_this_step=1 total_shelf_deliveries=5
+- step=263 delivered_this_step=1 total_shelf_deliveries=6
+- step=411 delivered_this_step=1 total_shelf_deliveries=7
+- step=437 delivered_this_step=1 total_shelf_deliveries=8
+- step=514 delivered_this_step=1 total_shelf_deliveries=9
+- step=528 delivered_this_step=1 total_shelf_deliveries=10

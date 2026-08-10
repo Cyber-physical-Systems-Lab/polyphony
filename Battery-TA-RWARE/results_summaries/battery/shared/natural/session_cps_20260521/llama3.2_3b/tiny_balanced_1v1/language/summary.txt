@@ -1,0 +1,42 @@
+Stated Objective: Optimize Battery Life: keep agents charged, prioritize safe charging decisions, and never let any agent go below the critical battery threshold.
+Model: llama3.2:3b (SLM)
+Scenario: tiny_balanced_1v1 [tarware-tiny-1agvs-1pickers-globalobs-chg-v1]
+Scenario Focus: Balanced baseline: reveal whether the model understands the normal AGV-Picker collaboration loop.
+Prompt format: LANGUAGE
+Total Shelf Delivery: 20
+Steps executed: 1889
+LLM calls: 1493
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 182
+LLM failures: 0
+LLM missing/invalid planned actions: 0
+JSON generation failures: 0
+Charging station utilization rate: 0.1427
+Average charging stations occupied per step: 0.2853
+Critical battery threshold: 30.0
+Minimum required charge: 30.0
+Minimum battery observed: 0.0
+Below required minimum charge events: 958
+Agents ever below required minimum charge: agent_0, agent_1
+Battery objective success: False
+Shelf delivery timeline:
+- step=37 delivered_this_step=1 total_shelf_deliveries=1
+- step=101 delivered_this_step=1 total_shelf_deliveries=2
+- step=234 delivered_this_step=1 total_shelf_deliveries=3
+- step=306 delivered_this_step=1 total_shelf_deliveries=4
+- step=376 delivered_this_step=1 total_shelf_deliveries=5
+- step=433 delivered_this_step=1 total_shelf_deliveries=6
+- step=489 delivered_this_step=1 total_shelf_deliveries=7
+- step=542 delivered_this_step=1 total_shelf_deliveries=8
+- step=940 delivered_this_step=1 total_shelf_deliveries=9
+- step=994 delivered_this_step=1 total_shelf_deliveries=10
+- step=1044 delivered_this_step=1 total_shelf_deliveries=11
+- step=1127 delivered_this_step=1 total_shelf_deliveries=12
+- step=1252 delivered_this_step=1 total_shelf_deliveries=13
+- step=1298 delivered_this_step=1 total_shelf_deliveries=14
+- step=1327 delivered_this_step=1 total_shelf_deliveries=15
+- step=1495 delivered_this_step=1 total_shelf_deliveries=16
+- step=1558 delivered_this_step=1 total_shelf_deliveries=17
+- step=1623 delivered_this_step=1 total_shelf_deliveries=18
+- step=1816 delivered_this_step=1 total_shelf_deliveries=19
+- step=1889 delivered_this_step=1 total_shelf_deliveries=20

@@ -1,0 +1,31 @@
+Stated Objective: Optimize calls to LLM and increase the total shelf delivery.
+Model: phi4 (LLM)
+Scenario: small_agv_heavy_4v2 [tarware-small-4agvs-2pickers-globalobs-chg-v1]
+Scenario Focus: AGV-heavy: reveal picker-support scheduling weakness and AGV waiting behavior.
+Prompt format: LANGUAGE
+Total Shelf Delivery: 15
+Steps executed: 1837
+LLM calls: 1054
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 633
+LLM failures: 0
+LLM missing/invalid planned actions: 36
+JSON generation failures: 0
+Charging station utilization rate: 0.1069
+Average charging stations occupied per step: 0.6413
+Shelf delivery timeline:
+- step=26 delivered_this_step=1 total_shelf_deliveries=1
+- step=47 delivered_this_step=1 total_shelf_deliveries=2
+- step=62 delivered_this_step=1 total_shelf_deliveries=3
+- step=63 delivered_this_step=1 total_shelf_deliveries=4
+- step=90 delivered_this_step=1 total_shelf_deliveries=5
+- step=118 delivered_this_step=1 total_shelf_deliveries=6
+- step=326 delivered_this_step=1 total_shelf_deliveries=7
+- step=405 delivered_this_step=1 total_shelf_deliveries=8
+- step=472 delivered_this_step=1 total_shelf_deliveries=9
+- step=613 delivered_this_step=1 total_shelf_deliveries=10
+- step=785 delivered_this_step=1 total_shelf_deliveries=11
+- step=1038 delivered_this_step=1 total_shelf_deliveries=12
+- step=1134 delivered_this_step=1 total_shelf_deliveries=13
+- step=1211 delivered_this_step=1 total_shelf_deliveries=14
+- step=1337 delivered_this_step=1 total_shelf_deliveries=15

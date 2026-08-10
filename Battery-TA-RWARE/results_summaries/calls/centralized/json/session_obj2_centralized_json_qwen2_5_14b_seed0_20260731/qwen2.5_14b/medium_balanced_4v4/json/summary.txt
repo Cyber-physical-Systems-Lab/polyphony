@@ -1,0 +1,36 @@
+Stated Objective: Optimize calls to LLM and increase the total shelf delivery.
+Model: qwen2.5:14b (LLM)
+Scenario: medium_balanced_4v4 [tarware-medium-4agvs-4pickers-globalobs-chg-v1]
+Scenario Focus: Balanced scaling: larger warehouse and longer-horizon coordination.
+Prompt format: JSON
+Total Shelf Delivery: 20
+Steps executed: 1625
+LLM calls: 1412
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 935
+LLM failures: 0
+LLM missing/invalid planned actions: 0
+JSON generation failures: 0
+Charging station utilization rate: 0.1322
+Average charging stations occupied per step: 1.0572
+Shelf delivery timeline:
+- step=62 delivered_this_step=1 total_shelf_deliveries=1
+- step=92 delivered_this_step=1 total_shelf_deliveries=2
+- step=130 delivered_this_step=1 total_shelf_deliveries=3
+- step=136 delivered_this_step=1 total_shelf_deliveries=4
+- step=283 delivered_this_step=1 total_shelf_deliveries=5
+- step=355 delivered_this_step=1 total_shelf_deliveries=6
+- step=605 delivered_this_step=1 total_shelf_deliveries=7
+- step=615 delivered_this_step=1 total_shelf_deliveries=8
+- step=688 delivered_this_step=1 total_shelf_deliveries=9
+- step=846 delivered_this_step=1 total_shelf_deliveries=10
+- step=1059 delivered_this_step=1 total_shelf_deliveries=11
+- step=1141 delivered_this_step=1 total_shelf_deliveries=12
+- step=1258 delivered_this_step=1 total_shelf_deliveries=13
+- step=1269 delivered_this_step=1 total_shelf_deliveries=14
+- step=1315 delivered_this_step=1 total_shelf_deliveries=15
+- step=1382 delivered_this_step=1 total_shelf_deliveries=16
+- step=1428 delivered_this_step=1 total_shelf_deliveries=17
+- step=1569 delivered_this_step=1 total_shelf_deliveries=18
+- step=1615 delivered_this_step=1 total_shelf_deliveries=19
+- step=1625 delivered_this_step=1 total_shelf_deliveries=20

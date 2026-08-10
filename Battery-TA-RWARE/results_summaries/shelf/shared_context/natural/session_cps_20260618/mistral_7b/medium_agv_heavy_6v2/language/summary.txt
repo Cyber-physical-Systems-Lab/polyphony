@@ -1,0 +1,39 @@
+Stated Objective: Maximize total shelf deliveries while keeping agents charged enough to avoid critical battery levels.
+Model: mistral:7b (MLM)
+Scenario: medium_agv_heavy_6v2 [tarware-medium-6agvs-2pickers-globalobs-chg-v1]
+Scenario Focus: Strongly AGV-heavy: stress-test support prioritization, waiting, and charging decisions.
+Prompt format: LANGUAGE
+Total Shelf Delivery: 19
+Steps executed: 1173
+LLM calls: 3259
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 280
+LLM failures: 0
+LLM missing/invalid planned actions: 16
+JSON generation failures: 0
+Charging station utilization rate: 0.1951
+Average charging stations occupied per step: 1.5610
+Minimum battery observed: 0.0
+Below required minimum charge events: 3647
+Agents ever below required minimum charge: agent_0, agent_1, agent_2, agent_3, agent_4, agent_5, agent_6, agent_7
+Battery safety success: False
+Shelf delivery timeline:
+- step=40 delivered_this_step=1 total_shelf_deliveries=1
+- step=66 delivered_this_step=1 total_shelf_deliveries=2
+- step=67 delivered_this_step=1 total_shelf_deliveries=3
+- step=96 delivered_this_step=1 total_shelf_deliveries=4
+- step=101 delivered_this_step=1 total_shelf_deliveries=5
+- step=139 delivered_this_step=1 total_shelf_deliveries=6
+- step=200 delivered_this_step=1 total_shelf_deliveries=7
+- step=212 delivered_this_step=1 total_shelf_deliveries=8
+- step=288 delivered_this_step=1 total_shelf_deliveries=9
+- step=299 delivered_this_step=1 total_shelf_deliveries=10
+- step=322 delivered_this_step=1 total_shelf_deliveries=11
+- step=354 delivered_this_step=1 total_shelf_deliveries=12
+- step=385 delivered_this_step=1 total_shelf_deliveries=13
+- step=439 delivered_this_step=1 total_shelf_deliveries=14
+- step=454 delivered_this_step=1 total_shelf_deliveries=15
+- step=497 delivered_this_step=1 total_shelf_deliveries=16
+- step=580 delivered_this_step=1 total_shelf_deliveries=17
+- step=585 delivered_this_step=1 total_shelf_deliveries=18
+- step=673 delivered_this_step=1 total_shelf_deliveries=19

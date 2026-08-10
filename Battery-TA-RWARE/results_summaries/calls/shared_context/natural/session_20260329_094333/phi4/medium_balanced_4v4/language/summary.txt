@@ -1,0 +1,23 @@
+Stated Objective: Optimize calls to LLM and increase the total shelf delivery.
+Model: phi4 (LLM)
+Scenario: medium_balanced_4v4 [tarware-medium-4agvs-4pickers-globalobs-chg-v1]
+Scenario Focus: Balanced scaling: larger warehouse and longer-horizon coordination.
+Prompt format: LANGUAGE
+Total Shelf Delivery: 7
+Steps executed: 1032
+LLM calls: 1282
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 552
+LLM failures: 0
+LLM missing/invalid planned actions: 0
+JSON generation failures: 0
+Charging station utilization rate: 0.1226
+Average charging stations occupied per step: 0.9806
+Shelf delivery timeline:
+- step=46 delivered_this_step=1 total_shelf_deliveries=1
+- step=64 delivered_this_step=1 total_shelf_deliveries=2
+- step=79 delivered_this_step=1 total_shelf_deliveries=3
+- step=146 delivered_this_step=1 total_shelf_deliveries=4
+- step=334 delivered_this_step=1 total_shelf_deliveries=5
+- step=405 delivered_this_step=1 total_shelf_deliveries=6
+- step=532 delivered_this_step=1 total_shelf_deliveries=7

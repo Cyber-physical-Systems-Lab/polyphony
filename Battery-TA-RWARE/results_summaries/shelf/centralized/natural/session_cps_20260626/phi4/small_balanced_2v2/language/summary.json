@@ -1,0 +1,96 @@
+{
+  "stated_objective": "Maximize total shelf deliveries while keeping agents charged enough to avoid critical battery levels.",
+  "model": "phi4",
+  "model_class": "LLM",
+  "scenario": "small_balanced_2v2",
+  "scenario_env_id": "tarware-small-2agvs-2pickers-globalobs-chg-v1",
+  "scenario_focus": "Balanced coordination at slightly higher concurrency.",
+  "prompt_format": "LANGUAGE",
+  "total_shelf_deliveries": 9,
+  "delivery_timeline": [
+    {
+      "step": 73,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 1
+    },
+    {
+      "step": 339,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 2
+    },
+    {
+      "step": 375,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 3
+    },
+    {
+      "step": 658,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 4
+    },
+    {
+      "step": 845,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 5
+    },
+    {
+      "step": 1062,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 6
+    },
+    {
+      "step": 1312,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 7
+    },
+    {
+      "step": 1424,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 8
+    },
+    {
+      "step": 1684,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 9
+    }
+  ],
+  "steps_executed": 2184,
+  "max_steps": 0,
+  "max_inactivity_steps": 500,
+  "max_busy_steps_for_replan": 10,
+  "disable_support_needed_soon": true,
+  "find_path_agent_aware_always": true,
+  "seed": 0,
+  "llm_calls": 1037,
+  "llm_calls_skipped_busy_agents": 0,
+  "action_reuse_without_llm_query": 581,
+  "llm_failures": 0,
+  "llm_missing_or_invalid_actions": 7,
+  "json_generation_failures": 0,
+  "charging_station_utilization_rate": 0.11504120879120878,
+  "average_charging_stations_occupied_per_step": 0.46016483516483514,
+  "critical_battery_threshold": 30.0,
+  "minimum_required_charge": 30.0,
+  "min_battery_observed": 0.0,
+  "per_agent_min_battery": {
+    "agent_0": 31.0,
+    "agent_1": 4.0,
+    "agent_2": 5.0,
+    "agent_3": 0.0
+  },
+  "below_required_min_charge_events": 3409,
+  "per_agent_below_required_min_charge_steps": {
+    "agent_0": 0,
+    "agent_1": 748,
+    "agent_2": 1328,
+    "agent_3": 1333
+  },
+  "agents_ever_below_required_min_charge": [
+    "agent_1",
+    "agent_2",
+    "agent_3"
+  ],
+  "battery_safety_success": false,
+  "elapsed_seconds": 17175.897822141647,
+  "step_records_path": "results/shelf/centralized/natural/session_cps_20260626/phi4/small_balanced_2v2/language/step_records.json"
+}

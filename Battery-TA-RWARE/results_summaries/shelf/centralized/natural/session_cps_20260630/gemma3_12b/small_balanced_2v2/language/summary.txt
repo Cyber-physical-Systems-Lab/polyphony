@@ -1,0 +1,23 @@
+Stated Objective: Maximize total shelf deliveries while keeping agents charged enough to avoid critical battery levels.
+Model: gemma3:12b (MLM)
+Scenario: small_balanced_2v2 [tarware-small-2agvs-2pickers-globalobs-chg-v1]
+Scenario Focus: Balanced coordination at slightly higher concurrency.
+Prompt format: LANGUAGE
+Total Shelf Delivery: 3
+Steps executed: 1202
+LLM calls: 564
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 307
+LLM failures: 0
+LLM missing/invalid planned actions: 5
+JSON generation failures: 0
+Charging station utilization rate: 0.1331
+Average charging stations occupied per step: 0.5324
+Minimum battery observed: 5.0
+Below required minimum charge events: 1199
+Agents ever below required minimum charge: agent_0, agent_1, agent_2, agent_3
+Battery safety success: False
+Shelf delivery timeline:
+- step=312 delivered_this_step=1 total_shelf_deliveries=1
+- step=507 delivered_this_step=1 total_shelf_deliveries=2
+- step=702 delivered_this_step=1 total_shelf_deliveries=3

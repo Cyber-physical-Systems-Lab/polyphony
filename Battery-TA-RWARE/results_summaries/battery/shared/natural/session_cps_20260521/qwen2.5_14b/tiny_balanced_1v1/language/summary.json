@@ -1,0 +1,50 @@
+{
+  "stated_objective": "Optimize Battery Life: keep agents charged, prioritize safe charging decisions, and never let any agent go below the critical battery threshold.",
+  "model": "qwen2.5:14b",
+  "model_class": "LLM",
+  "scenario": "tiny_balanced_1v1",
+  "scenario_env_id": "tarware-tiny-1agvs-1pickers-globalobs-chg-v1",
+  "scenario_focus": "Balanced baseline: reveal whether the model understands the normal AGV-Picker collaboration loop.",
+  "prompt_format": "LANGUAGE",
+  "total_shelf_deliveries": 1,
+  "delivery_timeline": [
+    {
+      "step": 35,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 1
+    }
+  ],
+  "steps_executed": 535,
+  "max_steps": 0,
+  "max_inactivity_steps": 500,
+  "max_busy_steps_for_replan": 10,
+  "disable_support_needed_soon": true,
+  "find_path_agent_aware_always": true,
+  "seed": 0,
+  "llm_calls": 182,
+  "llm_calls_skipped_busy_agents": 0,
+  "action_reuse_without_llm_query": 66,
+  "llm_failures": 0,
+  "llm_missing_or_invalid_actions": 0,
+  "json_generation_failures": 0,
+  "charging_station_utilization_rate": 0.09252336448598131,
+  "average_charging_stations_occupied_per_step": 0.18504672897196262,
+  "critical_battery_threshold": 30.0,
+  "minimum_required_charge": 30.0,
+  "min_battery_observed": 14.0,
+  "per_agent_min_battery": {
+    "agent_0": 40.0,
+    "agent_1": 14.0
+  },
+  "below_required_min_charge_events": 238,
+  "per_agent_below_required_min_charge_steps": {
+    "agent_0": 0,
+    "agent_1": 238
+  },
+  "agents_ever_below_required_min_charge": [
+    "agent_1"
+  ],
+  "battery_objective_success": false,
+  "elapsed_seconds": 364.64987802505493,
+  "step_records_path": "results/battery/shared/natural/session_cps_20260521/qwen2.5_14b/tiny_balanced_1v1/language/step_records.json"
+}

@@ -1,0 +1,76 @@
+{
+  "stated_objective": "Optimize Battery Life: keep agents charged, prioritize safe charging decisions, and never let any agent go below the critical battery threshold.",
+  "model": "llama3.2:1b",
+  "model_class": "SLM",
+  "scenario": "small_picker_heavy_2v4",
+  "scenario_env_id": "tarware-small-2agvs-4pickers-globalobs-chg-v1",
+  "scenario_focus": "Picker-heavy: reveal underutilization, role confusion, and unnecessary movement.",
+  "prompt_format": "LANGUAGE",
+  "total_shelf_deliveries": 4,
+  "delivery_timeline": [
+    {
+      "step": 42,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 1
+    },
+    {
+      "step": 115,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 2
+    },
+    {
+      "step": 187,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 3
+    },
+    {
+      "step": 264,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 4
+    }
+  ],
+  "steps_executed": 764,
+  "max_steps": 0,
+  "max_inactivity_steps": 500,
+  "max_busy_steps_for_replan": 10,
+  "disable_support_needed_soon": true,
+  "find_path_agent_aware_always": true,
+  "seed": 100,
+  "llm_calls": 1939,
+  "llm_calls_skipped_busy_agents": 0,
+  "action_reuse_without_llm_query": 266,
+  "llm_failures": 0,
+  "llm_missing_or_invalid_actions": 0,
+  "json_generation_failures": 0,
+  "charging_station_utilization_rate": 0.29777486910994766,
+  "average_charging_stations_occupied_per_step": 1.786649214659686,
+  "critical_battery_threshold": 30.0,
+  "minimum_required_charge": 30.0,
+  "min_battery_observed": 0.0,
+  "per_agent_min_battery": {
+    "agent_0": 0.0,
+    "agent_1": 16.0,
+    "agent_2": 24.0,
+    "agent_3": 19.0,
+    "agent_4": 37.0,
+    "agent_5": 42.0
+  },
+  "below_required_min_charge_events": 737,
+  "per_agent_below_required_min_charge_steps": {
+    "agent_0": 144,
+    "agent_1": 528,
+    "agent_2": 13,
+    "agent_3": 52,
+    "agent_4": 0,
+    "agent_5": 0
+  },
+  "agents_ever_below_required_min_charge": [
+    "agent_0",
+    "agent_1",
+    "agent_2",
+    "agent_3"
+  ],
+  "battery_objective_success": false,
+  "elapsed_seconds": 1620.4816076755524,
+  "step_records_path": "results/battery/shared/natural/session_cps_20260523/llama3.2_1b/small_picker_heavy_2v4/language/step_records.json"
+}

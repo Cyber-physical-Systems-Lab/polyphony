@@ -89,6 +89,7 @@ The objective-family runners write session outputs under the following default d
     \item \nolinkurl{results/obj3_shared_context_llm_experiments}
     \item \nolinkurl{results/obj3_centralized_llm_experiments}
 \end{itemize}
+These raw step-level result directories are retained separately because their size is unsuitable for the source repository; the repository contains the experiment implementation and runner commands.
 Each session stores aggregate summaries together with per-run JSON summaries and detailed logs.
 The aggregate analysis uses the retained runs from these outputs and follows the protocol described in Section~\ref{sec:method_scenarios_models_metrics}.
 
@@ -154,5 +155,5 @@ summary_json_path
 
 The main analysis uses total deliveries, \gls{llm} calls, deliveries per 1000 \gls{llm} calls, and the descriptive battery-aware productivity score defined in Section~\ref{sec:method_scenarios_models_metrics}.
 The remaining fields are retained for filtering, traceability, and diagnostic interpretation.
-For example, parsing and invalid-action fields help identify whether poor delivery performance is associated with structured-output failures or invalid model actions.
+Parsing and invalid-action fields support diagnostic tracing of malformed outputs and configuration errors.
 The \nolinkurl{summary_json_path} field links each aggregate row to the corresponding detailed run summary.

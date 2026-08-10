@@ -1,0 +1,94 @@
+{
+  "stated_objective": "Optimize Battery Life: keep agents charged, prioritize safe charging decisions, and never let any agent go below the critical battery threshold.",
+  "model": "gemma3:12b",
+  "model_class": "MLM",
+  "scenario": "medium_balanced_4v4",
+  "scenario_env_id": "tarware-medium-4agvs-4pickers-globalobs-chg-v1",
+  "scenario_focus": "Balanced scaling: larger warehouse and longer-horizon coordination.",
+  "prompt_format": "LANGUAGE",
+  "total_shelf_deliveries": 6,
+  "delivery_timeline": [
+    {
+      "step": 46,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 1
+    },
+    {
+      "step": 64,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 2
+    },
+    {
+      "step": 79,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 3
+    },
+    {
+      "step": 101,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 4
+    },
+    {
+      "step": 249,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 5
+    },
+    {
+      "step": 309,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 6
+    }
+  ],
+  "steps_executed": 809,
+  "max_steps": 0,
+  "max_inactivity_steps": 500,
+  "max_busy_steps_for_replan": 10,
+  "disable_support_needed_soon": true,
+  "find_path_agent_aware_always": true,
+  "seed": 0,
+  "llm_calls": 1189,
+  "llm_calls_skipped_busy_agents": 0,
+  "action_reuse_without_llm_query": 421,
+  "llm_failures": 0,
+  "llm_missing_or_invalid_actions": 0,
+  "json_generation_failures": 0,
+  "charging_station_utilization_rate": 0.11758343634116193,
+  "average_charging_stations_occupied_per_step": 0.9406674907292955,
+  "critical_battery_threshold": 30.0,
+  "minimum_required_charge": 30.0,
+  "min_battery_observed": 0.0,
+  "per_agent_min_battery": {
+    "agent_0": 6.0,
+    "agent_1": 6.0,
+    "agent_2": 0.0,
+    "agent_3": 0.0,
+    "agent_4": 12.0,
+    "agent_5": 0.0,
+    "agent_6": 0.0,
+    "agent_7": 0.0
+  },
+  "below_required_min_charge_events": 2277,
+  "per_agent_below_required_min_charge_steps": {
+    "agent_0": 102,
+    "agent_1": 67,
+    "agent_2": 67,
+    "agent_3": 69,
+    "agent_4": 421,
+    "agent_5": 525,
+    "agent_6": 506,
+    "agent_7": 520
+  },
+  "agents_ever_below_required_min_charge": [
+    "agent_0",
+    "agent_1",
+    "agent_2",
+    "agent_3",
+    "agent_4",
+    "agent_5",
+    "agent_6",
+    "agent_7"
+  ],
+  "battery_objective_success": false,
+  "elapsed_seconds": 4737.1063141822815,
+  "step_records_path": "results/battery/shared/natural/session_cps_20260521/gemma3_12b/medium_balanced_4v4/language/step_records.json"
+}

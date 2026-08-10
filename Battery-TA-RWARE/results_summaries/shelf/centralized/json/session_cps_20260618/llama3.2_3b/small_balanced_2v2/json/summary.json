@@ -1,0 +1,50 @@
+{
+  "stated_objective": "Maximize total shelf deliveries while keeping agents charged enough to avoid critical battery levels.",
+  "model": "llama3.2:3b",
+  "model_class": "SLM",
+  "scenario": "small_balanced_2v2",
+  "scenario_env_id": "tarware-small-2agvs-2pickers-globalobs-chg-v1",
+  "scenario_focus": "Balanced coordination at slightly higher concurrency.",
+  "prompt_format": "JSON",
+  "total_shelf_deliveries": 0,
+  "delivery_timeline": [],
+  "steps_executed": 500,
+  "max_steps": 0,
+  "max_inactivity_steps": 500,
+  "max_busy_steps_for_replan": 10,
+  "disable_support_needed_soon": true,
+  "find_path_agent_aware_always": true,
+  "seed": 0,
+  "llm_calls": 349,
+  "llm_calls_skipped_busy_agents": 0,
+  "action_reuse_without_llm_query": 152,
+  "llm_failures": 0,
+  "llm_missing_or_invalid_actions": 56,
+  "json_generation_failures": 0,
+  "charging_station_utilization_rate": 0.1235,
+  "average_charging_stations_occupied_per_step": 0.494,
+  "critical_battery_threshold": 30.0,
+  "minimum_required_charge": 30.0,
+  "min_battery_observed": 0.0,
+  "per_agent_min_battery": {
+    "agent_0": 0.0,
+    "agent_1": 19.0,
+    "agent_2": 6.0,
+    "agent_3": 37.0
+  },
+  "below_required_min_charge_events": 205,
+  "per_agent_below_required_min_charge_steps": {
+    "agent_0": 137,
+    "agent_1": 27,
+    "agent_2": 41,
+    "agent_3": 0
+  },
+  "agents_ever_below_required_min_charge": [
+    "agent_0",
+    "agent_1",
+    "agent_2"
+  ],
+  "battery_safety_success": false,
+  "elapsed_seconds": 2160.856732606888,
+  "step_records_path": "results/shelf/centralized/json/session_cps_20260618/llama3.2_3b/small_balanced_2v2/json/step_records.json"
+}

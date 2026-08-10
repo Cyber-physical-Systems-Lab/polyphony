@@ -1,0 +1,22 @@
+Stated Objective: Maximize total shelf deliveries while keeping agents charged enough to avoid critical battery levels.
+Model: llama3.2:3b (SLM)
+Scenario: tiny_balanced_1v1 [tarware-tiny-1agvs-1pickers-globalobs-chg-v1]
+Scenario Focus: Balanced baseline: reveal whether the model understands the normal AGV-Picker collaboration loop.
+Prompt format: LANGUAGE
+Total Shelf Delivery: 2
+Steps executed: 633
+LLM calls: 608
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 39
+LLM failures: 0
+LLM missing/invalid planned actions: 0
+JSON generation failures: 0
+Charging station utilization rate: 0.1469
+Average charging stations occupied per step: 0.2938
+Minimum battery observed: 0.0
+Below required minimum charge events: 113
+Agents ever below required minimum charge: agent_0, agent_1
+Battery safety success: False
+Shelf delivery timeline:
+- step=37 delivered_this_step=1 total_shelf_deliveries=1
+- step=133 delivered_this_step=1 total_shelf_deliveries=2

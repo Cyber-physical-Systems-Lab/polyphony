@@ -1,0 +1,36 @@
+Stated Objective: Optimize calls to LLM and increase the total shelf delivery.
+Model: gemma3:12b (MLM)
+Scenario: small_picker_heavy_2v4 [tarware-small-2agvs-4pickers-globalobs-chg-v1]
+Scenario Focus: Picker-heavy: reveal underutilization, role confusion, and unnecessary movement.
+Prompt format: LANGUAGE
+Total Shelf Delivery: 20
+Steps executed: 2578
+LLM calls: 4083
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 1033
+LLM failures: 0
+LLM missing/invalid planned actions: 0
+JSON generation failures: 0
+Charging station utilization rate: 0.1363
+Average charging stations occupied per step: 0.8177
+Shelf delivery timeline:
+- step=24 delivered_this_step=1 total_shelf_deliveries=1
+- step=49 delivered_this_step=1 total_shelf_deliveries=2
+- step=133 delivered_this_step=1 total_shelf_deliveries=3
+- step=190 delivered_this_step=1 total_shelf_deliveries=4
+- step=529 delivered_this_step=1 total_shelf_deliveries=5
+- step=644 delivered_this_step=1 total_shelf_deliveries=6
+- step=771 delivered_this_step=1 total_shelf_deliveries=7
+- step=895 delivered_this_step=1 total_shelf_deliveries=8
+- step=1099 delivered_this_step=1 total_shelf_deliveries=9
+- step=1343 delivered_this_step=1 total_shelf_deliveries=10
+- step=1517 delivered_this_step=1 total_shelf_deliveries=11
+- step=1715 delivered_this_step=1 total_shelf_deliveries=12
+- step=2132 delivered_this_step=1 total_shelf_deliveries=13
+- step=2179 delivered_this_step=1 total_shelf_deliveries=14
+- step=2260 delivered_this_step=1 total_shelf_deliveries=15
+- step=2295 delivered_this_step=1 total_shelf_deliveries=16
+- step=2437 delivered_this_step=1 total_shelf_deliveries=17
+- step=2478 delivered_this_step=1 total_shelf_deliveries=18
+- step=2502 delivered_this_step=1 total_shelf_deliveries=19
+- step=2578 delivered_this_step=1 total_shelf_deliveries=20

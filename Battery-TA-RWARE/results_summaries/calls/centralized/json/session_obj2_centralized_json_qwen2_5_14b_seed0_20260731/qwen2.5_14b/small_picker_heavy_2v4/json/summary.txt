@@ -1,0 +1,18 @@
+Stated Objective: Optimize calls to LLM and increase the total shelf delivery.
+Model: qwen2.5:14b (LLM)
+Scenario: small_picker_heavy_2v4 [tarware-small-2agvs-4pickers-globalobs-chg-v1]
+Scenario Focus: Picker-heavy: reveal underutilization, role confusion, and unnecessary movement.
+Prompt format: JSON
+Total Shelf Delivery: 2
+Steps executed: 547
+LLM calls: 486
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 140
+LLM failures: 0
+LLM missing/invalid planned actions: 1
+JSON generation failures: 0
+Charging station utilization rate: 0.4190
+Average charging stations occupied per step: 2.5137
+Shelf delivery timeline:
+- step=37 delivered_this_step=1 total_shelf_deliveries=1
+- step=47 delivered_this_step=1 total_shelf_deliveries=2

@@ -1,0 +1,67 @@
+{
+  "stated_objective": "Maximize total shelf deliveries while keeping agents charged enough to avoid critical battery levels.",
+  "model": "llama3.2:1b",
+  "model_class": "SLM",
+  "scenario": "small_balanced_2v2",
+  "scenario_env_id": "tarware-small-2agvs-2pickers-globalobs-chg-v1",
+  "scenario_focus": "Balanced coordination at slightly higher concurrency.",
+  "prompt_format": "JSON",
+  "total_shelf_deliveries": 3,
+  "delivery_timeline": [
+    {
+      "step": 46,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 1
+    },
+    {
+      "step": 99,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 2
+    },
+    {
+      "step": 120,
+      "step_shelf_deliveries": 1,
+      "total_shelf_deliveries": 3
+    }
+  ],
+  "steps_executed": 620,
+  "max_steps": 0,
+  "max_inactivity_steps": 500,
+  "max_busy_steps_for_replan": 10,
+  "disable_support_needed_soon": true,
+  "find_path_agent_aware_always": true,
+  "seed": 0,
+  "llm_calls": 1312,
+  "llm_calls_skipped_busy_agents": 0,
+  "action_reuse_without_llm_query": 195,
+  "llm_failures": 0,
+  "llm_missing_or_invalid_actions": 0,
+  "json_generation_failures": 0,
+  "charging_station_utilization_rate": 0.021370967741935483,
+  "average_charging_stations_occupied_per_step": 0.08548387096774193,
+  "critical_battery_threshold": 30.0,
+  "minimum_required_charge": 30.0,
+  "min_battery_observed": 0.0,
+  "per_agent_min_battery": {
+    "agent_0": 0.0,
+    "agent_1": 0.0,
+    "agent_2": 0.0,
+    "agent_3": 0.0
+  },
+  "below_required_min_charge_events": 1850,
+  "per_agent_below_required_min_charge_steps": {
+    "agent_0": 533,
+    "agent_1": 473,
+    "agent_2": 325,
+    "agent_3": 519
+  },
+  "agents_ever_below_required_min_charge": [
+    "agent_0",
+    "agent_1",
+    "agent_2",
+    "agent_3"
+  ],
+  "battery_safety_success": false,
+  "elapsed_seconds": 1683.7776477336884,
+  "step_records_path": "results/shelf/shared_context/json/session_cps_20260618/llama3.2_1b/small_balanced_2v2/json/step_records.json"
+}

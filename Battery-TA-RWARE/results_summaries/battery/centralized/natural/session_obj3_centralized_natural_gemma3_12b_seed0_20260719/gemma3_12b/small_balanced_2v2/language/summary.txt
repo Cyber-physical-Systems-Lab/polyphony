@@ -1,0 +1,23 @@
+Stated Objective: Optimize Battery Life: keep agents charged, prioritize safe charging decisions, and never let any agent go below the critical battery threshold.
+Model: gemma3:12b (MLM)
+Scenario: small_balanced_2v2 [tarware-small-2agvs-2pickers-globalobs-chg-v1]
+Scenario Focus: Balanced coordination at slightly higher concurrency.
+Prompt format: LANGUAGE
+Total Shelf Delivery: 0
+Steps executed: 500
+LLM calls: 142
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 123
+LLM failures: 0
+LLM missing/invalid planned actions: 0
+JSON generation failures: 0
+Charging station utilization rate: 0.0985
+Average charging stations occupied per step: 0.3940
+Critical battery threshold: 30.0
+Minimum required charge: 30.0
+Minimum battery observed: 3.0
+Below required minimum charge events: 618
+Agents ever below required minimum charge: agent_2, agent_3
+Battery objective success: False
+Shelf delivery timeline:
+- none

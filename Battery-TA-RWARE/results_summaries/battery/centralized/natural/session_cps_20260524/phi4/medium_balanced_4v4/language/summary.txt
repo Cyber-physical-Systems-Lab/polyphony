@@ -1,0 +1,23 @@
+Stated Objective: Optimize Battery Life: keep agents charged, prioritize safe charging decisions, and never let any agent go below the critical battery threshold.
+Model: phi4 (LLM)
+Scenario: medium_balanced_4v4 [tarware-medium-4agvs-4pickers-globalobs-chg-v1]
+Scenario Focus: Balanced scaling: larger warehouse and longer-horizon coordination.
+Prompt format: LANGUAGE
+Total Shelf Delivery: 0
+Steps executed: 500
+LLM calls: 500
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 0
+LLM failures: 500
+LLM missing/invalid planned actions: 4000
+JSON generation failures: 0
+Charging station utilization rate: 0.0000
+Average charging stations occupied per step: 0.0000
+Critical battery threshold: 30.0
+Minimum required charge: 30.0
+Minimum battery observed: 25.0
+Below required minimum charge events: 500
+Agents ever below required minimum charge: agent_2
+Battery objective success: False
+Shelf delivery timeline:
+- none

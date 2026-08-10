@@ -12,11 +12,11 @@ The growth of written language and, later, digital information created an unprec
 
 Early computational language models represented language through statistical relationships between words and phrases~\cite{jurafsky2025speech}. Neural probabilistic language models later showed how such relationships could be learned through distributed representations~\cite{bengio2003neural}, and word-embedding methods scaled distributed representations to large text corpora~\cite{mikolov2013distributed}. The introduction of transformer-based architectures marked a significant advance in language modelling~\cite{vaswani2017attention}. Together, these developments contributed to the emergence of large-scale foundation models trained on broad data collections~\cite{bommasani2021foundation}.
 
-Modern Large Language Models (LLMs) are trained on extensive collections of human-generated language~\cite{brown2020language,bommasani2021foundation}. Unlike systems based on manually encoded rules or task-specific reasoning procedures, they acquire behaviour from statistical patterns in examples contained within their training data~\cite{brown2020language,bommasani2021foundation}. This exposes the models to many forms of human activity expressed through language, including planning, instruction following, explanation, negotiation, coordination, and collaborative problem-solving~\cite{brown2020language,bommasani2021foundation}.
+Modern large language models (LLMs) are trained on extensive collections of human-generated language~\cite{brown2020language,bommasani2021foundation}. Unlike systems based on manually encoded rules or task-specific reasoning procedures, they acquire behaviour from statistical patterns in examples contained within their training data~\cite{brown2020language,bommasani2021foundation}. This exposes the models to many forms of human activity expressed through language, including planning, instruction following, explanation, negotiation, coordination, and collaborative problem-solving~\cite{brown2020language,bommasani2021foundation}.
 
 Although LLMs are fundamentally trained to predict the next token in a sequence, recent studies suggest that they can exhibit capabilities extending beyond simple text completion~\cite{bommasani2021foundation,jurafsky2025speech}. Under suitable prompting strategies, language models have been shown to generate plausible plans~\cite{huang2022lmp}, decompose complex tasks into intermediate sub-goals~\cite{wang2023planandsolve}, reason over sequences of actions~\cite{yao2022react}, and explore alternative reasoning paths when constraints or objectives change~\cite{yao2023tree}. These observations have motivated growing interest in the use of language models as components of decision-making and planning systems rather than solely as tools for text generation.
 
-A natural question is whether, if language evolved alongside sophisticated forms of collective action and modern language models acquire patterns from language that humans use to describe goals, plans, responsibilities, and constraints, such models could contribute to decision-making in situations where multiple entities must work together towards a shared objective. The present thesis investigates this possibility in the context of multi-agent systems.
+A natural question follows: if language evolved alongside sophisticated forms of collective action, and modern language models learn patterns from descriptions of goals, plans, responsibilities, and constraints, could such models contribute to decision-making in situations where multiple entities must work together towards a shared objective? The present thesis investigates this possibility in the context of multi-agent systems.
 
 Many real-world problems cannot be solved effectively by a single decision-making entity. Instead, they involve multiple entities that must operate within a shared environment while pursuing individual or collective objectives. In artificial intelligence and robotics, such entities are commonly referred to as agents. An agent is a system that perceives its environment and selects actions based on those perceptions~\cite{russell2021}. When multiple agents operate within the same environment, the resulting system is commonly referred to as a multi-agent system (MAS)~\cite{wooldridge2009}.
 
@@ -37,7 +37,7 @@ Consider a customer placing an online order. The requested item may be stored on
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.95\textwidth]{figures/WarehouseFlowcr.jpg}
-    \caption{Overview of the warehouse goods flow}
+    \caption{Overview of the warehouse goods flow.}
     \label{fig:warehouse_order_fulfilment}
 \end{figure}
 
@@ -66,7 +66,7 @@ Unlike traditional racks, which remain fixed in place, inventory pods are movabl
 \caption{Illustration of a Kiva-style inventory pod. The pod contains multiple shelves used for product storage, while a mobile drive unit operates beneath the pod to transport it throughout the warehouse~\cite{wurman2008coordinating}.}
 \label{fig:kiva_inventory_pod}
 \end{figure}
-Rather than asking workers to travel to products, the warehouse brings products to workers. By transporting storage units to stationary workstations, goods-to-person(GTP) systems reduce the need for worker travel and can improve fulfilment efficiency~\cite{wurman2008coordinating}. At the same time, they introduce additional coordination requirements among robots, storage units, and workstations.
+Rather than asking workers to travel to products, the warehouse brings products to workers. By transporting storage units to stationary workstations, goods-to-person (GTP) systems reduce the need for worker travel and can improve fulfilment efficiency~\cite{wurman2008coordinating}. At the same time, they introduce additional coordination requirements among robots, storage units, and workstations.
 The challenge is no longer limited to locating products and fulfilling orders. The warehouse must now determine which storage unit should be moved, which robot should perform the movement, which workstation should receive the requested items, and how shared resources should be allocated when multiple requests compete for attention. As the number of robots, workstations, and orders increases, these decisions become increasingly interdependent~\cite{wurman2008coordinating,barros2021rmfs}.
 
 At this point, warehouse operation becomes a coordination problem. Robots may compete for pathways, storage units, charging stations, or workstations. Tasks may depend on the completion of other tasks. Some activities can be performed independently, while others require multiple resources or specialised roles to interact successfully. The overall performance of the warehouse depends on the capabilities of individual agents and the effectiveness of their coordination~\cite{yan2013mrscoordination}.
@@ -96,50 +96,51 @@ Recent advances in large language models have motivated interest in their use be
 Despite growing interest in language-model-based planning, relatively little work has investigated their use for collaborative decision-making among heterogeneous agents operating under shared constraints. Existing studies often focus on single-agent tasks, embodied planning for individual robots, or coordination settings in which agents perform largely independent activities~\cite{huang2022lmp,ahn2022do,mandi2024roco}. Less attention has been given to environments where successful task completion depends on interactions between specialised roles and where decisions must remain grounded in a constrained action space.
 
 
-Several practical questions therefore remain open. Does increasing model size improve collaborative performance? How should planning responsibilities be distributed when multiple agents require decisions? Does the representation used to describe the environment influence the quality of the resulting decisions? Addressing these questions is important for understanding whether language models can contribute to collaborative multi-agent systems and how such systems should be designed and deployed in practice.
+Several practical questions therefore remain open. How does collaborative performance vary among locally deployable language models spanning different parameter scales? How should planning responsibilities be distributed when multiple agents require decisions? Does the representation used to describe the environment influence the quality of the resulting decisions? Addressing these questions is important for understanding whether language models can contribute to collaborative multi-agent systems and how such systems should be designed and deployed in practice.
 
 
-To investigate these questions, the present thesis evaluates language models as high-level decision-making components within a collaborative multi-agent setting. Rather than focusing on low-level robot control, the study examines how different design choices influence collaborative task performance. In particular, three factors are considered: the size of the language model, the architecture used for planning, and the representation used to describe the environment state.
+To investigate these questions, the present thesis evaluates language models as high-level decision-making components within a collaborative multi-agent setting. Rather than focusing on low-level robot control, the study examines how different design choices influence collaborative task performance. In particular, three factors are considered: model choice across nominal parameter scales, the architecture used for planning, and the representation used to describe the environment state.
 
 One important design consideration concerns the planning architecture. In a \emph{centralized planning} approach, a single prompt receives a shared description of the environment and returns decisions for all agents requiring planning. An alternative approach is \emph{shared-context per-agent planning}, where agents are planned individually but each prompt still contains a summary of the shared environment state. These approaches represent different ways of distributing decision-making responsibility while maintaining access to global context.
 
 Another important consideration concerns how information is presented to the language model. Software and robotic systems commonly exchange information using structured data representations rather than natural language. One widely adopted format is JavaScript Object Notation (\gls{json}), which represents system state through structured key-value pairs and hierarchical data structures. Such representations are convenient for software integration because they can often be generated directly from program variables with minimal transformation.
 
-However, language models are primarily trained on human-generated text and may therefore process information differently depending on how information is represented. Recent studies suggest that prompt structure and information representation can influence language-model behaviour and task performance, while structured formats may affect reasoning performance in some settings~\cite{sahoo2024promptsurvey,tam2024letmespeak}. This creates an important practical question for engineering applications. Should system state be provided directly in a structured format such as \gls{json}, or is it beneficial to invest additional effort in transforming the same information into natural-language descriptions that more closely resemble the data on which language models were trained? The present thesis investigates this question alongside the effects of model size and planning architecture.
+However, language models are primarily trained on human-generated text and may therefore process information differently depending on how information is represented. Recent studies suggest that prompt structure and information representation can influence language-model behaviour and task performance, while structured formats may affect reasoning performance in some settings~\cite{sahoo2024promptsurvey,tam2024letmespeak}. This creates an important practical question for engineering applications. Should system state be provided directly in a structured format such as \gls{json}, or is it beneficial to invest additional effort in transforming the same information into natural-language descriptions that more closely resemble the data on which language models were trained? The present thesis investigates this question alongside model choice across parameter scales and planning architecture.
 \subsection{Research Questions}
 \label{sec:rq}
 The thesis is guided by the following main research question:
 
 \begin{quote}
-\textbf{Main Research Question:} To what extent can prompted \glspl{llm} support grounded high-level decision-making for heterogeneous multi-robot collaboration in a constrained warehouse environment?
+\textbf{Main Research Question:} Can prompted \glspl{llm} support grounded high-level decision-making for heterogeneous multi-robot collaboration in a constrained warehouse environment?
 \end{quote}
 
-To investigate this question systematically, the study examines the influence of three design factors: language-model size, planning architecture, and prompt representation. The following sub-questions are considered:
+To investigate this question systematically, the study examines three design factors: model choice across nominal parameter scales, planning architecture, and prompt configuration. The following sub-questions are considered:
 
 \begin{enumerate}
-\item \textbf{RQ1 (Model Size):} How does language-model size affect collaborative task performance in a constrained warehouse environment?
+\item \textbf{RQ1 (Model Choice Across Parameter Scales):} How does grounded collaborative task performance vary among selected locally deployable language models spanning different nominal parameter sizes?
 
 \item \textbf{RQ2 (Planning Architecture):} How do centralized planning and shared-context per-agent planning differ in their ability to support collaborative task performance across scenarios with varying collaboration demands?
 
-\item \textbf{RQ3 (Prompt Representation):} How do natural-language and \gls{json}-based environment representations affect collaborative task performance?
+\item \textbf{RQ3 (Prompt Configuration):} How does collaborative task performance differ between the tested natural-language and \gls{json}-based prompt configurations?
 \end{enumerate}
 
-The research questions are evaluated in a warehouse-inspired collaborative environment involving heterogeneous agents operating under shared constraints. Performance is assessed using delivery throughput, language-model call efficiency, failure behaviour, and scenario-specific robustness measures.
+The research questions are evaluated in a warehouse-inspired collaborative environment involving heterogeneous agents operating under shared constraints. Performance is assessed using delivery count, model-interaction frequency, and behaviour across scenario configurations. Generation and action-validation failures are retained as diagnostic fields for run validation rather than treated as separate research outcomes.
 
 \subsection{Contributions}
 \label{sec:contrib}
 
-The current thesis work contributes:
+This thesis contributes:
 
 \begin{itemize}
 \item A grounded evaluation framework for studying language-model-based high-level decision-making in collaborative heterogeneous multi-robot systems. The approach constrains language-model outputs to environment-defined actions and validates proposed decisions against explicit feasibility constraints.
 
-\item Comparative empirical evidence on the effects of model size, planning architecture, and prompt representation in language-model-based collaborative decision-making. The results characterise their impact on throughput, language-model utilisation, robustness, and failure behaviour, while providing insights into the role of grounding and validation mechanisms.
+\item Comparative empirical observations across selected models spanning different parameter scales, planning architectures, and prompt configurations in language-model-based collaborative decision-making. The results characterise differences in delivery performance and language-model utilisation under the grounded control interface.
 \end{itemize}
 
 
 \subsection{Report Outline}
 Section~\ref{sec:background} provides background on multi-robot coordination, warehouse task assignment, and \gls{llm}-based planning.
 Section~\ref{sec:method} describes the environment, the proposed \gls{llm} control loop, the experimental design, and the main delimitations of the study.
-Section~\ref{sec:result_discussion} presents the current experimental results together with their interpretation.
-Finally, Section~\ref{sec:conclusions} concludes and outlines future work.
+Section~\ref{sec:result_discussion} presents the experimental results together with their interpretation.
+Section~\ref{sec:ethics_sustainability} discusses ethical and sustainability considerations.
+Finally, Section~\ref{sec:conclusions} concludes the thesis and outlines future work.

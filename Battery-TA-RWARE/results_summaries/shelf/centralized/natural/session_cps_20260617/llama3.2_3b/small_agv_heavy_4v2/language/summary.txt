@@ -1,0 +1,39 @@
+Stated Objective: Maximize total shelf deliveries while keeping agents charged enough to avoid critical battery levels.
+Model: llama3.2:3b (SLM)
+Scenario: small_agv_heavy_4v2 [tarware-small-4agvs-2pickers-globalobs-chg-v1]
+Scenario Focus: AGV-heavy: reveal picker-support scheduling weakness and AGV waiting behavior.
+Prompt format: LANGUAGE
+Total Shelf Delivery: 20
+Steps executed: 2226
+LLM calls: 1758
+LLM calls skipped because agent was busy: 0
+Action reuse without LLM query: 919
+LLM failures: 0
+LLM missing/invalid planned actions: 671
+JSON generation failures: 0
+Charging station utilization rate: 0.1477
+Average charging stations occupied per step: 0.8863
+Minimum battery observed: 0.0
+Below required minimum charge events: 3020
+Agents ever below required minimum charge: agent_0, agent_1, agent_2, agent_3, agent_4, agent_5
+Battery safety success: False
+Shelf delivery timeline:
+- step=164 delivered_this_step=1 total_shelf_deliveries=1
+- step=439 delivered_this_step=1 total_shelf_deliveries=2
+- step=504 delivered_this_step=1 total_shelf_deliveries=3
+- step=615 delivered_this_step=1 total_shelf_deliveries=4
+- step=800 delivered_this_step=1 total_shelf_deliveries=5
+- step=811 delivered_this_step=1 total_shelf_deliveries=6
+- step=932 delivered_this_step=1 total_shelf_deliveries=7
+- step=1011 delivered_this_step=1 total_shelf_deliveries=8
+- step=1084 delivered_this_step=2 total_shelf_deliveries=10
+- step=1320 delivered_this_step=1 total_shelf_deliveries=11
+- step=1509 delivered_this_step=1 total_shelf_deliveries=12
+- step=1537 delivered_this_step=1 total_shelf_deliveries=13
+- step=1549 delivered_this_step=1 total_shelf_deliveries=14
+- step=1805 delivered_this_step=1 total_shelf_deliveries=15
+- step=1828 delivered_this_step=1 total_shelf_deliveries=16
+- step=1929 delivered_this_step=1 total_shelf_deliveries=17
+- step=1947 delivered_this_step=1 total_shelf_deliveries=18
+- step=2207 delivered_this_step=1 total_shelf_deliveries=19
+- step=2226 delivered_this_step=1 total_shelf_deliveries=20

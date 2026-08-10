@@ -33,7 +33,9 @@ The current matched analysis finds that natural-language prompting generally pro
 | [`Report/`](Report/) | Thesis source and compiled PDF |
 | [`Report/figures/charts/latex/`](Report/figures/charts/latex/) | Native LaTeX/PGFPlots figures used in the report |
 
-Large raw experiment logs and model files are not stored in the repository. The stripped results archive contains only summaries for the Battery, Battery + Shelf, and Calls objectives that are referenced by the `Data Combined - all-runs` analysis sheet; legacy Shelf Deliveries runs and per-step records are excluded. The report documents how repeated executions are averaged into configuration-level observations and how matched configurations are selected for each comparison.
+The experiments were long-running, and the complete outputs are too large to include in the Git repository because each run contains detailed per-step records and logs. A stripped version is available in [`Battery-TA-RWARE/results_summaries/`](Battery-TA-RWARE/results_summaries/), containing only `summary.json` and `summary.txt` for the Battery, Battery + Shelf, and Calls objectives. Legacy Shelf Deliveries runs and per-step records are excluded.
+
+The combined run data and analysis are available in the [experiment results spreadsheet](Report/Analysis/Updated-all-runs.xlsx), particularly the `Data Combined - all-runs` sheet. The report documents how repeated executions are averaged into configuration-level observations and how matched configurations are selected for each comparison.
 
 ## Python environment
 
@@ -50,6 +52,78 @@ Run the automated tests with:
 
 ```bash
 pytest
+```
+
+## Docker with GPU and GUI support
+
+The repository-level [`Dockerfile`](Dockerfile) provides the Ollama, Python, GPU, and rendering dependencies used for the experiments. The host must have Docker, NVIDIA Container Toolkit, a working NVIDIA driver, X11, and `xauth`. Build the image from the repository root:
+
+```bash
+sudo docker build -t ollama-battertarware-gui:v1 .
+```
+
+Set the source directory to the absolute location of `Battery-TA-RWARE` on the host, prepare the X11 authorization file, and create the container:
+
+```bash
+export TARWARE_SOURCE=/absolute/path/to/polyphony/Battery-TA-RWARE
+export TARWARE_XSOCK=/tmp/.X11-unix
+export TARWARE_XAUTH="${HOME}/.docker.xauth"
+
+touch "$TARWARE_XAUTH"
+xauth nlist "$DISPLAY" | sed -e 's/^..../ffff/' | xauth -f "$TARWARE_XAUTH" nmerge -
+
+sudo docker run --network=host \
+  --name tarware-remote-gui \
+  --gpus all \
+  -it \
+  -e DISPLAY="$DISPLAY" \
+  -e XAUTHORITY=/root/.docker.xauth \
+  -v "$TARWARE_XSOCK:$TARWARE_XSOCK:rw" \
+  -v "$TARWARE_XAUTH:/root/.docker.xauth:rw" \
+  -v "$TARWARE_SOURCE:/docker-mount/Battery-TA-RWARE" \
+  ollama-battertarware-gui:v1
+```
+
+Inside the container, install the mounted project and optional X11 test utilities:
+
+```bash
+cd /docker-mount/Battery-TA-RWARE
+apt-get update
+apt-get install -y xauth x11-apps
+python3 -m pip install --break-system-packages -e .
+python3 -m pip install --break-system-packages -e ".[llm]"
+```
+
+Start Ollama inside the container and leave it running:
+
+```bash
+ollama serve
+```
+
+From another host terminal, open a second shell in the same container, obtain the required model, and run a small current-runner example:
+
+```bash
+sudo docker exec -it tarware-remote-gui bash
+cd /docker-mount/Battery-TA-RWARE
+ollama pull llama3.2:3b
+python3 scripts/run_obj1_centralized_llm.py \
+  --prompt_format language \
+  --selected_models llama3.2:3b \
+  --only_scenario tiny_balanced_1v1 \
+  --seed 0 \
+  --render
+```
+
+After the container has been stopped, restart and attach to it with:
+
+```bash
+sudo docker start -ai tarware-remote-gui
+```
+
+To open an additional shell while it is running:
+
+```bash
+sudo docker exec -it tarware-remote-gui bash
 ```
 
 ## Experiment runners

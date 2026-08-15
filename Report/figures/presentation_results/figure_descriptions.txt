@@ -1,0 +1,33 @@
+PRESENTATION RESULT FIGURES
+
+rq1_matched_model_performance.png
+Shows mean delivery count and deliveries per 1000 LLM calls for each model across the same 48 matched configurations. Llama 3B achieved the highest mean delivery count, while Phi4 achieved the highest call-normalised value. The comparison shows that performance did not increase consistently with nominal model size.
+
+rq2_architecture_by_scenario.png
+Compares mean deliveries from centralized and shared-context planning across the six warehouse scenarios. Each architecture and scenario uses 16 matched configurations. Shared-context planning produced more deliveries in all six scenario groups.
+
+rq2_architecture_by_model.png
+Compares mean deliveries from centralized and shared-context planning for each model. Each architecture and model uses 12 matched configurations. Shared-context planning produced more deliveries for five models, while Qwen produced more under centralized planning.
+
+rq3_prompt_by_scenario.png
+Compares deliveries per 1000 LLM calls for the natural-language and JSON prompt configurations across the six scenarios. Each bar uses 24 matched configurations. Natural language produced the higher call-normalised value in all six scenario groups.
+
+rq3_prompt_by_model.png
+Compares deliveries per 1000 LLM calls for the natural-language and JSON prompt configurations for each model. Each model and prompt uses 24 matched configurations. Natural language produced the higher value for five models, while Phi4 showed a small JSON advantage.
+
+rq3_prompt_by_architecture.png
+Compares deliveries per 1000 LLM calls for natural-language and JSON prompting within centralized and shared-context planning. Each bar uses 72 matched configurations. Natural language produced the higher call-normalised value within both architectures.
+
+supplementary_call_objective_response.png
+Shows the difference in mean LLM calls between the Calls and Battery + Shelf objectives. Negative values indicate fewer calls under the Calls objective. Four models reduced their calls, while Mistral and Gemma increased them, showing that adaptation to the call-reduction objective was inconsistent.
+
+supplementary_battery_productivity.png
+Shows the descriptive battery-aware productivity score for each model and objective. The objective producing the highest score differed between models, so the Battery objective did not produce a consistent improvement.
+
+INTERPRETATION NOTES
+
+Deliveries per 1000 LLM calls measures deliveries relative to model-interaction frequency. It does not measure latency, token usage, GPU time, energy consumption, or computational cost.
+
+The natural-language and JSON results compare the complete prompt configurations, including their response contracts and parsing paths. They do not isolate input representation alone.
+
+Battery-aware productivity is a descriptive combination of deliveries and charging-station utilisation. It is not a measure of optimal battery management.

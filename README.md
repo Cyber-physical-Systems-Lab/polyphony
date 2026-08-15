@@ -10,7 +10,9 @@ The LaTeX source, bibliography, figures, appendices, review responses, and build
 
 ## Study overview
 
-The experiments use a modified Battery-TA-RWARE environment containing AGVs and Picker robots with complementary roles. A supervisory controller converts the current simulator state into a prompt, queries a locally hosted language model, validates the proposed discrete actions, and passes accepted actions to the simulator.
+The experiments use a modified Battery-TA-RWARE environment containing AGVs and Picker robots with complementary roles. Battery-TA-RWARE follows the RWARE and TA-RWARE benchmark lineage and provides a discrete-time grid warehouse through the Gymnasium interface, the maintained successor to OpenAI Gym. Gymnasium supplies the standard environment API; the warehouse task and heterogeneous robot roles come from the RWARE/TA-RWARE environment family.
+
+A supervisory controller converts the current simulator state into a prompt, queries a locally hosted language model, validates the proposed discrete actions, and passes accepted actions to the simulator.
 
 The study evaluates:
 
@@ -21,6 +23,21 @@ The study evaluates:
 - prompted objectives concerning shelf delivery, LLM-call usage, and battery management.
 
 The current matched analysis finds that natural-language prompting generally produces stronger delivery results, with a small JSON advantage for Phi4. Shared-context planning produces more deliveries across all six scenario groups and for five of the six models, while centralized planning uses fewer model interactions and performs better for Qwen. Performance does not increase consistently with nominal model size. These results are descriptive observations within the tested simulator and do not establish superiority over non-language-model planning methods.
+
+## Changes from core Battery-TA-RWARE
+
+The core environment already provides the warehouse layout, requested-shelf queue, AGV and Picker roles, battery and charging dynamics, macro-action interface, A* navigation, collision handling, and load/unload mechanics. This thesis retains those responsibilities within the simulator and adds the following components:
+
+- **Language-model interface:** translation of simulator state into natural-language or JSON prompts, communication with locally hosted Ollama servers, parsing of model responses into discrete actions, validation against the current action mask, and no-op fallback for failed or invalid responses.
+- **Grounded planning support:** role-specific candidate construction, A*-path distance calculation and ranking, battery and task-state summaries, semantic action tags, charging and Picker-support information, and warnings for blocked or temporarily unreachable targets.
+- **Planning configurations:** centralized joint action generation and shared-context per-agent querying, in which each agent receives state and candidate information relevant to its role and current situation.
+- **Action persistence and replanning:** bounded reuse of accepted actions to avoid unnecessary model queries, together with conditional replacement of assignments that remain busy beyond the configured replanning threshold.
+- **Picker staging:** Pickers wait approximately two path steps from a shelf-interaction cell until the corresponding AGV is ready, reducing premature obstruction of the AGV's approach.
+- **Interaction timing:** movement is resolved before load/unload operations so that a Picker arriving during the current simulator step can support the shelf interaction in that step.
+- **Conflict recovery:** explicit conflict-resolution state, agent-aware path calculation, timeout and cooldown for unreachable targets, blocking information, and deterministic resolution when multiple AGVs claim the same requested shelf.
+- **Experimental instrumentation:** per-step and per-run logging of deliveries, model calls, actions, battery state, invalid generations, parsing and fallback events, conflicts, stuck states, and other evaluation data.
+
+The requested-shelf mechanism and battery model were not introduced by this thesis. They are inherited from the environment and are translated into prompt-visible task information by the added controller. Because Picker staging, busy-state replanning, and conflict recovery affect execution behaviour, results from this modified version should not be treated as direct benchmark comparisons with previously published TA-RWARE results.
 
 ## Repository structure
 
